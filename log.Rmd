@@ -1,0 +1,59 @@
+---
+title: Log kroků a poznatků
+output:
+  html_document:
+    toc_depth: 2
+---
+
+```{r, echo=F, include=F}
+source("shared.R")
+library(fontawesome)
+```
+
+
+## 29. 5. 2020
+
+### Hromadné načtení dat a základní kontrola
+
+##### `r fa("check-circle", fill = col_green)` vše OK 
+
+
+### [Kontrola interní validity dat](1-input-checks.html)
+
+##### `r fa("info-circle", fill = col_blue)` V datasetu je 85 146 projektů na celkem 147 683 řádcích; rozložení mezi OP dává smysl.
+
+##### `r fa("question-circle", fill = "black")` Existuje cca 200 projektů, u kterých známe sídlo příjemce, ale neznáme jeho název.
+
+Vadí, nevadí?
+
+##### `r fa("question-circle", fill = col_orange)` Existují 2 projekty OP PIK, kde číslo projektu obsahuje jen finální číselnou část.
+
+Vadí, nevadí?
+
+##### `r fa("exclamation-triangle", fill = col_red)` 24 projektů nemá žádné místo realizace: 1 z OP Z, 23 z OP ŽP.
+
+Část jsou velké plošné projekty AOPK, část lokální, které by šly alokovat podle příjemce.
+
+### [Validace dat proti číselníkům](1_input-checks.html)
+
+##### `r fa("info-circle", fill = col_blue)` OK, ale vyžadovalo dost úprav, aby kompozitní identifikátory obcí a ZUJ seděly proti číselníkům
+
+##### `r fa("info-circle", fill = "black")` je třeba vyřadit jeden projekt OP Z s místem realizace v Polsku
+
+Je to ale logické, je to projekt z výzvy na mobility.
+
+##### Ještě nás čeká kontrola interní validity geografických názvů
+
+tj. jestli místo s ID X má stejný název v datech a v ofiko číselnících
+
+##### ...a kontrola interní validity administrativně-prostorové hierarchie
+
+tj. jestli někde nejsou projekty rozpadnuty do území, které neodpovídají jejich (zadaným nebo intuitivně smysluplným) nadřazeným geografickým jednotkám. 
+
+### [Explorace struktury geografických informací v datasetu](3_explore.html)
+
+##### `r fa("info-circle", fill = col_blue)` Zhruba 10 tisíc projektů je označeno ve více než jedné geografické úrovni
+
+Dominantní je to u OP PPR, relativně časté u IROPu, OP D a OP ŽP.
+
+S těmi tedy budeme muset zacházet specificky - např. kontrolovat, jestli nižší a vyšší jednotky do sebe zapadají.
