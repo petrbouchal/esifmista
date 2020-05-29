@@ -18,7 +18,7 @@ dtl <- read_parquet(here::here("data-processed", "misto-fixed-long-geo.parquet")
 ```
 
 
-## Jsou někde informace na víc územních úrovních?
+## Na jakých územních úrovních jsou projekty lokalizovány?
 
 ### Memo: kolik máme projektů?
 
@@ -50,6 +50,7 @@ maxlevels %>%
   spread(maxlevel, n)
 ```
 
+### Ve kterých projektech je více územních úrovní?
 
 ```{r multilevel}
 dtl %>% 
