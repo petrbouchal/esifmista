@@ -1,0 +1,194 @@
+---
+title: "Vstupní kontrola úplnosti a konzistence dat"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(metathis)
+library(tidyverse)
+library(arrow)
+library(fontawesome)
+
+source(here::here("shared.R"))
+```
+
+```{r load data}
+dt <- read_parquet(here::here("data-processed", "misto_renamed.parquet"))
+```
+
+## Jak to číst
+
+Tento skript/dokument funguje tak, že se snaží najít řádky/projekty s nějakou vnitřní nekonzistencí. V prvním gardu pak vyhodí počet takových řádků. Pokud je pod kódem vidět `0`, je vše v pořádku.
+
+## Počty a ID projektů
+
+### Máme všude ID projektu?
+
+```{r no-id}
+dt %>% 
+  filter(is.na(prj_id)) %>% 
+  nrow()
+```
+
+### Dávají čísla projektů smysl?
+
+Délky:
+
+```{r prj-id-length}
+dt %>% 
+  distinct(prj_id, .keep_all = T) %>% 
+  mutate(prj_id_len = str_length(prj_id)) %>% 
+  count(op_id, prj_id_len) %>% 
+  arrange(prj_id_len) %>% 
+  spread(prj_id_len, n)
+```
+
+```{r prj-id-short-list}
+dt %>% 
+  filter(str_length(prj_id) < 33)
+```
+
+
+### Počty řádků a projektů
+
+Kolik je unikátních projektů
+
+```{r distinct projects}
+dt %>%
+  summarise(prj_count = n_distinct(prj_id))
+```
+
+```{r radky-projekty}
+dt %>% 
+  group_by(op_id) %>% 
+  summarise(n_radky = n(), 
+            n_projekty = n_distinct(prj_id))
+```
+
+## Údaje o místě realizace
+
+```{r dt-long-geo}
+
+dt_long_g <- make_long_geo(dt)
+
+write_parquet(dt_long_g, here::here("data-processed", "misto_long-geo.parquet"))
+```
+
+### Existují projekty bez jakékoli idenfitikace místa?
+
+```{r noplace-n}
+dt_noplace <- dt_long_g %>%
+  group_by(prj_id, op_id) %>% 
+  summarise(all_na = all(is.na(value))) %>% 
+  filter(all_na) %>% 
+  ungroup()
+
+nrow(dt_noplace)
+```
+
+```{r noplace-op}
+dt_noplace %>% 
+  count(op_id)
+```
+
+```{r noplace-list}
+dt_noplace
+```
+```{r}
+dt %>% 
+  filter(prj_id %in% dt_noplace$prj_id)
+```
+
+
+### Chybí někde ID tam, kde je název a naopak?
+
+
+```{r missing-corresp}
+dt_misscorresp <- dt_long_g %>% 
+  select(-prj_anotace, -starts_with("z_sidlo")) %>% 
+  pivot_wider(id_cols = c(prj_id, prj_radek, level), 
+              names_from = typ, values_from = value)
+```
+
+```{r missing-corresp-n}
+dt_misscorresp %>% 
+  filter(is.na(id) != is.na(nazev)) %>% 
+  nrow()
+```
+
+### Jsou ID a názvy konzistentní?
+
+
+```{r id-name-mismatch-n}
+dt_long_g %>% 
+  select(-prj_anotace, -starts_with("z_sidlo")) %>% 
+  pivot_wider(id_cols = c(prj_id, prj_radek, level), 
+              names_from = typ, values_from = value) %>% 
+  group_by(level, id) %>%
+  summarise(n_names_in_id = n_distinct(nazev)) %>% 
+  filter(n_names_in_id > 1) %>% 
+  nrow()
+```
+
+
+
+## Dávají data o příjemci smysl?
+
+### Je ve všech řádcích každého projektu to stejné sídlo? 
+
+```{r prij-sidlo-id-mismatch}
+dt %>% 
+  group_by(prj_id) %>% 
+  summarise(sidlo_id_unique = n_distinct(p_sidlo_id),
+            sidlo_name_unique = n_distinct(p_sidlo_nazev)) %>% 
+  filter(sidlo_id_unique > 1 | sidlo_name_unique > 1) %>% 
+  nrow()
+```
+
+
+### Chybí někde údaje o příjemci?
+
+```{r prij-missing}
+dt %>% 
+  filter(prj_radek == 1) %>% 
+  filter(is.na(p_nazev)) %>% 
+  select(op_id, prj_id, p_sidlo_id, p_sidlo_nazev, p_nazev, prj_nazev)
+```
+### Chybí někde údaje o sídle?
+
+```{r prij-sidlo-missing}
+dt %>% 
+  filter(prj_radek == 1) %>% 
+  filter(is.na(p_sidlo_id) | is.na(p_sidlo_nazev)) %>% 
+  select(op_id, prj_id, p_sidlo_id, p_sidlo_nazev, p_nazev, prj_nazev)
+```
+Ehm, takže asi existují projekty, kde známe místo sídla a neznáme název příjemce
+
+```{r prij-incognito}
+dt %>% 
+  filter(prj_radek == 1) %>% 
+  filter(is.na(p_nazev) & (!is.na(p_sidlo_id) | !is.na(p_sidlo_nazev))) %>% 
+  select(op_id, p_sidlo_id, p_sidlo_nazev, p_nazev, prj_id) %>% 
+  arrange(prj_id)
+```
+
+### Jsou údaje o sídle vnitřně konzistentní?
+
+```{r prij-sidlo-match-df}
+dt_long_sidla <- dt %>%
+  group_by(prj_id, prj_radek) %>% 
+  pivot_longer(cols = starts_with("p_sidlo_")) %>%
+  separate(name, c("p_", "sidlo", "typ")) %>% 
+  select(op_id, prj_id, typ, value)
+```
+
+```{r prij-sidlo-mismatch-list}
+dt_long_sidla %>% 
+  pivot_wider(id_cols = c(prj_id, prj_radek),
+              names_from = typ, values_from = value) %>% 
+  group_by(id) %>% 
+  summarise(distinct_ids = n_distinct(id)) %>% 
+  filter(distinct_ids > 1)
+```

@@ -1,0 +1,16 @@
+---
+title: "Čištění ESIF dat"
+output:
+  html_document:
+    toc: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(fontawesome)
+```
+
+#### `r fa("exclamation-triangle", fill = "#d9534f")` Interní dokumentace - neslouží k dalšímu šíření {.bs-callout .bs-callout-red} 
+
+Naposledy aktualizováno `r format(Sys.time(), "%d. %B %Y, %H:%M")`
+

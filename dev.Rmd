@@ -1,0 +1,27 @@
+---
+title: "Technická dokumentace"
+output:
+  html_document:
+    toc: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(details)
+```
+
+```{r, child="README.md"}
+```
+
+## Reproducibility log
+
+```{r details-2, details.summary = "Time", echo = FALSE}
+details::details(Sys.time(), summary = "Time")
+```
+```{r details-0, details.summary = "Session Info", echo = FALSE}
+details::details(sessioninfo::session_info(), summary = "Session info")
+```
+
+```{r details-3, details.summary = "Git Info", echo = FALSE}
+details::details(git2r::repository(), summary = "Git")
+```

@@ -1,0 +1,38 @@
+name: Rozpočty obcí a měst v krizi
+output_dir: docs
+include: []
+exclude: ["LICENSE.md", "*.csv", "*.rds", "data-input", "data-processed", "renv", "renv.lock", "archive", "prep", "*.sh"]
+navbar:
+  title: "Místa realizace ESIF: čištění dat"
+  left:
+  - text: Validace
+    menu:
+    - text: "Kontrola úplnosti a konzistence"
+      href: 01_input-checks.html
+    - text: "Ověření geodat"
+      href: 02_validate.html
+  - text: Analýza
+    menu:
+    - text: "Struktura dat"
+      href: 03_explore.html
+  - text: Úpravy dat
+    menu:
+    - text: TO DO
+  - text: "Záznam kroků a poznatků"
+    href: log.html
+  - text: Dokumentace
+    menu:
+    - text: "Technická dokumentace"
+    href: dev.html
+  right:
+  - icon: fa-github fa-lg
+    href: https://github.com/petrbouchal/mmr-esif-clean
+output:
+  html_document:
+    css: extra.css
+    toc: true
+    toc_float: true
+    mathjax: null
+    df_print: paged
+    includes:
+      in_header: [meta.html]

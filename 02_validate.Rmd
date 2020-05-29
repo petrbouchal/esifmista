@@ -1,0 +1,161 @@
+---
+title: "Kontrola proti číselníkům"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(arrow)
+
+source(here::here("shared.R"))
+```
+
+```{r data}
+dt <- read_parquet(here::here("data-processed", "misto_renamed.parquet"))
+dtl <- read_parquet(here::here("data-processed", "misto_long-geo.parquet"))
+```
+
+
+```{r codes-in-data}
+obec_id_e <- unique(dt$g_obec_id)
+kraj_id_e <- unique(dt$g_kraj_id)
+orp_id_e <- unique(dt$g_rozobec_id)
+okres_id_e <- unique(dt$g_okres_id)
+zuj_id_e <- unique(dt$g_zuj_id)
+```
+
+
+### Jak vypadají kódy v datech?
+
+```{r sample codes}
+head(obec_id_e)
+head(zuj_id_e)
+head(orp_id_e)
+head(okres_id_e)
+head(kraj_id_e)
+```
+
+### Podle toho načteme a upravíme metadata
+
+Děje se v `03_load-metadata.R`, aby se stahování a počítání dělalo jen jednou.
+
+```{r metadata-load}
+cz <- read_parquet(here::here("data-processed", "cz_geo_meta.parquet"))
+csu_orp <- read_parquet(here::here("data-processed", "orp-csu.parquet"))
+csu_kraj <- read_parquet(here::here("data-processed", "kraj-csu.parquet"))
+csu_okres <- read_parquet(here::here("data-processed", "okres-csu.parquet"))
+csu_zuj <- read_parquet(here::here("data-processed", "zuj-csu.parquet"))
+csu_obec <- read_parquet(here::here("data-processed", "obec-csu.parquet"))
+```
+
+```{r metadata-prep}
+obce_n <- csu_obec %>% 
+  mutate(kod_n = paste0(CZNUTS, CHODNOTA2))
+
+zuj_n <- csu_zuj %>% 
+  mutate(kod_n = paste0(CZNUTS, CHODNOTA2))
+  
+head(obce_n$kod_n)
+```
+
+## Existují kódy uvedené v datech v oficiálních číselnících?
+
+```{r validate}
+dt_validated <- dt %>% 
+  mutate(valid_kraj = g_kraj_id %in% csu_kraj$CZNUTS,
+         valid_obec = g_obec_id %in% obce_n$kod_n,
+         valid_orp = g_rozobec_id %in% csu_orp$CHODNOTA,
+         valid_okres = g_okres_id %in% csu_okres$CHODNOTA,
+         valid_zuj = g_zuj_id %in% zuj_n$kod_n) %>% 
+  mutate(valid_kraj = if_else(is.na(g_kraj_id), NA, valid_kraj),
+         valid_obec = if_else(is.na(g_obec_id), NA, valid_obec),
+         valid_orp = if_else(is.na(g_rozobec_id), NA, valid_orp),
+         valid_okres = if_else(is.na(g_okres_id), NA, valid_okres),
+         valid_zuj = if_else(is.na(g_zuj_id), NA, valid_zuj)) %>% 
+  select(matches(c("valid", "g_.*_id")))
+
+skimr::skim(dt_validated)
+```
+
+Něco se děje s kódy ZÚJ: část nesedí s číselníkem - a část je taky kratší.
+
+```{r zuj-len}
+dt %>% 
+  mutate(zuj_len = str_length(g_zuj_id)) %>% 
+  count(op_id, zuj_len) %>% 
+  spread(zuj_len, n)
+```
+
+```{r zuj-short}
+dt %>% 
+  filter(str_length(g_zuj_id) < 11) %>% 
+  distinct(g_zuj_id) 
+```
+Což jsou podle všeho hlavně městské části.
+
+Oprava kódů ZÚJ: ke kratším na začátek přilepíme kód kraje
+
+```{r zuj-fix}
+dt_fixed_zuj <- dt %>% 
+  mutate(g_zuj_id_short = str_sub(g_zuj_id, -6, -1)) %>% 
+  left_join(csu_zuj %>% select(g_zuj_id_short = CHODNOTA2, CZNUTS)) %>% 
+  mutate(g_zuj_id_new = paste0(CZNUTS, g_zuj_id_short),
+         g_zuj_id_new = if_else(str_length(g_zuj_id) < 11,
+                                g_zuj_id_new, g_zuj_id),
+         g_zuj_id = g_zuj_id_new) %>% 
+  select(-g_zuj_id_new, -g_zuj_id_short)
+
+dt_fixed_zuj %>% 
+  mutate(ln = str_length(g_zuj_id)) %>% 
+  count(ln)
+```
+
+Kontrola znova:
+
+```{r revalidate}
+dt_zujfix_validated <- dt_fixed_zuj %>% 
+  mutate(valid_kraj = g_kraj_id %in% csu_kraj$CZNUTS,
+         valid_obec = g_obec_id %in% obce_n$kod_n,
+         valid_orp = g_rozobec_id %in% csu_orp$CHODNOTA,
+         valid_okres = g_okres_id %in% csu_okres$CHODNOTA,
+         valid_zuj = g_zuj_id %in% zuj_n$kod_n) %>% 
+  mutate(valid_kraj = if_else(is.na(g_kraj_id), NA, valid_kraj),
+         valid_obec = if_else(is.na(g_obec_id), NA, valid_obec),
+         valid_orp = if_else(is.na(g_rozobec_id), NA, valid_orp),
+         valid_okres = if_else(is.na(g_okres_id), NA, valid_okres),
+         valid_zuj = if_else(is.na(g_zuj_id), NA, valid_zuj)) %>% 
+  select(matches(c("valid", "g_.*_id")))
+
+skimr::skim(dt_zujfix_validated)
+```
+
+Fajn: teď už to sedí: podíly chybějících jsou stejné v původních proměnních jako ve validačních, plus máme velmi málo chybných kódů - jen 2 kraje nesedí.
+
+Které?
+
+```{r polsko}
+kraj_id_e[!kraj_id_e %in% csu_kraj$CZNUTS]
+```
+
+Polský region Bielski a `NA`.
+
+```{r polsko-list}
+dt %>% 
+  filter(prj_id == dt %>% 
+           filter(g_kraj_id == "PL225") %>% 
+           pull(prj_id))
+```
+Hmm, jeden projekt OP Z, který se odehrával jen v Polsku... Ale je to výzva na mezinárodní mobilitu, takže asi OK - prostě se jen vyřadí.
+
+```{r fixed-write}
+write_parquet(dt_fixed_zuj, here::here("data-processed", "misto-fixed.parquet"))
+```
+
+```{r}
+dt_fixed_long <- make_long_geo(dt_fixed_zuj)
+write_parquet(dt_fixed_long, here::here("data-processed", "misto-fixed-long-geo.parquet"))
+```
+
+## Validita jmen proti registrům

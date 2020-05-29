@@ -1,0 +1,76 @@
+---
+title: "Vstupní analýza struktury dat"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(arrow)
+
+source(here::here("shared.R"))
+```
+
+```{r data}
+dt <- read_parquet(here::here("data-processed", "misto-fixed.parquet"))
+dtl <- read_parquet(here::here("data-processed", "misto-fixed-long-geo.parquet"))
+```
+
+
+## Jsou někde informace na víc územních úrovních?
+
+### Memo: kolik máme projektů?
+
+```{r}
+dtl %>% 
+  ungroup() %>% 
+  summarise(n_distinct(prj_id))
+```
+
+### Na které nejvyšší úrovni jsou projekty lokalizovány?
+
+```{r maxlevels, warning=F}
+maxlevels <- dtl %>% 
+  filter(!is.na(value)) %>% 
+  # sample_n(10) %>% 
+  mutate(level_num = as.numeric(level)) %>% 
+  select(prj_id, level, level_num, op_id) %>% 
+  group_by(prj_id, op_id) %>% 
+  summarise(maxlevel = max(level_num)) %>% 
+  mutate(maxlevel = recode(maxlevel, !!!geounits_recoder)) %>% 
+  ungroup()
+```
+
+
+```{r maxlevels-show, warning=F}
+maxlevels %>% 
+  count(op_id, maxlevel) %>% 
+  mutate(maxlevel = fct_relevel(maxlevel, geounits)) %>% 
+  spread(maxlevel, n)
+```
+
+
+```{r multilevel}
+dtl %>% 
+  filter(!is.na(value) & typ == "id") %>% 
+  group_by(prj_id) %>% 
+  mutate(n_urovni = n_distinct(level),
+         multilevel = n_urovni > 1) %>% 
+  ungroup() %>% 
+  count(op_id, multilevel, wt = n_distinct(prj_id)) %>% 
+  spread(multilevel, n) %>% 
+  mutate(share = `TRUE`/(`FALSE` + `TRUE`))
+```
+
+## Množství územních jednotek pro jednotlivé projekty
+
+TO DO
+
+```{r}
+
+```
+
+## Validita územní hierarchie
+
+TO DO
