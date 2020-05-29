@@ -24,7 +24,9 @@ library(fontawesome)
 
 ##### `r fa("question-circle", fill = "black")` Existuje cca 200 projektů, u kterých známe sídlo příjemce, ale neznáme jeho název.
 
-Vadí, nevadí?
+##### `r fa("question-circle", fill = "black")` Existuje cca 46 projektů, u kterých neznáme sídlo příjemce.
+
+To by neměla vadit, pokud zrovna u těchto projektů nebudeme muset dovozovat místo realizace ze sídla.
 
 ##### `r fa("question-circle", fill = col_orange)` Existují 2 projekty OP PIK, kde číslo projektu obsahuje jen finální číselnou část.
 
