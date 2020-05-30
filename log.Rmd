@@ -10,7 +10,6 @@ source("shared.R")
 library(fontawesome)
 ```
 
-
 ## 29. 5. 2020
 
 ### Hromadné načtení dat a základní kontrola
@@ -25,6 +24,10 @@ library(fontawesome)
 ##### `r fa("question-circle", fill = "black")` Existuje cca 200 projektů, u kterých známe sídlo příjemce, ale neznáme jeho název.
 
 ##### `r fa("question-circle", fill = "black")` Existuje cca 46 projektů, u kterých neznáme sídlo příjemce.
+
+##### `r fa("info-circle", fill = "black")` Některé subjekty (zahlédl jsem, nepočítal systematicky) mají v různých projektech různá sídla
+
+Ale to je asi OK.
 
 To by neměla vadit, pokud zrovna u těchto projektů nebudeme muset dovozovat místo realizace ze sídla.
 
@@ -59,3 +62,15 @@ tj. jestli někde nejsou projekty rozpadnuty do území, které neodpovídají j
 Dominantní je to u OP PPR, relativně časté u IROPu, OP D a OP ŽP.
 
 S těmi tedy budeme muset zacházet specificky - např. kontrolovat, jestli nižší a vyšší jednotky do sebe zapadají.
+
+### Další otázky do následujících kroků
+
+- v jaké formě se budou vkládat nová data?
+  - nové soubory, stejná forma, jen nové řádky
+  - stejné soubory, doplněné řádky
+  - jinak
+  
+- očekáváme další OP?
+- co přeshranička?
+
+
