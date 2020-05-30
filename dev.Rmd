@@ -13,15 +13,31 @@ library(details)
 ```{r, child="README.md"}
 ```
 
+## How to reproduce
+
+- load data and metadata by running numbered R scripts in order. This relies on input XLSX files being in `data-input`
+- run `rmarkdown::render_site()` or run numbered RMarkdown scripts in order
+
+or run `build-and-render.R`.
+
+To subsequently build the site afresh and deploy to Netlify, run `build-site-and-deploy.sh`.
+
+Environment reproducibility is maintained using `renv`. This means that upon running R in the project folder, all the necessary packages will be installed in a local library (in fact, installed in a cache from which they can be reused, and linked into the local project library where they take up no space.) Should this fail, you can run `renv::deactivate()` and install the packages manually, though you might end up with different versions.
+
 ## Reproducibility log
 
-```{r details-2, details.summary = "Time", echo = FALSE}
-details::details(Sys.time(), summary = "Time")
+```{details, details.summary = "Time", echo = FALSE}
+Sys.time()
 ```
-```{r details-0, details.summary = "Session Info", echo = FALSE}
-details::details(sessioninfo::session_info(), summary = "Session info")
+```{details, details.summary = "Session Info", echo = FALSE}
+sessioninfo::session_info()
 ```
 
-```{r details-3, details.summary = "Git Info", echo = FALSE}
-details::details(git2r::repository(), summary = "Git")
+```{details, details.summary = "Version control", echo = FALSE}
+git2r::repository()
 ```
+
+```{details, details.summary = "renv status", echo = FALSE}
+print(renv::status())
+```
+
