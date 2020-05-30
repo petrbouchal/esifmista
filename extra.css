@@ -1,6 +1,50 @@
-h1 h2 h3 h4 {
-  color: #00008b;
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans|IBM+Plex+Sans+Condensed');
+body {font-family: "IBM Plex Sans", "Helvetica", Helvetica, sans-serif, sans}
+
+.tocify {
+  border: 0px;
+  border-radius: 0px;
 }
+
+.tocify .list-group-item {
+  background-color: white;
+  color: #00f;
+}
+
+.tocify .list-group-item.active {
+  background-color: #00f;
+  color: #fff;
+}
+
+.navbar-default, .navbar-brand, .navbar-nav {
+  color: white !important;
+  background-color: #00f;
+  border-color: #00f;
+}
+
+.navbar-nav > li > a {
+  color: white !important;
+  background-color: #00f;
+}
+
+.navbar-nav > .active > a {
+  color: #00f !important;
+  background-color: #fff !important;
+}
+
+.dropdown-menu > .active > a {
+  background-color: #00f;
+}
+.navbar-nav > .open > a {
+  color: white !important;
+  background-color: #00f !important;
+}
+
+.icon-bar {
+    background-color: #fff !important;
+}
+
+h1, h2, h3, h4, h5 {color: #0000ff;}
 
 .bs-callout {
     margin:20px 0;
