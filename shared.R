@@ -1,6 +1,7 @@
 library(magrittr)
 library(forcats)
 
+
 geounits <- c("zuj", "obec", "rozobec", "okres", "kraj")
 geounits_recoder <- c("zuj", "obec", "rozobec", "okres", "kraj")
 names(geounits_recoder) <- 1:5
@@ -24,3 +25,9 @@ make_long_geo <- function(data) {
              fct_relevel(geounits)) %>%
     ungroup()
 }
+
+ptrr::set_ptrr_ggplot_fonts()
+ggplot2::update_geom_defaults(geom = "bar", new= list(fill = "darkblue"))
+ggplot2::update_geom_defaults(geom = "line", new = list(colour = "darkblue"))
+ggplot2::update_geom_defaults(geom = "point", new = list(colour = "darkblue",
+                                                         fill = "darkblue"))
