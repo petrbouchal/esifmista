@@ -8,15 +8,22 @@ library(janitor)
 
 source(here::here("shared.R"))
 
-read_xlsx("data-input/misto/IROP.xlsx")
+read_xlsx("data-input/misto-ico/OP D.xlsx", skip = 1)
 
-files <- list.files(here::here("data-input/misto"))
-files_paths <- str_glue("data-input/misto/{files}")
-names(files_paths) <- tools::file_path_sans_ext(files)
+# pth <- "data-input/misto/"
+pth <- "data-input/misto-ico"
+
+files <- list.files(here::here(pth), full.names = T)
+names(files) <- tools::file_path_sans_ext(files) %>% basename()
 files
-files_paths
-names(files_paths)
-dt0 <- map_dfr(files_paths, read_xlsx, skip = 1, .id = "op_id")
+names(files)
+
+files <- str_replace(files,
+                     "data-input/misto-ico/OP PIK.xlsx",
+                     "data-input/misto/OP PIK.xlsx")
+files
+
+dt0 <- map_dfr(files[c(1:2, 4:8)], read_xlsx, skip = 1, .id = "op_id")
 
 geounits_pattern <- str_c("^", geounits, collapse = "|")
 geounits_name_pattern <- str_c(paste0(geounits, "$"), collapse = "|")
@@ -28,6 +35,7 @@ dt <- dt0 %>%
          prj_anotace = anotace_projektu,
          p_nazev = nazev_subjektu,
          p_sidlo_nazev = sidlo_nazev,
+         p_ico = ic,
          p_sidlo_id = sidlo_kod,
   ) %>%
   rename_all(str_replace, "(?!_)cislo$", "_id") %>%
@@ -37,5 +45,5 @@ dt <- dt0 %>%
   mutate(prj_radek = row_number()) %>%
   ungroup()
 
-write_parquet(dt0, here::here("data-processed","misto_raw.parquet"))
-write_parquet(dt, here::here("data-processed","misto_renamed.parquet"))
+write_parquet(dt0, here::here("data-processed","misto_raw-mix.parquet"))
+write_parquet(dt, here::here("data-processed","misto_renamed-mix.parquet"))
