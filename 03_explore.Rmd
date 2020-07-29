@@ -8,13 +8,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(arrow)
+library(ptrr)
 
 source(here::here("shared.R"))
 ```
 
 ```{r data}
-dt <- read_parquet(here::here("data-processed", "misto-fixed.parquet"))
-dtl <- read_parquet(here::here("data-processed", "misto-fixed-long-geo.parquet"))
+dt <- read_parquet(here::here("data-processed", "misto_fix-01-zuj.parquet"))
+dtl <- read_parquet(here::here("data-processed", "misto_fix-01-zuj_long-geo.parquet"))
 ```
 
 
@@ -32,7 +33,7 @@ dtl %>%
 
 ```{r maxlevels, warning=F}
 maxlevels <- dtl %>% 
-  filter(!is.na(value)) %>% 
+  filter(!is.na(value) & typ != "shortid") %>% 
   # sample_n(10) %>% 
   mutate(level_num = as.numeric(level)) %>% 
   select(prj_id, level, level_num, op_id) %>% 
@@ -40,6 +41,52 @@ maxlevels <- dtl %>%
   summarise(maxlevel = max(level_num)) %>% 
   mutate(maxlevel = recode(maxlevel, !!!geounits_recoder)) %>% 
   ungroup()
+```
+
+```{r upset-plot-data}
+library(ggupset)
+
+dtl_for_upset <- dtl %>% 
+  filter(typ == "id" & !is.na(value)) %>% 
+  select(op_id, prj_id, level) %>%
+  distinct() %>% 
+  mutate(level = as.character(level)) %>% 
+  group_by(prj_id) %>% 
+  summarise(geos = list(level)) %>%
+  left_join(dt %>% filter(prj_radek == 1) %>% select(prj_id, op_id)) %>% 
+  # mutate(nr = map_int(geos, nrow)) %>%
+  # arrange(desc(nr)) %>% 
+  filter(TRUE)
+```
+
+
+```{r upset-plot}
+ggplot2::update_geom_defaults("line", list(colour = "black"))
+ggplot(dtl_for_upset) +
+  geom_bar(mapping = aes(x = geos, fill = op_id), position = "stack") +
+  scale_x_upset(order_by = "degree", sets = geounits) +
+  # scale_y_continuous(limits = c(0, 6e4)) +
+  # scale_y_log10(limits = c(1, 1e5), n.breaks = 10,
+  #               labels = scales::label_number(1)) +
+  # scale_y_continuous(trans = scales::log_trans(), breaks = scales::pretty_breaks()) +
+  ptrr::theme_ptrr() +
+  scale_fill_brewer(type = "qual")
+
+ggplot2::update_geom_defaults("line", list(colour = "darkblue"))
+```
+
+```{r upset-plot-ops}
+ggplot2::update_geom_defaults("line", list(colour = "black"))
+
+ggplot(dtl_for_upset) +
+  geom_bar(mapping = aes(x = geos)) +
+  scale_x_upset(order_by = "degree", sets = geounits) +
+  # scale_y_log10(n.breaks = 6, labels = scales::label_number(1)) +
+  # scale_y_continuous(trans = scales::log_trans(), breaks = scales::pretty_breaks()) +
+  ptrr::theme_ptrr(multiplot = T) +
+  facet_wrap(~op_id, scales = "free_y")
+
+ggplot2::update_geom_defaults("line", list(colour = "darkblue"))
 ```
 
 
@@ -52,26 +99,97 @@ maxlevels %>%
 
 ### Ve kterých projektech je více územních úrovní?
 
-```{r multilevel}
+```{r multilevel-list}
 dtl %>% 
+  filter(!is.na(value) & typ == "id") %>% 
+  distinct(prj_id, level)
+```
+### Jaký podíl projektů má více než jednu úroveň lokalizace?
+
+```{r multilevel-shares}
+multilevel <- dtl %>% 
   filter(!is.na(value) & typ == "id") %>% 
   group_by(prj_id) %>% 
   mutate(n_urovni = n_distinct(level),
          multilevel = n_urovni > 1) %>% 
-  ungroup() %>% 
+  ungroup()
+  # filter(multilevel) %>%
+
+multilevel %>%   
   count(op_id, multilevel, wt = n_distinct(prj_id)) %>% 
+  spread(multilevel, n, fill = 0) %>% 
+  mutate(share = `TRUE`/(`FALSE` + `TRUE`))
+```
+
+
+```{r multilevel-shares}
+multilevel %>%   
+  count(multilevel, wt = n_distinct(prj_id)) %>% 
   spread(multilevel, n) %>% 
   mutate(share = `TRUE`/(`FALSE` + `TRUE`))
 ```
 
-## Množství územních jednotek pro jednotlivé projekty
 
-TO DO
+```{r multilevel-shares}
+```
+
+## Množství územních jednotek pro jednotlivé projekty {.tabset .tabset-pills .tabset-fade}
+
+```{r n-units-per-level-build}
+dtl_geo_counts <- dtl %>% 
+  filter(typ == "id" & !is.na(value)) %>% 
+  # filter(prj_id == "CZ.05.1.24/0.0/0.0/18_096/0008287") %>% 
+  select(op_id, prj_id, level, value) %>% 
+  group_by(op_id, prj_id, level) %>% 
+  nest(geo_ids = value) %>% 
+  mutate(n_geos = map_int(geo_ids, nrow))
+```
+
+### Histogram
+
+```{r n-units-per-level-hist, echo = F, warning=F, message=F}
+library(ggridges)
+
+dtl_geo_counts %>% 
+  drop_na(n_geos) %>% 
+  ungroup() %>% 
+  group_by(op_id) %>% 
+  ggplot(aes(n_geos, level)) +
+  geom_density_ridges(fill = "darkblue", colour = "white") +
+  facet_wrap(~op_id, scales = "free") +
+  theme_ptrr("both", multiplot = T)
+```
+
+### Body
+
+```{r n-units-per-level-point, echo = F, warning=F, message=F}
+dtl_geo_counts %>% 
+  drop_na(n_geos) %>% 
+  ungroup() %>% 
+  group_by(op_id) %>% 
+  ggplot(aes(n_geos, level)) +
+  geom_point(alpha = .05, position = position_jitter(width = .5, height = .5)) +
+  facet_wrap(~op_id, scales = "free_x") +
+  theme_ptrr("both", multiplot = T)
+```
+
+```{r}
+dtl_geo_counts %>% 
+  group_by(prj_id) %>% 
+  mutate(total_geo_ids = sum(n_geos)) %>% 
+  filter(total_geo_ids > 5) %>% 
+  select(-geo_ids) %>% 
+  spread(level, n_geos) %>% 
+  filter(kraj > obec | kraj > rozobec | kraj > okres | obec > zuj | kraj > zuj | okres > rozobec |
+           rozobec > obec | rozobec > zuj | okres > obec | okres > zuj)
+```
+
+
+## Validita územní hierarchie
+
+TODO
 
 ```{r}
 
 ```
 
-## Validita územní hierarchie
-
-TO DO
