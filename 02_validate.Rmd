@@ -91,23 +91,23 @@ dt %>%
 ```{r zuj-short}
 dt %>% 
   filter(str_length(g_zuj_id) < 11) %>% 
-  distinct(g_zuj_id) 
+  distinct(op_id, g_zuj_id) 
 ```
-Což jsou podle všeho hlavně městské části.
+Což jsou podle všeho městské části Prahy (je jich 57).
 
 Oprava kódů ZÚJ: ke kratším na začátek přilepíme kód kraje
 
 ```{r zuj-fix}
-dt_fixed_zuj <- dt %>% 
-  mutate(g_zuj_id_short = str_sub(g_zuj_id, -6, -1)) %>% 
-  left_join(csu_zuj %>% select(g_zuj_id_short = CHODNOTA2, CZNUTS)) %>% 
-  mutate(g_zuj_id_new = paste0(CZNUTS, g_zuj_id_short),
-         g_zuj_id_new = if_else(str_length(g_zuj_id) < 11,
-                                g_zuj_id_new, g_zuj_id),
+dt_zujfix <- dt %>% 
+  mutate(g_zuj_shortid = str_sub(g_zuj_id, -6, -1)) %>% 
+  left_join(csu_zuj %>% 
+              select(g_zuj_shortid = CHODNOTA2, CZNUTS)) %>% 
+  mutate(g_zuj_id_new = if_else(str_length(g_zuj_id) < 11,
+                                paste0(CZNUTS, g_zuj_shortid), g_zuj_id),
          g_zuj_id = g_zuj_id_new) %>% 
-  select(-g_zuj_id_new, -g_zuj_id_short)
+  select(-g_zuj_id_new)
 
-dt_fixed_zuj %>% 
+dt_zujfix %>% 
   mutate(ln = str_length(g_zuj_id)) %>% 
   count(ln)
 ```
@@ -115,7 +115,7 @@ dt_fixed_zuj %>%
 Kontrola znova:
 
 ```{r revalidate}
-dt_zujfix_validated <- dt_fixed_zuj %>% 
+dt_zujfix_validated <- dt_zujfix %>% 
   mutate(valid_kraj = g_kraj_id %in% csu_kraj$CZNUTS,
          valid_obec = g_obec_id %in% obce_n$kod_n,
          valid_orp = g_rozobec_id %in% csu_orp$CHODNOTA,
@@ -147,15 +147,18 @@ dt %>%
            filter(g_kraj_id == "PL225") %>% 
            pull(prj_id))
 ```
+
 Hmm, jeden projekt OP Z, který se odehrával jen v Polsku... Ale je to výzva na mezinárodní mobilitu, takže asi OK - prostě se jen vyřadí.
 
 ```{r fixed-write}
-write_parquet(dt_fixed_zuj, here::here("data-processed", "misto-fixed.parquet"))
+write_parquet(dt_zujfix, here::here("data-processed", "misto_fix-01-zuj.parquet"))
 ```
 
-```{r}
-dt_fixed_long <- make_long_geo(dt_fixed_zuj)
-write_parquet(dt_fixed_long, here::here("data-processed", "misto-fixed-long-geo.parquet"))
+```{r fixed-long-write}
+dt_fixed_long <- make_long_geo(dt_zujfix)
+write_parquet(dt_fixed_long, here::here("data-processed", "misto_fix-01-zuj_long-geo.parquet"))
 ```
 
 ## Validita jmen proti registrům
+
+TO DO
