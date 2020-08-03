@@ -14,8 +14,10 @@ source(here::here("shared.R"))
 ```
 
 ```{r data}
-dt <- read_parquet(here::here("data-processed", "misto_fix-01-zuj.parquet"))
-dtl <- read_parquet(here::here("data-processed", "misto_fix-01-zuj_long-geo.parquet"))
+dt <- read_parquet(here::here("data-processed", 
+                              "misto_fix-02-gnames.parquet"))
+dtl <- read_parquet(here::here("data-processed", 
+                               "misto_fix-02-gnames_long-geo.parquet"))
 ```
 
 
