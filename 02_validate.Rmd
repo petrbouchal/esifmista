@@ -151,7 +151,8 @@ write_parquet(dt_zujfix, here::here("data-processed", "misto_fix-01-zuj.parquet"
 
 ```{r fixed-long-write}
 dt_fixed_long <- make_long_geo(dt_zujfix)
-write_parquet(dt_fixed_long, here::here("data-processed", "misto_fix-01-zuj_long-geo.parquet"))
+write_parquet(dt_fixed_long, here::here("data-processed", 
+                                        "misto_fix-01-zuj_long-geo.parquet"))
 ```
 
 ## Validita jmen proti registrům
