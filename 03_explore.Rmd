@@ -106,7 +106,7 @@ dtl %>%
 ```
 ### Jaký podíl projektů má více než jednu úroveň lokalizace?
 
-```{r multilevel-shares}
+```{r multilevel-shares-op}
 multilevel <- dtl %>% 
   filter(!is.na(value) & typ == "id") %>% 
   group_by(prj_id) %>% 
@@ -127,10 +127,6 @@ multilevel %>%
   count(multilevel, wt = n_distinct(prj_id)) %>% 
   spread(multilevel, n) %>% 
   mutate(share = `TRUE`/(`FALSE` + `TRUE`))
-```
-
-
-```{r multilevel-shares}
 ```
 
 ## Množství územních jednotek pro jednotlivé projekty {.tabset .tabset-pills .tabset-fade}
