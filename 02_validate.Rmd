@@ -8,6 +8,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(arrow)
+library(pointblank)
 
 source(here::here("shared.R"))
 ```
@@ -157,4 +158,75 @@ write_parquet(dt_fixed_long, here::here("data-processed",
 
 ## Validita jmen proti registrům
 
-TO DO
+```{r geoid-validation-merge}
+dt_val_ids <- dt_zujfix %>% 
+  # select(prj_id, starts_with("g_")) %>% 
+  left_join(zuj_n %>% 
+              select(g_zuj_nazev_csu = TEXT2, 
+                     g_zuj_id = kod_n)) %>% 
+  left_join(obce_n %>% 
+              select(g_obec_nazev_csu = TEXT2, 
+                     g_obec_id = kod_n)) %>% 
+  left_join(csu_okres %>% 
+              select(g_okres_nazev_csu = TEXT, 
+                     g_okres_id = CHODNOTA)) %>% 
+  left_join(csu_orp %>% 
+              select(g_rozobec_nazev_csu = TEXT, 
+                     g_rozobec_id = CHODNOTA)) %>% 
+  left_join(csu_kraj %>% 
+              select(g_kraj_nazev_csu = TEXT, 
+                     g_kraj_id = CZNUTS))
+```
+
+```{r geoid-validation-validate, validate = T}
+dt_val_ids_agent <- dt_val_ids %>% 
+  mutate(across(starts_with("g_"), tolower)) %>% 
+  create_agent() %>% 
+  col_vals_equal(g_zuj_nazev, 
+                 vars(g_zuj_nazev_csu), na_pass = T) %>% 
+  col_vals_equal(g_obec_nazev, 
+                 vars(g_obec_nazev_csu), na_pass = T) %>% 
+  col_vals_equal(g_rozobec_nazev, 
+                 vars(g_rozobec_nazev_csu), na_pass = T) %>% 
+  col_vals_equal(g_okres_nazev, 
+                 vars(g_okres_nazev_csu), na_pass = T) %>% 
+  col_vals_equal(g_kraj_nazev, 
+                 vars(g_kraj_nazev_csu), na_pass = T)
+```
+
+```{r geoid-validation-interrogate, validate = T}
+dt_val_ids_agent %>% interrogate()
+```
+
+```{r geoid-validation-inspect-1}
+dt_val_ids_agent %>% 
+  interrogate() %>% 
+  get_data_extracts(1) %>% 
+  select(g_zuj_id, g_zuj_nazev, g_zuj_nazev_csu)
+```
+```{r geoid-validation-inspect-2}
+dt_val_ids_agent %>% 
+  interrogate() %>% 
+  get_data_extracts(2) %>% 
+  select(g_obec_id, g_obec_nazev, g_obec_nazev_csu) %>% 
+  distinct()
+```
+```{r geoid-validation-rename-cols}
+dt_val_ids_csunames <- dt_val_ids %>% 
+  select(-g_zuj_nazev, -g_obec_nazev) %>% 
+  rename(g_zuj_nazev = g_zuj_nazev_csu,
+         g_obec_nazev = g_obec_nazev_csu) %>% 
+  select_at(vars(-ends_with("_csu")))
+
+dt_val_ids_csunames_long <- make_long_geo(dt_val_ids_csunames)
+```
+
+```{r geoid-validation-write}
+write_parquet(dt_val_ids_csunames, 
+              here::here("data-processed", 
+                         "misto_fix-02-gnames.parquet"))
+write_parquet(dt_val_ids_csunames_long, 
+              here::here("data-processed",
+                         "misto_fix-02-gnames_long-geo.parquet"))
+```
+
