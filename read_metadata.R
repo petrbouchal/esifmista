@@ -1,0 +1,6 @@
+cz <- read_parquet(here::here("data-processed", "cz_geo_meta.parquet"))
+csu_orp <- read_parquet(here::here("data-processed", "orp-csu.parquet"))
+csu_kraj <- read_parquet(here::here("data-processed", "kraj-csu.parquet"))
+csu_okres <- read_parquet(here::here("data-processed", "okres-csu.parquet"))
+csu_zuj <- read_parquet(here::here("data-processed", "zuj-csu.parquet"))
+csu_obec <- read_parquet(here::here("data-processed", "obec-csu.parquet"))
