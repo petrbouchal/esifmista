@@ -20,6 +20,9 @@ dtl <- read_parquet(here::here("data-processed",
                                "misto_fix-02-gnames_long-geo.parquet"))
 ```
 
+```{r metadata-csu}
+source("read_metadata.R")
+```
 
 ## Na jakých územních úrovních jsou projekty lokalizovány?
 
