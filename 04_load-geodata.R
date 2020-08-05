@@ -5,12 +5,12 @@ library(CzechData)
 library(tidyverse)
 
 
-czk <- czso_get_catalogue()
+# czk <- czso_get_catalogue()
 
-sf::st_layers("/Users/petr/Documents/Research/Geodata/AdministrativniCleneni_v13.gdb")
+# sf::st_layers("/Users/petr/Documents/Research/Geodata/AdministrativniCleneni_v13.gdb")
 
-zsjp <- st_read("/Users/petr/Documents/Research/Geodata/AdministrativniCleneni_v13.gdb",
-                layer = "ZakladniSidelniJednotkyPolygony")
+# zsjp <- st_read("/Users/petr/Documents/Research/Geodata/AdministrativniCleneni_v13.gdb",
+#                 layer = "ZakladniSidelniJednotkyPolygony")
 
 obce_p200 <- CzechData::load_Data200("AdministrativniUzemiObce")
 obce_pr <- CzechData::load_RUIAN_state("obce")
