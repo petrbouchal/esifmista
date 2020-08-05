@@ -14,8 +14,12 @@ library(arrow)
 #                 layer = "ZakladniSidelniJednotkyPolygony")
 
 obce_p200 <- CzechData::load_Data200("AdministrativniUzemiObce")
+write_parquet(here::here("data-input", "obce_data200.parquet"))
 obce_pr <- CzechData::load_RUIAN_state("obce")
-obce_pr <- CzechData::load_RUIAN_settlement()
+write_parquet(here::here("data-input", "obce_ruian.parquet"))
+
+setdiff(obce_p200$NAMN, obce_pr$nazev)
+setdiff(obce_pr$nazev, obce_p200$NAMN)
 
 plot(obce_p200, max.plot = 1)
 
@@ -48,3 +52,5 @@ zuj <- obce_pr %>%
   mutate(typuj = "obec") %>%
   bind_rows(obce_momc %>%
               mutate(typuj = "momc"))
+
+write_parquet(zuj, here::here("data-processed", "geo_zuj-all.parquet"))
