@@ -3,6 +3,7 @@ library(czso)
 library(CzechData)
 
 library(tidyverse)
+library(arrow)
 
 
 # czk <- czso_get_catalogue()
