@@ -175,7 +175,7 @@ dtl_geo_counts %>%
 ```
 
 ```{r}
-dtl_geo_counts %>% 
+weird_projs <- dtl_geo_counts %>% 
   group_by(prj_id) %>% 
   mutate(total_geo_ids = sum(n_geos)) %>% 
   filter(total_geo_ids > 5) %>% 
@@ -183,6 +183,23 @@ dtl_geo_counts %>%
   spread(level, n_geos) %>% 
   filter(kraj > obec | kraj > rozobec | kraj > okres | obec > zuj | kraj > zuj | okres > rozobec |
            rozobec > obec | rozobec > zuj | okres > obec | okres > zuj)
+
+weird_projs
+```
+```{r}
+weird_projs %>% 
+  ungroup() %>% 
+  count(op_id, sort = T)
+```
+```{r}
+weird_projs %>% 
+  filter(op_id == "OP_VVV")
+```
+
+
+```{r}
+weird_projs_full <- dt %>% filter(prj_id %in% weird_projs$prj_id)
+weird_projs_full
 ```
 
 
