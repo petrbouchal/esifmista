@@ -27,11 +27,10 @@ table(obce_pr$sm_typ_kod)
 CzechData::obce
 
 cisobce <- czso::czso_get_codelist(43)
-cizsuj <- czso::czso_get_codelist(51)
+ciszuj <- czso::czso_get_codelist(51)
 
 table(cisobce$SM_ROZSAH)
 table(cisobce$SM_TYP)
-
 
 obce_clenene <- obce_pr %>%
   filter(!is.na(sm_typ_kod)) %>%
