@@ -7,6 +7,12 @@
 
 library(tidyverse)
 library(arrow)
+library(progress)
+
+library(tictoc)
+library(beepr)
+
+plan(multiprocess)
 
 
 # load sample data --------------------------------------------------------
@@ -18,6 +24,12 @@ ids <- ids_and_names %>%
   mutate(zuj =  paste0(kraj, zuj),
          obec = paste0(kraj, obec))
 
+pb <- progress_bar$new(
+  format = "  checking spatial hierarchy [:bar] :percent eta: :eta",
+  complete = "◼",
+  incomplete = " ",
+  current = "▸",
+  total = 1000, clear = FALSE, width= 60)
 
 #' Check geographical hierarchy
 #'
@@ -102,6 +114,8 @@ thousandproj_rand <- dfs[dfs$prj_id %in% sample(projids, size = 1000),]
 #' @return a tibble derived from `df` with row for all unit-parent combinations
 #' and a column indicating whether the combination exists in the real hierarchy.
 check_all_parents <- function(df, id_table) {
+
+  pb$tick()
 
   # print(unique_values_nokraj)
 
@@ -194,12 +208,16 @@ twoproj_rand %>%
 
 # test many-project ------------------------------------------------------
 
+beep()
+tic()
 thousandproj_rand_checked <- thousandproj_rand %>%
   ungroup() %>%
   group_by(prj_id) %>%
   group_modify(~check_all_parents(.x, ids)) %>%
   group_by(prj_id, value, level) %>%
   nest(geocheck = c(parent, parent_level, levels_ok))
+toc()
+beep()
 
 thousandproj_with_check <- thousandproj_rand %>%
   left_join(thousandproj_rand_checked)
