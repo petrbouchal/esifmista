@@ -1,5 +1,15 @@
+# TO DO
+# [ ] clean up column names in output, preferably internally too
+# [ ] handle kraj in input - should be TRUE or NA on output
+# [x] handle reliance on unstated inputs - df and ids
+# [ ] apply to multiple projects
+#
+
 library(tidyverse)
 library(arrow)
+
+
+# load sample data --------------------------------------------------------
 
 ids_and_names <- read_parquet(here::here("data-processed", "czso-ids-all.parquet"))
 ids <- ids_and_names %>%
@@ -14,19 +24,19 @@ ids <- ids_and_names %>%
 #' Check whether a given ID of a given level is within a parent of another level.
 #'
 #' Not vectorised, so must be applied using `pmap_lgl()`.
-#' Relies on an object `ids` defined above, which contains a complete table of
-#' geographical IDs, defining the hierarchy within which checking should be done.
-#' The table is in wide format, i.e. each level is defined by a column.
-#' It has a row for each lowest-level unit (ZUJ) and columns defining the IDs of
-#' all its parents.
 #'
 #' @param id the ID of the unit to be checked (string, full NUTS form).
 #' @param parent the ID of the (supposed) parent (string, full NUTS form).
 #' @param level level of the checked ID.
 #' @param parent_level level of the (supposed) parent ID.
+#' @param id_table table containing complete spatial hierarchy - a complete table of
+#' geographical IDs, defining the hierarchy within which checking should be done.
+#' The table is in wide format, i.e. each level is defined by a column.
+#' It has a row for each lowest-level unit (ZUJ) and columns defining the IDs of
+#' all its parents
 #'
 #' @return boolean of length one
-is_parent <- function(id, parent, level, parent_level) {
+is_parent <- function(id, parent, level, parent_level, id_table) {
 
   stopifnot(level != parent_level)
   stopifnot(level != "kraj")
@@ -34,7 +44,7 @@ is_parent <- function(id, parent, level, parent_level) {
   filter_var <- sym(as.character(level))
   pull_var <- sym(as.character(parent_level))
 
-  parents <- ids %>%
+  parents <- id_table %>%
     filter(!!filter_var == id) %>%
     pull(!!pull_var) %>%
     unique()
@@ -45,12 +55,12 @@ is_parent <- function(id, parent, level, parent_level) {
   return(rslt)
 }
 
-is_parent("CZ010554782", "CZ010", "obec", "kraj") # Praha
-is_parent("CZ010554782", "CZ010", "kraj", "kraj") # should fail
-is_parent("CZ010582786", "CZ010", "obec", "kraj") # Brno
-is_parent("CZ010582786", "CZ010", "obec", "obec") # should fail
+is_parent("CZ010554782", "CZ010", "obec", "kraj", ids) # Praha v Praze
+is_parent("CZ010554782", "CZ010", "kraj", "kraj", ids) # should fail
+is_parent("CZ010582786", "CZ010", "obec", "kraj", ids) # Brno v Praze
+is_parent("CZ010582786", "CZ010", "obec", "obec", ids) # should fail
 
-is_parent("CZ0513", "CZ051", "okres", "kraj") # Brno
+is_parent("CZ0513", "CZ051", "okres", "kraj", ids) # Brno
 
 # load sample data
 dfs <- read_parquet("data-processed/sample_multilevel.parquet") %>%
@@ -84,7 +94,7 @@ max(as.numeric(oneproj_rand$level))
 #'
 #' @return a tibble derived from `df` with row for all unit-parent combinations
 #' and a column indicating whether the combination exists in the real hierarchy.
-check_all_parents <- function(df) {
+check_all_parents <- function(df, id_table) {
 
   # create numeric level for unambiguous comparison
   df <- df %>% mutate(level_num = as.numeric(level))
@@ -108,11 +118,12 @@ check_all_parents <- function(df) {
   #'
   #' @param checked_value DESCRIPTION.
   #' @param checked_val_level DESCRIPTION.
+  #' @param data data, same shape as `df` arg in `check_all_parents()`
   #'
   #' @return RETURN_DESCRIPTION
   #' @examples
   #' # ADD_EXAMPLES_HERE
-  get_relevant_parents <- function(val, lev) {
+  get_relevant_parents <- function(val, lev, data) {
     lev_num <- as.numeric(lev)
 
     # recall `df` contains cols
@@ -120,7 +131,7 @@ check_all_parents <- function(df) {
     # - level
     # - level_num
 
-    df %>%
+    data %>%
       # only levels higher than that of the checked value
       filter(level_num > lev_num) %>%
       # distinct
@@ -134,9 +145,9 @@ check_all_parents <- function(df) {
 
   relevant_parents <- map2_dfr(unique_values_nokraj$value,
                                unique_values_nokraj$level,
-                               get_relevant_parents)
-  print("Relevant parents")
-  print(relevant_parents)
+                               get_relevant_parents, df)
+  # print("Relevant parents: ")
+  # print(relevant_parents)
 
   # print(checkable_superiors)
 
@@ -145,14 +156,16 @@ check_all_parents <- function(df) {
                                      value,
                                      this_val_level,
                                      level),
-                                is_parent)) %>%
+                                is_parent, id_table)) %>%
     select(-ends_with("_num"))
 
 }
 
+ids2 <- ids
 
-check_all_parents(oneproj_true)
-check_all_parents(oneproj_false)
-check_all_parents(oneproj_rand)
 
-is_parent("CZ053574449", "CZ053574449", "zuj", "obec")
+# test --------------------------------------------------------------------
+
+check_all_parents(oneproj_true, ids2)
+check_all_parents(oneproj_false, ids2)
+check_all_parents(oneproj_rand, ids2)
