@@ -1,8 +1,8 @@
 # TO DO
-# [ ] clean up column names in output, preferably internally too
-# [ ] handle kraj in input - should be TRUE or NA on output
+# [x] clean up column names in output, preferably internally too
+# [-] handle kraj in input - should be TRUE or NA on output
 # [x] handle reliance on unstated inputs - df and ids
-# [ ] apply to multiple projects
+# [x] apply to multiple projects
 #
 
 library(tidyverse)
@@ -39,18 +39,22 @@ ids <- ids_and_names %>%
 is_parent <- function(id, parent, level, parent_level, id_table) {
 
   stopifnot(level != parent_level)
-  stopifnot(level != "kraj")
+  # stopifnot(level != "kraj")
 
-  filter_var <- sym(as.character(level))
-  pull_var <- sym(as.character(parent_level))
+  if (level != "kraj") {
+    rslt <- TRUE
+  }  else {
+    filter_var <- sym(as.character(level))
+    pull_var <- sym(as.character(parent_level))
 
-  parents <- id_table %>%
-    filter(!!filter_var == id) %>%
-    pull(!!pull_var) %>%
-    unique()
-  # print(rslt)
-  # print(id2)
-  rslt <- parent %in% parents
+    parents <- id_table %>%
+      filter(!!filter_var == id) %>%
+      pull(!!pull_var) %>%
+      unique()
+    # print(rslt)
+    # print(id2)
+    rslt <- parent %in% parents
+  }
 
   return(rslt)
 }
@@ -85,6 +89,9 @@ projids <- unique(dfs$prj_id)
 oneproj_rand <- dfs[dfs$prj_id == sample(projids, size = 1),]
 max(as.numeric(oneproj_rand$level))
 
+twoproj_rand <- dfs[dfs$prj_id %in% sample(projids, size = 2),]
+thousandproj_rand <- dfs[dfs$prj_id %in% sample(projids, size = 1000),]
+
 
 #' Check each geo ID against any parent geo IDs in a project
 #'
@@ -96,20 +103,9 @@ max(as.numeric(oneproj_rand$level))
 #' and a column indicating whether the combination exists in the real hierarchy.
 check_all_parents <- function(df, id_table) {
 
-  # create numeric level for unambiguous comparison
-  df <- df %>% mutate(level_num = as.numeric(level))
-
-  # print(df)
-
-  # select distinct values, exclude kraj (top level with no need to check)
-
-  unique_values_nokraj <- df %>%
-    distinct(value, level, level_num) %>%
-    filter(level != "kraj")
-
   # print(unique_values_nokraj)
 
-  #' FUNCTION_TITLE
+  #' Find checkable parent IDs
   #'
   #' Find all IDs against which a given ID can be checked
   #'
@@ -137,11 +133,24 @@ check_all_parents <- function(df, id_table) {
       # distinct
       distinct(value, level, level_num) %>%
       # rename cols
-      mutate(this_value = val,
-             this_val_level = lev,
-             this_val_level_num = lev_num)
+      rename(parent = value,
+             parent_level = level,
+             parent_level_num = level_num) %>%
+      mutate(value = val,
+             level = lev,
+             level_num = lev_num)
   }
 
+  # create numeric level for unambiguous comparison
+  df <- df %>% mutate(level_num = as.numeric(level))
+
+  # print(df)
+
+  # select distinct values, exclude kraj (top level with no need to check)
+
+  unique_values_nokraj <- df %>%
+    distinct(value, level, level_num) %>%
+    filter(level != "kraj")
 
   relevant_parents <- map2_dfr(unique_values_nokraj$value,
                                unique_values_nokraj$level,
@@ -152,10 +161,10 @@ check_all_parents <- function(df, id_table) {
   # print(checkable_superiors)
 
   relevant_parents %>%
-    mutate(levels_ok = pmap_lgl(list(this_value,
-                                     value,
-                                     this_val_level,
-                                     level),
+    mutate(levels_ok = pmap_lgl(list(value,
+                                     parent,
+                                     level,
+                                     parent_level),
                                 is_parent, id_table)) %>%
     select(-ends_with("_num"))
 
@@ -169,3 +178,40 @@ ids2 <- ids
 check_all_parents(oneproj_true, ids2)
 check_all_parents(oneproj_false, ids2)
 check_all_parents(oneproj_rand, ids2)
+
+
+# test multi-project ------------------------------------------------------
+
+twoproj_rand_checked <- twoproj_rand %>%
+  ungroup() %>%
+  group_by(prj_id) %>%
+  group_modify(~check_all_parents(.x, ids)) %>%
+  group_by(prj_id, value, level) %>%
+  nest(geocheck = c(parent, parent_level, levels_ok))
+
+twoproj_rand %>%
+  left_join(twoproj_rand_checked)
+
+# test many-project ------------------------------------------------------
+
+thousandproj_rand_checked <- thousandproj_rand %>%
+  ungroup() %>%
+  group_by(prj_id) %>%
+  group_modify(~check_all_parents(.x, ids)) %>%
+  group_by(prj_id, value, level) %>%
+  nest(geocheck = c(parent, parent_level, levels_ok))
+
+thousandproj_with_check <- thousandproj_rand %>%
+  left_join(thousandproj_rand_checked)
+
+thousandproj_with_check %>%
+  ungroup() %>%
+  mutate(all_ok = all(geocheck$levels_ok)) %>%
+  count(all_ok)
+
+thousandproj_with_check %>%
+  unnest(c(geocheck)) %>%
+  group_by(prj_id) %>%
+  summarise(all_ok = all(levels_ok)) %>%
+  count(all_ok)
+
