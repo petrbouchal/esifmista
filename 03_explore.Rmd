@@ -109,9 +109,10 @@ dtl %>%
   filter(!is.na(value) & typ == "id") %>% 
   distinct(prj_id, level)
 ```
+
 ### Jaký podíl projektů má více než jednu úroveň lokalizace?
 
-```{r multilevel-shares-op}
+```{r multilevel-data}
 multilevel <- dtl %>% 
   filter(!is.na(value) & typ == "id") %>% 
   group_by(prj_id) %>% 
@@ -119,19 +120,21 @@ multilevel <- dtl %>%
          multilevel = n_urovni > 1) %>% 
   ungroup()
   # filter(multilevel) %>%
-
-multilevel %>%   
-  count(op_id, multilevel, wt = n_distinct(prj_id)) %>% 
-  spread(multilevel, n, fill = 0) %>% 
-  mutate(share = `TRUE`/(`FALSE` + `TRUE`))
 ```
 
 
 ```{r multilevel-shares}
-multilevel %>%   
-  count(multilevel, wt = n_distinct(prj_id)) %>% 
-  spread(multilevel, n) %>% 
-  mutate(share = `TRUE`/(`FALSE` + `TRUE`))
+multilevel %>% 
+  distinct(op_id, prj_id, multilevel) %>% 
+  summarise(podil = mean(multilevel))
+```
+
+
+```{r multilevel-shares-op}
+multilevel %>% 
+  distinct(op_id, prj_id, multilevel) %>% 
+  group_by(op_id) %>% 
+  summarise(podil = mean(multilevel), .groups = "drop")
 ```
 
 ## Množství územních jednotek pro jednotlivé projekty {.tabset .tabset-pills .tabset-fade}
@@ -207,7 +210,25 @@ weird_projs_full
 
 TODO
 
-```{r}
-
+```{r define-scope}
+multilevel_ids <- unique(multilevel[multilevel$multilevel,]$prj_id)
 ```
+
+```{r data-for-geocheck}
+data_for_geocheck <- dtl %>% 
+  filter(prj_id %in% multilevel_ids,
+         typ == "id") %>%
+  drop_na(value) %>% 
+  select(prj_id, value, level)
+```
+
+```{r}
+head(data_for_geocheck)
+```
+```{r}
+n_multilevel <- n_distinct(data_for_geocheck$prj_id)
+n_multilevel
+```
+
+
 
