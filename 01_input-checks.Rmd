@@ -230,9 +230,11 @@ dt_long_sidla %>%
   summarise(distinct_ids = n_distinct(id),
             distinct_names = n_distinct(nazev)) %>% 
   create_agent() %>% 
-  col_vals_equal(distinct_ids, 1, brief = "Each prj only has prijemce in one place ID") %>% 
-  col_vals_equal(distinct_names, 1, brief = "Each prj only has prijemce in one place name") %>% 
-  interrogate()
+  col_vals_equal(distinct_ids, 1, 
+                 brief = "Each prj only has prijemce in one place ID") %>% 
+  col_vals_equal(distinct_names, 1, 
+                 brief = "Each prj only has prijemce in one place name") %>% 
+  interrogate(extract_failed = F)
 ```
 
 Do recipients move seat? Change names?
