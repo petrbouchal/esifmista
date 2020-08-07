@@ -9,6 +9,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(arrow)
 library(ptrr)
+library(progress)
+library(tictoc)
+library(beepr)
 
 source(here::here("shared.R"))
 ```
@@ -206,9 +209,7 @@ weird_projs_full
 ```
 
 
-## Validita územní hierarchie
-
-TODO
+## Validita územní hierarchie {.tabset .tabset-pills}
 
 ```{r define-scope}
 multilevel_ids <- unique(multilevel[multilevel$multilevel,]$prj_id)
@@ -219,16 +220,132 @@ data_for_geocheck <- dtl %>%
   filter(prj_id %in% multilevel_ids,
          typ == "id") %>%
   drop_na(value) %>% 
-  select(prj_id, value, level)
+  mutate(level_num = as.numeric(level),
+         level = fct_recode(level, orp = "rozobec")) %>%
+  select(prj_id, value, level, level_num)
 ```
 
-```{r}
+```{r data-for-geocheck-inspect}
 head(data_for_geocheck)
 ```
-```{r}
+```{r geocheck-counts}
 n_multilevel <- n_distinct(data_for_geocheck$prj_id)
 n_multilevel
 ```
 
+```{r build-geo-hierarchy}
+ids_and_names <- read_parquet(here::here("data-processed", 
+                                         "czso-ids-all.parquet"))
+ids <- ids_and_names %>%
+  select(ends_with("_id")) %>%
+  rename_with(.fn = str_remove, pattern = "_id") %>%
+  mutate(zuj =  paste0(kraj, zuj),
+         obec = paste0(kraj, obec))
+```
 
+```{r}
+source("check-geo-hierarchy-fns.R")
+```
+
+```{r check-geo-hierarchy}
+
+data_geocheck_file <- here::here("data-processed", "data_geocheck.parquet")
+
+if (file.exists(data_geocheck_file)) {
+  data_geocheck <- read_parquet(data_geocheck_file)
+}  else {
+  tic()
+  pb <- make_pb(n_multilevel)
+  data_geocheck <- data_for_geocheck %>%
+    ungroup() %>%
+    group_by(prj_id) %>%
+    nest(geodata = c(level, value, level_num)) %>%
+    mutate(geocheck = map(geodata, check_all_parents, ids)) %>%
+    unnest(c(geocheck)) %>% 
+    select(-geodata)
+  toc()
+  beep()
+  
+  write_parquet(data_geocheck, data_geocheck_file)
+}
+```
+
+```{r get-proj-ops}
+progs <- distinct(dt, prj_id, op_id)
+```
+
+
+```{r merge-back}
+data_with_geocheck <- data_for_geocheck %>%
+  left_join(data_geocheck)
+```
+
+```{r geocheck-inspect-result}
+data_with_geocheck <- data_with_geocheck %>% 
+  left_join(progs) 
+
+prjs_geocheck <- data_with_geocheck %>% 
+  group_by(op_id, prj_id) %>%
+  summarise(all_ok = all(levels_ok, na.rm = T), .groups = "drop")
+
+prjs_geocheck %>%   
+  summarise(mean = 1-mean(all_ok), count = n())
+
+prjs_geocheck %>%   
+  group_by(op_id) %>% 
+  summarise(mean = 1-mean(all_ok), count = n())
+```
+
+```{r extract-categories}
+prjs_fishy_hierarchies <- prjs_geocheck %>% 
+  filter(!all_ok) %>% 
+  distinct(prj_id, all_ok)
+
+prjs_nogeo <- dtl %>% 
+  group_by(prj_id) %>% 
+  summarise(no_geo = all(is.na(value)))
+
+table(prjs_nogeo$no_geo)
+```
+
+```{r build-geostatus-dataset}
+prjs_geostatus <- dt %>%
+  distinct(prj_id, op_id) %>% 
+  left_join(prjs_nogeo) %>% 
+  left_join(prjs_geocheck) %>% 
+  mutate(multilevel = prj_id %in% multilevel_ids,
+         geostatus = case_when(no_geo ~ "bez místa",
+                               !multilevel ~ "jedno místo",
+                               all_ok ~ "více míst, hierarchicky",
+                               !all_ok ~ "více míst, nehierarchicky") %>% 
+           as.factor() %>% fct_rev() %>% fct_relevel("bez místa"))
+
+gst_bar <- prjs_geostatus %>% 
+  ggplot() +
+  scale_fill_manual(values = rev(c("grey", "darkgreen", "orange", "red"))) +
+  guides(fill = guide_legend(reverse = T)) +
+  theme_ptrr("x", legend.position = "bottom", legend.title = element_blank())
+```
+
+### Procentuálně
+
+```{r geostatus-plot-abse}
+gst_bar +  
+  geom_bar(aes(y = op_id, fill = geostatus), position = "fill")
+```
+
+### Absolutně
+
+```{r geostatus-plot-rel}
+gst_bar +  
+  geom_bar(aes(y = op_id, fill = geostatus), position = "identity")
+```
+
+### Tabulka
+
+```{r geostatus-table}
+prjs_geostatus %>% 
+  count(op_id, geostatus) %>% 
+  spread(geostatus, n, fill = 0)
+``` 
 
