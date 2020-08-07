@@ -219,17 +219,84 @@ thousandproj_rand_checked <- thousandproj_rand %>%
 toc()
 beep()
 
-thousandproj_with_check <- thousandproj_rand %>%
-  left_join(thousandproj_rand_checked)
 
-thousandproj_with_check %>%
+# Test many project with nest-map logic -----------------------------------
+
+pb <- make_pb()
+
+twoproj_rand_checked <- twoproj_rand %>%
   ungroup() %>%
-  mutate(all_ok = all(geocheck$levels_ok)) %>%
-  count(all_ok)
+  group_by(prj_id) %>%
+  nest(geodata = c(level, value, level_num)) %>%
+  mutate(geocheck = map(geodata, check_all_parents, ids)) %>%
+  unnest(c(geocheck))
+
+message("1k, nest-map")
+
+pb <- make_pb()
+
+tic()
+thousandproj_rand_checked <- thousandproj_rand %>%
+  ungroup() %>%
+  group_by(prj_id) %>%
+  nest(geodata = c(level, value, level_num)) %>%
+  mutate(geocheck = map(geodata, check_all_parents, ids)) %>%
+  unnest(c(geocheck))
+toc()
+beep()
+
+pb <- make_pb(9484)
+
+tic()
+dfs_checked <- dfs %>%
+  ungroup() %>%
+  group_by(prj_id) %>%
+  nest(geodata = c(level, value, level_num)) %>%
+  mutate(geocheck = map(geodata, check_all_parents, ids)) %>%
+  unnest(c(geocheck))
+toc()
+beep()
+
+# Test many project with nest-map logic and multicore ---------------------
+
+# message("1k, nest-map, multicore")
+#
+# plan(multiprocess)
+#
+# pb <- make_pb()
+#
+# tic()
+# thousandproj_rand_checked <- thousandproj_rand %>%
+#   ungroup() %>%
+#   group_by(prj_id) %>%
+#   nest(geodata = c(level, value, level_num)) %>%
+#   mutate(geocheck = future_map(geodata, check_all_parents, ids)) %>%
+#   unnest(c(geocheck))
+# toc()
+# beep()
+
+
+# Compile data and check result -------------------------------------------
+
+thousandproj_with_check <- thousandproj_rand %>%
+  left_join(thousandproj_rand_checked %>% select(-geodata))
 
 thousandproj_with_check %>%
-  unnest(c(geocheck)) %>%
   group_by(prj_id) %>%
-  summarise(all_ok = all(levels_ok)) %>%
+  summarise(all_ok = all(levels_ok, na.rm = T)) %>%
   count(all_ok)
+
+dfs_with_check <- dfs %>%
+  left_join(dfs_checked %>% select(-geodata))
+
+dt <- read_parquet(here::here("data-processed",
+                              "misto_fix-02-gnames.parquet"))
+
+progs <- distinct(dt, prj_id, op_id)
+
+dfs_with_check %>%
+  left_join(progs) %>%
+  group_by(op_id, prj_id) %>%
+  summarise(all_ok = all(levels_ok, na.rm = T)) %>%
+  summarise(mean = 1-mean(all_ok), count = n())
 
