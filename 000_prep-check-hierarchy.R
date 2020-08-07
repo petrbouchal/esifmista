@@ -8,7 +8,7 @@
 library(tidyverse)
 library(arrow)
 library(progress)
-library(furrr)
+# library(furrr)
 
 library(tictoc)
 library(beepr)
@@ -245,7 +245,7 @@ thousandproj_rand_checked <- thousandproj_rand %>%
 toc()
 beep()
 
-pb <- make_pb(9484)
+pb <- make_pb(n_distinct(dfs$prj_id))
 
 tic()
 dfs_checked <- dfs %>%
