@@ -33,11 +33,11 @@ as <- action_levels(stop_at = 1)
 
 ### Máme všude ID projektu?
 
-```{r no-id}
+```{r no-id, validate = F}
 dt %>% 
   create_agent("project IDs") %>% 
   col_vals_not_null(c(op_id, prj_id)) %>% 
-  interrogate()
+  interrogate(extract_failed = F)
 ```
 
 ### Dávají čísla projektů smysl?
@@ -52,7 +52,7 @@ dt %>%
   col_vals_regex(prj_id, ".{12,15}", actions = al, brief = "Proj num len") %>% 
   col_vals_not_null(c(op_id, prj_id)) %>% 
   col_vals_regex(g_zuj_id, ".{11}", actions = al, na_pass = T) %>% 
-  interrogate()
+  interrogate(extract_failed = F)
 ```
 
 
@@ -103,7 +103,7 @@ dtonpl_agent <- dt_noplace %>%
   col_vals_equal(all_na, FALSE) 
 
 dtonpl_agent %>% 
-  interrogate(extract_failed = T)
+  interrogate(extract_failed = F)
 ```
 
 
@@ -120,7 +120,7 @@ dt_noplace %>%
   count(op_id)
 ```
 
-```{r noplace-op-zadatel}
+```{r noplace-op-zadatel, eval = F}
 dt_noplace %>% 
   count(op_id, p_nazev, p_sidlo_nazev)
 ```
@@ -180,7 +180,8 @@ dt %>%
             sidlo_name_unique = n_distinct(p_sidlo_nazev)) %>% 
   create_agent() %>% 
   col_vals_equal(sidlo_id_unique, 1) %>% 
-  col_vals_equal(sidlo_name_unique, 1)
+  col_vals_equal(sidlo_name_unique, 1) %>% 
+  interrogate(extract_failed = F)
 ```
 
 
@@ -222,7 +223,7 @@ dt_long_sidla <- dt %>%
   select(op_id, prj_id, typ, value)
 ```
 
-```{r prij-sidlo-mismatch-list, validate = T}
+```{r prij-sidlo-mismatch-list, validate = F}
 dt_long_sidla %>% 
   pivot_wider(id_cols = c(prj_id, prj_radek),
               names_from = typ, values_from = value) %>% 
@@ -239,7 +240,7 @@ dt_long_sidla %>%
 
 Do recipients move seat? Change names?
 
-```{r prij-sidlo-change, validate = T}
+```{r prij-sidlo-change, validate = F}
 dt %>% 
   group_by(p_ico) %>% 
   summarise(distinct_seats = n_distinct(p_sidlo_id),
@@ -247,6 +248,6 @@ dt %>%
   create_agent() %>% 
   col_vals_equal(distinct_seats, 1, brief = "Each recipient only has one seat") %>% 
   col_vals_equal(distinct_names, 1, brief = "Each recipient only has one name") %>% 
-  interrogate()
+  interrogate(extract_failed = F)
 ```
 
