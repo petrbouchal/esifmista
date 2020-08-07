@@ -8,12 +8,10 @@
 library(tidyverse)
 library(arrow)
 library(progress)
+library(furrr)
 
 library(tictoc)
 library(beepr)
-
-plan(multiprocess)
-
 
 # load sample data --------------------------------------------------------
 
@@ -24,12 +22,18 @@ ids <- ids_and_names %>%
   mutate(zuj =  paste0(kraj, zuj),
          obec = paste0(kraj, obec))
 
-pb <- progress_bar$new(
-  format = "  checking spatial hierarchy [:bar] :percent eta: :eta",
-  complete = "◼",
-  incomplete = " ",
-  current = "▸",
-  total = 1000, clear = FALSE, width= 60)
+make_pb <- function(n = 1000) {
+  progress_bar$new(
+    format = "  checking spatial hierarchy [:bar] :percent ETA: :eta",
+    complete = "◼",
+    incomplete = " ",
+    current = "▸",
+    total = n, clear = FALSE, width= 60)
+}
+
+pb <- make_pb()
+
+
 
 #' Check geographical hierarchy
 #'
@@ -53,28 +57,24 @@ is_parent <- function(id, parent, level, parent_level, id_table) {
   stopifnot(level != parent_level)
   # stopifnot(level != "kraj")
 
-  if (level != "kraj") {
-    rslt <- TRUE
-  }  else {
-    filter_var <- sym(as.character(level))
-    pull_var <- sym(as.character(parent_level))
+  filter_var <- sym(as.character(level))
+  pull_var <- sym(as.character(parent_level))
 
-    parents <- id_table %>%
-      filter(!!filter_var == id) %>%
-      pull(!!pull_var) %>%
-      unique()
-    # print(rslt)
-    # print(id2)
-    rslt <- parent %in% parents
-  }
+  parents <- id_table %>%
+    filter(!!filter_var == id) %>%
+    pull(!!pull_var) %>%
+    unique()
+  # print(rslt)
+  # print(id2)
+  rslt <- parent %in% parents
 
   return(rslt)
 }
 
 is_parent("CZ010554782", "CZ010", "obec", "kraj", ids) # Praha v Praze
-is_parent("CZ010554782", "CZ010", "kraj", "kraj", ids) # should fail
+# is_parent("CZ010554782", "CZ010", "kraj", "kraj", ids) # should fail
 is_parent("CZ010582786", "CZ010", "obec", "kraj", ids) # Brno v Praze
-is_parent("CZ010582786", "CZ010", "obec", "obec", ids) # should fail
+# is_parent("CZ010582786", "CZ010", "obec", "obec", ids) # should fail
 
 is_parent("CZ0513", "CZ051", "okres", "kraj", ids) # Brno
 
@@ -184,15 +184,11 @@ check_all_parents <- function(df, id_table) {
 
 }
 
-ids2 <- ids
-
-
 # test --------------------------------------------------------------------
 
-check_all_parents(oneproj_true, ids2)
-check_all_parents(oneproj_false, ids2)
-check_all_parents(oneproj_rand, ids2)
-
+check_all_parents(oneproj_true, ids)
+check_all_parents(oneproj_false, ids)
+check_all_parents(oneproj_rand, ids)
 
 # test multi-project ------------------------------------------------------
 
@@ -207,6 +203,10 @@ twoproj_rand %>%
   left_join(twoproj_rand_checked)
 
 # test many-project ------------------------------------------------------
+
+pb <- make_pb()
+
+message("1k, group_modify")
 
 beep()
 tic()
