@@ -92,7 +92,7 @@ ggplot(dtl_for_upset) +
   # scale_y_log10(n.breaks = 6, labels = scales::label_number(1)) +
   # scale_y_continuous(trans = scales::log_trans(), breaks = scales::pretty_breaks()) +
   ptrr::theme_ptrr(multiplot = T) +
-  facet_wrap(~op_id, scales = "free_y")
+  facet_wrap(~op_id, scales = "free")
 
 ggplot2::update_geom_defaults("line", list(colour = "darkblue"))
 ```
