@@ -10,6 +10,30 @@ source("shared.R")
 library(fontawesome)
 ```
 
+## 10. 8. 2020
+
+### Kontrola interní validity názvů a identifikátorů
+
+Tj. odpovídají názvy územních jednotech v našich datech těm názvům, které pod stejným identifikátorem najdeme v číselnících ČSÚ?
+
+#### `r fa("info-circle", fill = "black")` [téměř vše OK](https://esif-data-cleaning.netlify.app/02_validate.html#Validita_jmen_proti_registr%C5%AFm)
+
+Jen u několika desítek míst lehce neseděly názvy - velká a malá písmena, název Horní u Dolní vs. jen Horní atd. Pro lepší napojitelnost na další data ČSÚ jsem se rozhodl data upravit směrem ke konformitě s ČSÚ.
+
+### [Kontrola validity geografické hierarchie](https://esif-data-cleaning.netlify.app/03_explore.html#Validita_%C3%BAzemn%C3%AD_hierarchie)
+
+tj. jak časté jsou projekty, které se realizovaly např. zároveň v kraji X a obci O, která neleží v kraji X?
+
+![](03_explore_files/figure-html/geostatus-plot-abse-1.png)
+
+#### `r fa("question-circle", fill = col_orange)` Není to příliš časté, ale život nám to zkomplikuje
+
+máme asi 500 projektů (tj. < 1 % z celku), u kterých jsou uvedena místa realizace na různé administrativní úrovni a zároveň tato místa neleží v jedné hierarachické lince. Nejčastější je to u OP VVV a OP ŽP, něco málo též u OP D a OP PIK.
+
+Díky tomu ale máme nachystané datové struktury a algoritmy na libovolné porovnávání, rozpadání atd. míst realizace v různých kombinacích počtů a úrovní.
+
+Další krok bude rozčlenit těch cca 500 komplikovaných projektů (nejspíš podle výzev) a udělat nějakou úvahu o tom, jak s nimi naložit při finální akokaci místa realizace.
+
 ## 29. 5. 2020
 
 ### Hromadné načtení dat a základní kontrola
