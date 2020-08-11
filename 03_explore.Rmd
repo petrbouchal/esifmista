@@ -310,44 +310,75 @@ prjs_nogeo <- dtl %>%
 table(prjs_nogeo$no_geo)
 ```
 
+[x] TODO: detect ZUJ == OBEC
+[x] TODO: detect one level, multiple units [+ validate whether within same higher-level unit]
+[ ] integrate "weird projects" (above) in geostatus indicator = more units at higher level than lower level
+
+```{r}
+dtl_zujobec <- dtl %>% 
+  select(prj_id, value, level, typ) %>% 
+  group_by(prj_id) %>% 
+  drop_na(value) %>% 
+  filter(typ == "id") %>% 
+  mutate(n_levels = length(unique(level)), 
+         n_values = length(unique(value)),
+         zujobec = (n_levels == 2 & n_values == 1),
+         onelevelmultiunits = (n_levels == 1 & n_values > 1)) %>% 
+  distinct(prj_id, onelevelmultiunits, zujobec)
+```
+
+```{r}
+dtl_zujobec %>% 
+  ungroup() %>% 
+  count(onelevelmultiunits, zujobec)
+```
 ```{r build-geostatus-dataset}
 prjs_geostatus <- dt %>%
   distinct(prj_id, op_id) %>% 
   left_join(prjs_nogeo) %>% 
   left_join(prjs_geocheck) %>% 
+  left_join(dtl_zujobec) %>% 
   mutate(multilevel = prj_id %in% multilevel_ids,
          geostatus = case_when(no_geo ~ "bez místa",
+                               zujobec ~ "obec a ZUJ\nse kryjí",
+                               onelevelmultiunits ~ 
+                                 "více míst\nna stejné úrovni",
                                !multilevel ~ "jedno místo",
-                               all_ok ~ "více míst, hierarchicky",
-                               !all_ok ~ "více míst, nehierarchicky") %>% 
-           as.factor() %>% fct_rev() %>% fct_relevel("bez místa"))
+                               all_ok ~ "více míst,\nhierarchicky",
+                               !all_ok ~ "více míst,\nnehierarchicky",
+                               ) %>% 
+           as.factor() %>% fct_rev() %>% 
+           fct_relevel("bez místa") %>% 
+           fct_relevel("obec a ZUJ\nse kryjí", after = 4))
 
 gst_bar <- prjs_geostatus %>% 
   ggplot() +
-  scale_fill_manual(values = rev(c("grey", "darkgreen", "orange", "red"))) +
-  guides(fill = guide_legend(reverse = T)) +
+  scale_fill_manual(values = rev(c("grey75", "grey50", "grey25", "darkgreen", 
+                                   "gold", "orange", "red"))) +
+  guides(fill = guide_legend(reverse = T, nrow = 1)) +
   theme_ptrr("x", legend.position = "bottom", legend.title = element_blank())
 ```
 
-### Procentuálně
+#### Procentuálně
 
 ```{r geostatus-plot-abse}
 gst_bar +  
-  geom_bar(aes(y = op_id, fill = geostatus), position = "fill")
+  geom_bar(aes(y = op_id, fill = geostatus), position = "fill") +
+  scale_x_percent_cz()
 ```
 
-### Absolutně
+#### Absolutně
 
 ```{r geostatus-plot-rel}
 gst_bar +  
   geom_bar(aes(y = op_id, fill = geostatus), position = "identity")
 ```
 
-### Tabulka
+#### Tabulka
 
 ```{r geostatus-table}
 prjs_geostatus %>% 
   count(op_id, geostatus) %>% 
-  spread(geostatus, n, fill = 0)
+  spread(op_id, n, fill = 0)
 ``` 
 
