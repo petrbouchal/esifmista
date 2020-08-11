@@ -211,7 +211,7 @@ dt_val_ids_agent <- dt_val_ids %>%
 ```
 
 ```{r geoid-validation-interrogate, validate = T}
-dt_val_ids_agent %>% interrogate()
+dt_val_ids_agent %>% interrogate(extract_failed = F)
 ```
 
 ```{r geoid-validation-inspect-1}
