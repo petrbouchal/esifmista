@@ -92,17 +92,20 @@ dt_noplace <- dt_long_g %>%
 ```
 
 ```{r, message=F}
-dtonpl_agent <- dt_noplace %>% 
+dtnopl_agent <- dt_noplace %>% 
   create_agent() %>% 
-  col_vals_equal(all_na, FALSE) 
+  col_vals_equal(all_na, FALSE)
+```
 
-dtonpl_agent %>% 
+
+```{r, message=F, validate = T}
+dtnopl_agent %>% 
   interrogate(extract_failed = F)
 ```
 
 
 ```{r, message=F}
-dtonpl_agent %>% 
+dtnopl_agent %>% 
   interrogate() %>% 
   get_data_extracts(i = 1)
 ```
