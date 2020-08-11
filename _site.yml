@@ -34,5 +34,6 @@ output:
     toc_float: true
     mathjax: null
     df_print: paged
+    code_folding: hide
     includes:
       in_header: [meta.html]

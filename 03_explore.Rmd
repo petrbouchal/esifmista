@@ -211,7 +211,9 @@ weird_projs_full
 ```
 
 
-## Validita územní hierarchie {.tabset .tabset-pills}
+## Validita územní hierarchie {.tabset}
+
+### Analýza
 
 ```{r define-scope}
 multilevel_ids <- unique(multilevel[multilevel$multilevel,]$prj_id)
@@ -332,6 +334,9 @@ dtl_zujobec %>%
   ungroup() %>% 
   count(onelevelmultiunits, zujobec)
 ```
+
+### Výsledky {.tabset .tabset-pills}
+
 ```{r build-geostatus-dataset}
 prjs_geostatus <- dt %>%
   distinct(prj_id, op_id) %>% 
