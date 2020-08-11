@@ -33,7 +33,7 @@ as <- action_levels(stop_at = 1)
 
 ### Máme všude ID projektu?
 
-```{r no-id, validate = F}
+```{r no-id, validate = T}
 dt %>% 
   create_agent("project IDs") %>% 
   col_vals_not_null(c(op_id, prj_id)) %>% 
@@ -45,7 +45,7 @@ dt %>%
 Délky:
 
 
-```{r, results="hold", collapse=TRUE}
+```{r, validate = T}
 dt %>% 
   create_agent("project number") %>% 
   col_is_character(starts_with("g_")) %>% 
@@ -53,12 +53,6 @@ dt %>%
   col_vals_not_null(c(op_id, prj_id)) %>% 
   col_vals_regex(g_zuj_id, ".{11}", actions = al, na_pass = T) %>% 
   interrogate(extract_failed = F)
-```
-
-
-```{r prj-id-short-list}
-dt %>% 
-  filter(str_length(prj_id) < 33)
 ```
 
 
@@ -118,20 +112,6 @@ dtonpl_agent %>%
 dt_noplace %>% 
   filter(all_na) %>% 
   count(op_id)
-```
-
-```{r noplace-op-zadatel, eval = F}
-dt_noplace %>% 
-  count(op_id, p_nazev, p_sidlo_nazev)
-```
-
-```{r noplace-list}
-dt_noplace
-```
-
-```{r}
-dt %>% 
-  filter(prj_id %in% dt_noplace$prj_id)
 ```
 
 
@@ -223,7 +203,7 @@ dt_long_sidla <- dt %>%
   select(op_id, prj_id, typ, value)
 ```
 
-```{r prij-sidlo-mismatch-list, validate = F}
+```{r prij-sidlo-mismatch-list, validate = T}
 dt_long_sidla %>% 
   pivot_wider(id_cols = c(prj_id, prj_radek),
               names_from = typ, values_from = value) %>% 
@@ -240,7 +220,7 @@ dt_long_sidla %>%
 
 Do recipients move seat? Change names?
 
-```{r prij-sidlo-change, validate = F}
+```{r prij-sidlo-change, validate = T}
 dt %>% 
   group_by(p_ico) %>% 
   summarise(distinct_seats = n_distinct(p_sidlo_id),
