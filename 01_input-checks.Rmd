@@ -143,7 +143,7 @@ dt_long_g %>%
   pivot_wider(id_cols = c(prj_id, prj_radek, level), 
               names_from = typ, values_from = value) %>% 
   group_by(level, id) %>%
-  summarise(n_names_in_id = n_distinct(nazev)) %>% 
+  summarise(n_names_in_id = length(unique(nazev))) %>% 
   filter(n_names_in_id > 1) %>% 
   nrow()
 ```
@@ -156,11 +156,11 @@ dt_long_g %>%
 
 ### Je ve všech řádcích každého projektu to stejné sídlo? 
 
-```{r prij-sidlo-id-mismatch}
+```{r prij-sidlo-id-mismatch, validate = T}
 dt %>% 
   group_by(prj_id) %>% 
-  summarise(sidlo_id_unique = n_distinct(p_sidlo_id),
-            sidlo_name_unique = n_distinct(p_sidlo_nazev)) %>% 
+  summarise(sidlo_id_unique = length(unique(p_sidlo_id)),
+            sidlo_name_unique = length(unique(p_sidlo_nazev))) %>% 
   create_agent() %>% 
   col_vals_equal(sidlo_id_unique, 1) %>% 
   col_vals_equal(sidlo_name_unique, 1) %>% 
@@ -211,8 +211,8 @@ dt_long_sidla %>%
   pivot_wider(id_cols = c(prj_id, prj_radek),
               names_from = typ, values_from = value) %>% 
   group_by(prj_id) %>% 
-  summarise(distinct_ids = n_distinct(id),
-            distinct_names = n_distinct(nazev)) %>% 
+  summarise(distinct_ids = length(unique(id)),
+            distinct_names = length(unique(nazev))) %>% 
   create_agent() %>% 
   col_vals_equal(distinct_ids, 1, 
                  brief = "Each prj only has prijemce in one place ID") %>% 
@@ -226,8 +226,8 @@ Do recipients move seat? Change names?
 ```{r prij-sidlo-change, validate = T}
 dt %>% 
   group_by(p_ico) %>% 
-  summarise(distinct_seats = n_distinct(p_sidlo_id),
-            distinct_names = n_distinct(p_nazev)) %>%  
+  summarise(distinct_seats = length(unique(p_sidlo_id)),
+            distinct_names = length(unique(p_nazev))) %>%  
   create_agent() %>% 
   col_vals_equal(distinct_seats, 1, brief = "Each recipient only has one seat") %>% 
   col_vals_equal(distinct_names, 1, brief = "Each recipient only has one name") %>% 

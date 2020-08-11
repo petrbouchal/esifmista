@@ -119,7 +119,7 @@ dtl %>%
 multilevel <- dtl %>% 
   filter(!is.na(value) & typ == "id") %>% 
   group_by(prj_id) %>% 
-  mutate(n_urovni = n_distinct(level),
+  mutate(n_urovni = length(unique(level)),
          multilevel = n_urovni > 1) %>% 
   ungroup()
   # filter(multilevel) %>%
@@ -192,11 +192,13 @@ weird_projs <- dtl_geo_counts %>%
 
 weird_projs
 ```
+
 ```{r}
 weird_projs %>% 
   ungroup() %>% 
   count(op_id, sort = T)
 ```
+
 ```{r}
 weird_projs %>% 
   filter(op_id == "OP_VVV")
