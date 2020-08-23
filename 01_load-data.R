@@ -21,12 +21,12 @@ names(files) <- tools::file_path_sans_ext(files) %>% basename()
 files
 names(files)
 
-files <- str_replace(files,
-                     "data-input/misto-ico/OP PIK.xlsx",
-                     "data-input/misto/OP PIK.xlsx")
+# files <- str_replace(files,
+#                      "data-input/misto-ico/OP PIK.xlsx",
+#                      "data-input/misto/OP PIK.xlsx")
 files
 
-dt0 <- map_dfr(files[c(1:2, 4:8)], read_xlsx, skip = 1, .id = "op_id")
+dt0 <- map_dfr(files, read_xlsx, skip = 1, .id = "op_id")
 
 geounits_pattern <- str_c("^", geounits, collapse = "|")
 geounits_name_pattern <- str_c(paste0(geounits, "$"), collapse = "|")
@@ -48,8 +48,10 @@ dt <- dt0 %>%
   mutate(prj_radek = row_number()) %>%
   ungroup()
 
-write_parquet(dt0, here::here("data-processed","misto_raw-mix.parquet"))
-write_parquet(dt, here::here("data-processed","misto_renamed-mix.parquet"))
+write_parquet(dt0, here::here("data-processed","misto_raw-n.parquet"))
+write_parquet(dt, here::here("data-processed","misto_renamed-n.parquet"))
+
+
 # Projects in NP/CHKO -----------------------------------------------------
 
 prj_chu <- read_excel(here::here("data-input", "CHKONP.xlsx"), skip = 1) %>%
