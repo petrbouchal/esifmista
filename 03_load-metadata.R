@@ -2,6 +2,7 @@ library(CzechData)
 library(arrow)
 library(czso)
 library(dplyr)
+library(xml2)
 
 cz <- load_RUIAN_state("obce")
 write_parquet(cz, here::here("data-processed", "cz_geo_meta.parquet"))
@@ -74,3 +75,30 @@ ops <- tribble(~op_id, ~op_abbrev, ~op_name, ~op_num,
   mutate(op_tnum = str_pad(op_num, width = 2, pad = "0"))
 
 write_parquet(ops, here::here("data-processed", "op-codes.parquet"))
+
+
+# Metadata vyzev ----------------------------------------------------------
+
+library(xml2)
+library(tidyverse)
+
+xmldoc <- xml2::read_xml("https://ms14opendata.mssf.cz/SeznamVyzev.xml", )
+
+xmldoc
+
+vyzvyxml <- xmldoc %>%
+  xml2::xml_children()
+
+vyzvy <- purrr::map_df(vyzvyxml, function(x) {
+  ids <- x %>% xml2::xml_child(3) %>% xml2::xml_text()
+  descs <- x %>% xml2::xml_child(4) %>% xml2::xml_text()
+
+  tibble(vyzva_id = ids, vyzva_desc = descs)
+
+}) %>%
+  mutate(op_tnum = str_sub(vyzva_id, 2))
+
+write_parquet(vyzvy, here::here("data-processed", "vyzvy-codes.parquet"))
+
+
+# org metadata from statnipokladna ----------------------------------------
