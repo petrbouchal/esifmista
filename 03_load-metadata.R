@@ -57,3 +57,20 @@ czsoids_all <- zuj_csu %>%
 
 
 write_parquet(czsoids_all, here::here("data-processed", "czso-ids-all.parquet"))
+
+
+# ESIF metadata -----------------------------------------------------------
+
+ops <- tribble(~op_id, ~op_abbrev, ~op_name, ~op_num,
+               "OP PIK", "PIK", "", 1,
+               "OP ZP", "ŽP", "", 5,
+               "OP D", "D", "", 4,
+               "OP PPR", "PPR", "", 7,
+               "IROP", "IROP", "", 6,
+               "OP Z", "Z", "", 3,
+               "OP TP", "TP", "", 8,
+               "OP VVV", "VVV", "", 2,
+               ) %>%
+  mutate(op_tnum = str_pad(op_num, width = 2, pad = "0"))
+
+write_parquet(ops, here::here("data-processed", "op-codes.parquet"))
