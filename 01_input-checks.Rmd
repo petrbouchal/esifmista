@@ -201,7 +201,7 @@ Ehm, takže asi existují projekty, kde známe místo sídla a neznáme název p
 dt %>% 
   filter(prj_radek == 1) %>% 
   filter(is.na(p_nazev) & (!is.na(p_sidlo_id) | !is.na(p_sidlo_nazev))) %>% 
-  select(op_id, p_sidlo_id, p_sidlo_nazev, p_nazev, prj_id, prj_nazev) %>% 
+  select(op_id, p_sidlo_id, p_sidlo_nazev, p_nazev, p_ico, prj_id, prj_nazev) %>% 
   arrange(prj_id)
 ```
 
