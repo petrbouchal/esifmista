@@ -70,6 +70,42 @@ maxlevels <- dtl %>%
   ungroup()
 ```
 
+```{r}
+head(maxlevels)
+```
+
+### Jaký podíl projektů nemá lokalizaci na obec nebo ZÚJ?
+
+```{r}
+prj_no_obec <- dtl %>%
+  filter(typ == "id") %>%
+  drop_na(value) %>%
+  group_by(prj_id) %>%
+  summarise(noobecnozuj = all(!(level %in% c("zuj", "obec"))), .groups = "drop") %>%
+  filter(noobecnozuj) %>%
+  select(prj_id)
+
+dim(prj_no_obec)
+
+write_parquet(prj_no_obec, here::here("data-processed", "prj_id_noobec.parquet"))
+```
+
+```{r}
+maxlevels %>% 
+  mutate(notoplevel = prj_id %in% prj_no_obec$prj_id) %>% 
+  count(op_id, wt = mean(notoplevel)) %>%
+  bind_rows(maxlevels %>% 
+              mutate(notoplevel = prj_id %in% prj_no_obec$prj_id) %>% 
+              count(wt = mean(notoplevel)) %>% 
+              mutate(op_id = "Celkem")) %>% 
+  mutate(op_id = fct_reorder(op_id, n)) %>% 
+  ggplot(aes(n, op_id)) +
+  geom_col() +
+  theme_ptrr("x") +
+  scale_x_percent_cz(limits = c(0, 1))
+```
+
+
 ```{r upset-plot-data}
 library(ggupset)
 
