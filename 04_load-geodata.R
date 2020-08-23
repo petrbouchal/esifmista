@@ -13,18 +13,18 @@ library(arrow)
 # zsjp <- st_read("/Users/petr/Documents/Research/Geodata/AdministrativniCleneni_v13.gdb",
 #                 layer = "ZakladniSidelniJednotkyPolygony")
 
-obce_p200 <- CzechData::load_Data200("AdministrativniUzemiObce")
-write_parquet(here::here("data-input", "obce_data200.parquet"))
+# obce_p200 <- CzechData::load_Data200("AdministrativniUzemiObce")
+# write_parquet(here::here("data-input", "obce_data200.parquet"))
 obce_pr <- CzechData::load_RUIAN_state("obce")
 write_parquet(here::here("data-input", "obce_ruian.parquet"))
 
-setdiff(obce_p200$NAMN, obce_pr$nazev)
-setdiff(obce_pr$nazev, obce_p200$NAMN)
+# setdiff(obce_p200$NAMN, obce_pr$nazev)
+# setdiff(obce_pr$nazev, obce_p200$NAMN)
 
-plot(obce_p200, max.plot = 1)
+# plot(obce_p200, max.plot = 1)
 
-unique(obce_p200$FCSUBTYPE)
-unique(obce_p200$DESN)
+# unique(obce_p200$FCSUBTYPE)
+# unique(obce_p200$DESN)
 table(obce_pr$status_kod)
 table(obce_pr$sm_roz_kod)
 table(obce_pr$sm_typ_kod)
