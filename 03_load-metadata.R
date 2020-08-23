@@ -102,3 +102,36 @@ write_parquet(vyzvy, here::here("data-processed", "vyzvy-codes.parquet"))
 
 
 # org metadata from statnipokladna ----------------------------------------
+
+library(statnipokladna)
+
+if(!file.exists("data-input/orgs.rds")) {
+  orgs_raw <- sp_get_codelist("ucjed", dest_dir = "data-input")
+  druhuj <- sp_get_codelist("druhuj", dest_dir = "data-input")
+
+  orgs <- orgs_raw %>%
+    left_join(druhuj)
+
+  write_rds(orgs, "data-input/orgs.rds", compress = "gz")
+
+} else {
+  orgs <- read_rds("data-input/orgs.rds")
+}
+
+orgs %>%
+  distinct(druhuj_id, poddruhuj_id, druhuj_nazev) %>% View()
+
+poddruhy <- statnipokladna::sp_get_codelist("poddruhuj")
+druhy <- statnipokladna::sp_get_codelist("poddruhuj")
+
+poddruhy_joinable <- poddruhy %>%
+  mutate(across(c(poddruhuj_id, druhuj_id), ~str_remove(., "^0")),
+         poddruhuj_id = paste0(druhuj_id, poddruhuj_id)) %>%
+  select(-druhuj_id)
+
+orgs_detail <- orgs %>%
+  left_join(poddruhy_joinable)
+
+write_parquet(orgs_detail, here::here("data-processed", "orgs_sp.parquet"))
+
+
