@@ -46,8 +46,8 @@ maxlevels <- dtl %>%
   mutate(level_num = as.numeric(level)) %>% 
   select(prj_id, level, level_num, op_id) %>% 
   group_by(prj_id, op_id) %>% 
-  summarise(maxlevel = max(level_num)) %>% 
-  mutate(maxlevel = recode(maxlevel, !!!geounits_recoder)) %>% 
+  summarise(maxlevel = max(level_num), minlevel = min(level_num), .groups = "drop") %>% 
+  mutate(across(c(maxlevel, minlevel), recode, !!!geounits_recoder)) %>% 
   ungroup()
 ```
 
