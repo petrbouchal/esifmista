@@ -200,6 +200,13 @@ dtl_geo_counts %>%
 ```
 
 ```{r}
+
+# projekty, kde je víc jednotek na úrovni N než na jakékoli úrovni < N, tj. 
+# např. dva kraje a jedna ZÚj
+
+# tohle by se mělo (logicky?) odchytit v obecné kontrole hierarchie, takže není
+# třeba to dál integrovat
+
 weird_projs <- dtl_geo_counts %>% 
   group_by(prj_id) %>% 
   mutate(total_geo_ids = sum(n_geos)) %>% 
@@ -307,12 +314,17 @@ data_with_geocheck <- data_for_geocheck %>%
 data_with_geocheck <- data_with_geocheck %>% 
   left_join(progs) 
 
-prjs_geocheck <- data_with_geocheck %>% 
-  group_by(op_id, prj_id) %>%
-  summarise(all_ok = all(levels_ok, na.rm = T), .groups = "drop")
 places_geocheck <- data_with_geocheck %>% 
   group_by(op_id, prj_id, value, level) %>%
   summarise(value_has_valid_parent = any(levels_ok, na.rm = F), .groups = "drop")
+
+prjs_geocheck <- places_geocheck %>% 
+  group_by(op_id, prj_id) %>% 
+  summarise(all_ok = !any(!value_has_valid_parent, na.rm = T))
+
+prjs_geocheck %>% 
+  count(op_id, all_ok) %>% 
+  spread(all_ok, n)
 
 prjs_geocheck %>%   
   summarise(mean = 1-mean(all_ok), count = n())
@@ -335,11 +347,12 @@ prjs_nogeo <- dtl %>%
   summarise(no_geo = all(is.na(value)))
 
 table(prjs_nogeo$no_geo)
+nrow(prjs_fishy_hierarchies)
 ```
 
 [x] TODO: detect ZUJ == OBEC
 [x] TODO: detect one level, multiple units [+ validate whether within same higher-level unit]
-[ ] integrate "weird projects" (above) in geostatus indicator = more units at higher level than lower level
+[-] integrate "weird projects" (above) in geostatus indicator = more units at higher level than lower level - nerelevantní, podchyceno v kontrole hierarchie - bez ohledu na to, kolik je jednotek v nižších a vyšších úrovních, pokud nějaká jednotka nemá mezi jednotkami na vyšší úrovni validní nadřazenou jednotku, je označena jako nehierarchická 
 
 ```{r}
 dtl_zujobec <- dtl %>% 
