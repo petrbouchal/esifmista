@@ -310,6 +310,9 @@ data_with_geocheck <- data_with_geocheck %>%
 prjs_geocheck <- data_with_geocheck %>% 
   group_by(op_id, prj_id) %>%
   summarise(all_ok = all(levels_ok, na.rm = T), .groups = "drop")
+places_geocheck <- data_with_geocheck %>% 
+  group_by(op_id, prj_id, value, level) %>%
+  summarise(value_has_valid_parent = any(levels_ok, na.rm = F), .groups = "drop")
 
 prjs_geocheck %>%   
   summarise(mean = 1-mean(all_ok), count = n())
@@ -317,6 +320,9 @@ prjs_geocheck %>%
 prjs_geocheck %>%   
   group_by(op_id) %>% 
   summarise(mean = 1-mean(all_ok), count = n())
+
+write_parquet(places_geocheck, 
+              here::here("data-processed", "places-geo-check.parquet"))
 ```
 
 ```{r extract-categories}
