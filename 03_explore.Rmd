@@ -30,6 +30,22 @@ ops <- read_parquet(here::here("data-processed",
 source("read_metadata.R")
 ```
 
+## Prep: vygenerovat metadata projektů pro další použití
+
+```{r prj-esif-meta}
+prj_esif_meta <- dt %>% 
+  distinct(op_id, prj_id) %>% 
+  separate(prj_id, sep = "/", into = c("prog", "drop_1", "drop_2", "vyzva", "prj_num"), 
+           remove = F) %>% 
+  separate(prog, sep = "\\.", into = c("drop_3", "op_tnum", "op_po", "op_kat")) %>% 
+  select(-starts_with("drop_")) %>% 
+  separate(vyzva, sep = "_", into = c("vyzva_rok", "vyzva_cislo"), remove = F) %>% 
+  mutate(vyzva_kod = paste(op_tnum, vyzva, sep = "_"))
+
+write_parquet(prj_esif_meta, here::here("data-processed", "prj-esif-meta.parquet"))
+```
+
+
 ## Na jakých územních úrovních jsou projekty lokalizovány?
 
 ### Memo: kolik máme projektů?
