@@ -383,17 +383,24 @@ prjs_geostatus <- dt %>%
   left_join(dtl_zujobec) %>% 
   mutate(multilevel = prj_id %in% multilevel_ids,
          geostatus = case_when(no_geo ~ "bez místa",
-                               zujobec ~ "obec a ZUJ\nse kryjí",
+                               zujobec ~ "obec a ZUJ se kryjí",
                                onelevelmultiunits ~ 
-                                 "více míst\nna stejné úrovni",
+                                 "více míst na stejné úrovni",
                                !multilevel ~ "jedno místo",
-                               all_ok ~ "více míst,\nhierarchicky",
-                               !all_ok ~ "více míst,\nnehierarchicky",
+                               all_ok ~ "více míst hierarchicky",
+                               !all_ok ~ "více míst nehierarchicky",
                                ) %>% 
            as.factor() %>% fct_rev() %>% 
            fct_relevel("bez místa") %>% 
-           fct_relevel("obec a ZUJ\nse kryjí", after = 4))
+           fct_relevel("obec a ZUJ se kryjí", after = 4),
+         geostatus_wrap = fct_relabel(geostatus, str_wrap, width = 10))
 
+write_parquet(prjs_geostatus, 
+              here::here("data-processed", "projects-geo-check-groups.parquet"))
+```
+
+
+```{r build-geostatus-plot}
 gst_bar <- prjs_geostatus %>% 
   ggplot() +
   scale_fill_manual(values = rev(c("grey75", "grey50", "grey25", "darkgreen", 
