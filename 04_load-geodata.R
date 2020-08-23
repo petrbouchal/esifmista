@@ -53,4 +53,4 @@ zuj <- obce_pr %>%
   bind_rows(obce_momc %>%
               mutate(typuj = "momc"))
 
-write_parquet(zuj, here::here("data-processed", "geo_zuj-all.parquet"))
+write_rds(zuj, here::here("data-processed", "geo_zuj-all.rds"))
