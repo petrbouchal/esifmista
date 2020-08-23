@@ -21,6 +21,9 @@ dt <- read_parquet(here::here("data-processed",
                               "misto_fix-02-gnames.parquet"))
 dtl <- read_parquet(here::here("data-processed", 
                                "misto_fix-02-gnames_long-geo.parquet"))
+
+ops <- read_parquet(here::here("data-processed", 
+                               "op-codes.parquet"))
 ```
 
 ```{r metadata-csu}
