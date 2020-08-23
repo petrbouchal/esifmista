@@ -46,12 +46,21 @@ Délky:
 
 
 ```{r, validate = T}
+op_ids <- c("OP Z", "OP D", "OP VVV", "OP PIK", 
+            "OP TP", "OP PPR", "OP ZP", "IROP")
+
+op_ids %in% dt$op_id
+```
+
+
+```{r, validate = T}
 dt %>% 
-  create_agent("project number") %>% 
-  col_is_character(starts_with("g_")) %>% 
-  col_vals_regex(prj_id, ".{12,15}", actions = al, brief = "Proj num len") %>% 
+  create_agent("project number", actions = al) %>% 
+  col_is_character(starts_with("g_")) %>%
+  col_vals_in_set(op_id, op_ids) %>%
+  col_vals_regex(prj_id, ".{12,15}", brief = "Proj num len") %>% 
   col_vals_not_null(c(op_id, prj_id)) %>% 
-  col_vals_regex(g_zuj_id, ".{11}", actions = al, na_pass = T) %>% 
+  col_vals_regex(g_zuj_id, ".{11}", na_pass = T) %>% 
   interrogate(extract_failed = F)
 ```
 
