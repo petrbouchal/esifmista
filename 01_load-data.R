@@ -47,3 +47,9 @@ dt <- dt0 %>%
 
 write_parquet(dt0, here::here("data-processed","misto_raw-mix.parquet"))
 write_parquet(dt, here::here("data-processed","misto_renamed-mix.parquet"))
+# Projects in NP/CHKO -----------------------------------------------------
+
+prj_chu <- read_excel(here::here("data-input", "CHKONP.xlsx"), skip = 1) %>%
+  set_names(c("prj_id", "prj_nazev", "chkonp_nazev"))
+
+write_parquet(prj_chu, here::here("data-processed","prj_chkonp.parquet"))

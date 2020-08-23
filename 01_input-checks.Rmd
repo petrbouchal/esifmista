@@ -243,3 +243,17 @@ dt %>%
   interrogate(extract_failed = F)
 ```
 
+## Údaje o projektech v CHKO/NP
+
+```{r}
+prj_chkonp <- read_parquet(here::here("data-processed", "prj_chkonp.parquet"))
+```
+
+```{r}
+prj_chkonp %>% 
+  create_agent(actions = action_levels(stop_at = 1)) %>% 
+  col_vals_in_set(prj_id, unique(dt$prj_id)) %>% 
+  interrogate()
+```
+
+
