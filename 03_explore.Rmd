@@ -447,15 +447,15 @@ gst_bar <- prjs_geostatus %>%
 
 #### Procentuálně
 
-```{r geostatus-plot-abse}
+```{r geostatus-plot-perc}
 gst_bar +  
-  geom_bar(aes(y = op_id, fill = geostatus), position = "fill") +
+  geom_bar(aes(y = op_id, fill = geostatus_wrap), position = "fill") +
   scale_x_percent_cz()
 ```
 
 #### Absolutně
 
-```{r geostatus-plot-rel}
+```{r geostatus-plot-abs}
 gst_bar +  
   geom_bar(aes(y = op_id, fill = geostatus), position = "identity")
 ```
