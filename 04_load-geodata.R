@@ -16,7 +16,8 @@ library(arrow)
 # obce_p200 <- CzechData::load_Data200("AdministrativniUzemiObce")
 # write_parquet(here::here("data-input", "obce_data200.parquet"))
 obce_pr <- CzechData::load_RUIAN_state("obce")
-write_parquet(here::here("data-input", "obce_ruian.parquet"))
+write_rds(obce_pr %>% select(-vlajka_txt, -znak_txt),
+              here::here("data-input", "obce_ruian.rds"))
 
 # setdiff(obce_p200$NAMN, obce_pr$nazev)
 # setdiff(obce_pr$nazev, obce_p200$NAMN)
@@ -53,4 +54,5 @@ zuj <- obce_pr %>%
   bind_rows(obce_momc %>%
               mutate(typuj = "momc"))
 
-write_rds(zuj, here::here("data-processed", "geo_zuj-all.rds"))
+write_rds(zuj %>% select(-vlajka_txt, -znak_txt),
+          here::here("data-processed", "geo_zuj-all.rds"))
