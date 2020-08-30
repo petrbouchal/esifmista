@@ -33,3 +33,5 @@ ggplot2::update_geom_defaults(geom = "point", new = list(colour = "darkblue",
                                                          fill = "darkblue"))
 
 ggplot2::theme_set(ptrr::theme_ptrr("both"))
+
+mas_pravniformy_regex <- "[,]?\\s?(([zo]\\.\\s?[ús]\\.\\s?)|(([o]\\.\\s?[p]\\.\\s?[s]\\.\\s?)))"

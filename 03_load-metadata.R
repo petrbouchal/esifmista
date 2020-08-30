@@ -3,6 +3,9 @@ library(arrow)
 library(czso)
 library(dplyr)
 library(xml2)
+library(readxl)
+
+source("shared.R")
 
 cz <- load_RUIAN_state("obce")
 write_parquet(cz, here::here("data-processed", "cz_geo_meta.parquet"))
@@ -134,3 +137,44 @@ orgs_detail <- orgs %>%
 write_parquet(orgs_detail, here::here("data-processed", "orgs_sp.parquet"))
 
 
+# MAS metadata ------------------------------------------------------------
+
+masczsofile <- tempfile()
+download.file("https://www.czso.cz/documents/10180/23194580/data_pro_mas_2014_2019_b_aktualizace_k_30_6_2020.xlsx/3e6bf657-507b-4592-a6b9-959392e934ba?version=1.1",
+              masczsofile)
+
+readxl::excel_sheets(masczsofile)
+
+get_mas_year <- function(year) {
+  read_excel(masczsofile, sheet = as.character(year)) %>%
+    select(1:3) %>%
+    set_names(c("obec_kod", "obec_nazev", "mas_nazev")) %>%
+    mutate(across(dplyr::everything(), as.character)) %>%
+    mutate(year = as.character(year))
+}
+
+# NB looking at 2014 shows that some MAS renamed into 2015
+# plus there were no projects in 2014 anyway
+
+mas_all <- map_dfr(2015:2019, get_mas_year) %>%
+  mutate(mas_nazev_simple = str_remove_all(mas_nazev, mas_pravniformy_regex)) %>%
+  filter(mas_nazev != "(obec vznikla k 1.1.2016)")
+
+mas_all %>%
+  count(mas_nazev_simple, year) %>%
+  spread(year, n)
+
+p_nazev_simple <- dtl %>%
+  distinct(p_nazev) %>%
+  mutate(p_nazev_simple = str_remove_all(p_nazev, mas_pravniformy_regex)) %>%
+  pull()
+
+(unique(mas_all$mas_nazev) %in% unique(dtl$p_nazev)) %>% table()
+(unique(mas_all$mas_nazev_simple) %in% unique(dtl$p_nazev)) %>% table()
+(unique(mas_all$mas_nazev_simple) %in% p_nazev_simple) %>% table()
+
+mas_all %>%
+  filter(!mas_nazev_simple %in% p_nazev_simple) %>%
+  distinct(mas_nazev_simple)
+
+write_parquet(mas_all, here::here("data-processed", "mas-metadata.parquet"))
