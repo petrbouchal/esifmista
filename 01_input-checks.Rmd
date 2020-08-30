@@ -78,7 +78,7 @@ dt %>%
 dt %>% 
   group_by(op_id) %>% 
   summarise(n_radky = n(), 
-            n_projekty = n_distinct(prj_id))
+            n_projekty = length(unique(prj_id)))
 ```
 
 ## Údaje o místě realizace
