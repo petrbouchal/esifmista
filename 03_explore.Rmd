@@ -40,7 +40,7 @@ prj_esif_meta <- dt %>%
   separate(prog, sep = "\\.", into = c("drop_3", "op_tnum", "op_po", "op_kat")) %>% 
   select(-starts_with("drop_")) %>% 
   separate(vyzva, sep = "_", into = c("vyzva_rok", "vyzva_cislo"), remove = F) %>% 
-  mutate(vyzva_kod = paste(op_tnum, vyzva, sep = "_"))
+  mutate(vyzva_id = paste(op_tnum, vyzva, sep = "_"))
 
 write_parquet(prj_esif_meta, here::here("data-processed", "prj-esif-meta.parquet"))
 ```
