@@ -1,0 +1,224 @@
+---
+title: 'Řešení projektů bez místa realizace'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(arrow)
+library(ptrr)
+library(readxl)
+
+library(CzechData)
+
+source(here::here("shared.R"))
+```
+
+# OP ŽP - chráněná území
+
+```{r data}
+dt <- read_parquet(here::here("data-processed", 
+                              "misto_fix-02-gnames.parquet"))
+dtl <- read_parquet(here::here("data-processed", 
+                               "misto_fix-02-gnames_long-geo.parquet"))
+
+ops <- read_parquet(here::here("data-processed", "op-codes.parquet"))
+prj_meta <- read_parquet(here::here("data-processed", "prj-esif-meta.parquet"))
+
+dt_chkonp <- read_parquet(here::here("data-processed", "prj_chkonp.parquet"))
+
+prj_no_obec <- read_parquet(here::here("data-processed", "prj_id_noobec.parquet"))
+```
+
+```{r geodata}
+zuj_geo <- read_rds(here::here("data-processed", "geo_zuj-all.rds"))
+```
+
+```{r geodata-chkonp}
+chu_geo <- CzechData::load_Data50("ChraneneUzemi") %>%
+  group_by(KODCHU, NAZEV, KATEGCHU) %>% 
+  summarise(pocet = n()) %>% 
+  st_cast("MULTIPOLYGON") %>% 
+  st_as_sf() %>% 
+  ungroup()
+
+# mapview::mapview(chu_geo, zcol = "NAZEV")
+```
+
+```{r ids-noplace}
+prj_noplace <- setdiff(dt$prj_id, dtl$prj_id)
+```
+
+```{r cross-projs}
+dt_chkonp$prj_id %in% dt$prj_id %>% table()
+```
+
+```{r inspect-prj}
+dt_chkonp %>% 
+  # jen projekty v našich datech
+  filter(!prj_id %in% dt$prj_id) %>% 
+  # jen programu 1-9
+  filter(str_detect(prj_id, "CZ\\.0[1-8]")) %>% 
+  distinct(prj_id)
+```
+
+Cca 39 projektů označených CHKO/NP nemáme v datech - jsou všechny z nedávných (a snad tedy stále otevřených) výzev, tj. projekty, které skutečně nově přibyly. (Celkem těchto projektů je 64, ty zbylé jsou v OPR a PRV).
+
+```{r prj-noplace-in-chudata}
+prj_noplace %in% dt_chkonp$prj_id %>% table()
+```
+
+```{r by-op}
+dt %>% 
+  filter(prj_id %in% prj_noplace) %>% 
+  distinct(prj_id, op_id) %>% 
+  count(op_id)
+```
+
+```{r cross-noobec-noplace}
+dt_chkonp %>%
+  left_join(prj_meta) %>% 
+  distinct(prj_id, op_id) %>% 
+  mutate(noobec = prj_id %in% prj_no_obec$prj_id, 
+         noplace = prj_id %in% prj_noplace) %>% 
+  count(op_id, noobec, noplace) %>% 
+  spread(noobec, n)
+```
+
+Takže data o CHKO/NP nám pomůžou rozřešit projekty s chybějící lokalizací a pak ještě cca 30 projektů bez informace o obci.
+
+Jaká je struktura míst realizace u těch zbylých?
+
+```{r chkodata-geo-structure}
+dtl %>% 
+  filter(prj_id %in% dt_chkonp$prj_id) %>% 
+  group_by(prj_id) %>% 
+  mutate(toplevel = min(as.numeric(level))) %>% 
+  group_by(op_id, prj_id, level, toplevel, p_nazev, prj_nazev) %>% 
+  summarise(n_units = length(unique(value)))
+```
+
+To vypadá dost důvěryhodně, minimálně tam, kde na tom sejde - u IROPu a OP ŽP. Počty obcí a dalších území na projektech působí, že není potřeba je dopočítávat z území CHKO/NP ani že jsou tam uměle nastrkané všechny obce překrývající se s chráněným územím.
+
+## Propojit a porovnat standardní data s daty na úrovni CHKO/NP
+
+Kolik je jakých CHKO/NP?
+
+```{r}
+chu_geo %>% 
+  st_set_geometry(NULL) %>% 
+  count(KATEGCHU)
+```
+
+Najít v datech všechny bez místa
+
+```{r dt-noplace}
+dt %>% 
+  filter(prj_id %in% prj_noplace) %>% 
+  select(prj_id, prj_nazev, p_nazev, p_sidlo_nazev, prj_anotace) 
+```
+
+Kolik je u každého z nich řádků?
+
+```{r rows-in-noplace}
+dt %>% 
+  filter(prj_id %in% prj_noplace) %>% 
+  select(op_id, prj_id, prj_nazev, p_nazev, p_sidlo_nazev, prj_anotace) %>% 
+  count(prj_id, op_id, sort = T) %>% 
+  arrange(desc(n), prj_id)
+```
+
+A kolik řádků je u stejných projektů ve vyjetině s rozpadem na CHKO/NP
+
+```{r rows-in-chudata}
+dt_chkonp %>% 
+  filter(prj_id %in% prj_noplace) %>% 
+  left_join(prj_meta) %>% 
+  count(prj_id, op_id, sort = T) %>% 
+  arrange(desc(n), prj_id)
+```
+
+Takže je to to samé až na projekt OP Z, který v datech s rozpadem CHKO/NP není.
+
+```{r add-chkonp-data}
+dt_with_chkonp <- dt %>% 
+  filter(prj_id %in% prj_noplace, op_id == "OP ZP") %>% 
+  distinct(prj_id) %>% 
+  left_join(dt_chkonp)
+```
+
+```{r inspect-chkonp-data}
+dt_with_chkonp %>% 
+  count(prj_nazev, prj_id, sort = T)
+```
+
+## Najít obce v jednotlivých CHKO a NP
+
+```{r obce-v-chu}
+obce_v_chu <- zuj_geo %>% 
+  select(kod, nazev) %>% 
+  mutate(has_chu = map(geometry, ~st_intersects(.x, chu_geo %>% 
+                                                  st_transform(5514))))
+```
+
+```{r obce-s-chu}
+obce_s_chu <- obce_v_chu %>% 
+  mutate(chu_num = map(has_chu, `[[`, 1)) %>%
+  unnest(chu_num) %>% 
+  left_join(chu_geo %>% 
+              st_set_geometry(NULL) %>% 
+              select(-pocet) %>% 
+              mutate(chu_num = row_number()))
+```
+
+```{r obce-s-chu-map}
+obce_s_chu %>% 
+  st_simplify(preserveTopology = TRUE, dTolerance = 100) %>% 
+  ggplot(aes(fill = paste(NAZEV, str_sub(KATEGCHU, 1, 2)))) +
+  geom_sf(colour = NA)
+```
+
+```{r obce-s-chu-mapview}
+mapview::mapview(obce_s_chu, zcol = "NAZEV") %>% 
+  leafem::addFeatures(chu_geo)
+```
+
+```{r obce-by-chu}
+obce_s_chu %>% 
+  st_set_geometry(NULL) %>% 
+  count(NAZEV, TYP)
+```
+```{r proj-by-chkonp}
+dt_chkonp %>% 
+  count(chkonp_nazev)
+```
+
+
+```{r proj-obce-chu-merge}
+obce_s_chu_to_join <- obce_s_chu %>% 
+  st_set_geometry(NULL) %>% 
+  select(obec_kod = kod, obec_nazev = nazev, 
+         chkonp_nazev = NAZEV, chkonp_typ = KATEGCHU) %>% 
+  mutate(chkonp_nazev = if_else(chkonp_typ == "NP" & 
+                                  chkonp_nazev %in% c("Šumava", "České Švýcarsko", "Podyjí"),
+                                paste("NP", chkonp_nazev), chkonp_nazev))
+
+dt_with_chuobce <- dt_with_chkonp %>% 
+  mutate(chkonp_nazev = recode(chkonp_nazev,
+                               `Kokořínsko` = "Kokořínsko - Máchův kraj")) %>% 
+  left_join(obce_s_chu_to_join) %>% 
+  mutate(chkonp_idtext = chkonp_nazev,
+         chkonp_nazev = str_remove(chkonp_nazev, "^NP "))
+```
+
+```{r rslt-inspect}
+dt_with_chuobce %>% 
+  group_by(chkonp_nazev, chkonp_typ) %>% 
+  count()
+```
+```{r rslt-write}
+write_parquet(dt_with_chuobce, here::here("data-processed", "dt_noplace_filled.parquet"))
+```
+

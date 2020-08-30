@@ -19,7 +19,8 @@ navbar:
       href: 04_explore-complicated-projects.html
   - text: Úpravy dat
     menu:
-    - text: TO DO
+    - text: "Řešení projektů bez místa realizace"
+      href: 08_resolve-placeless.html
   - text: "Záznam kroků a poznatků"
     href: log.html
   - text: Dokumentace
