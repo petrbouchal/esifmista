@@ -95,8 +95,7 @@ vyzvy <- purrr::map_df(vyzvyxml, function(x) {
 
   tibble(vyzva_id = ids, vyzva_desc = descs)
 
-}) %>%
-  mutate(op_tnum = str_sub(vyzva_id, 2))
+})
 
 write_parquet(vyzvy, here::here("data-processed", "vyzvy-codes.parquet"))
 
