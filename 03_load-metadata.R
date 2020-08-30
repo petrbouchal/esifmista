@@ -82,7 +82,7 @@ write_parquet(ops, here::here("data-processed", "op-codes.parquet"))
 library(xml2)
 library(tidyverse)
 
-xmldoc <- xml2::read_xml("https://ms14opendata.mssf.cz/SeznamVyzev.xml", )
+xmldoc <- xml2::read_xml("https://ms14opendata.mssf.cz/SeznamVyzev.xml")
 
 xmldoc
 
