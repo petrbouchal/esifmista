@@ -31,3 +31,5 @@ ggplot2::update_geom_defaults(geom = "bar", new= list(fill = "darkblue"))
 ggplot2::update_geom_defaults(geom = "line", new = list(colour = "darkblue"))
 ggplot2::update_geom_defaults(geom = "point", new = list(colour = "darkblue",
                                                          fill = "darkblue"))
+
+ggplot2::theme_set(ptrr::theme_ptrr("both"))
