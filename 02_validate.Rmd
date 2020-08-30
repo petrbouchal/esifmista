@@ -153,8 +153,9 @@ write_parquet(dt_zujfix, here::here("data-processed", "misto_fix-01-zuj.parquet"
 
 ```{r fixed-long-write}
 dt_fixed_long <- make_long_geo(dt_zujfix)
-write_parquet(dt_fixed_long, here::here("data-processed", 
-                                        "misto_fix-01-zuj_long-geo.parquet"))
+write_parquet(dt_fixed_long %>% 
+                drop_na(value), 
+              here::here("data-processed", "misto_fix-01-zuj_long-geo.parquet"))
 ```
 
 ### Obce
@@ -234,7 +235,8 @@ dt_val_ids_csunames <- dt_val_ids %>%
          g_obec_nazev = g_obec_nazev_csu) %>% 
   select_at(vars(-ends_with("_csu")))
 
-dt_val_ids_csunames_long <- make_long_geo(dt_val_ids_csunames)
+dt_val_ids_csunames_long <- make_long_geo(dt_val_ids_csunames) %>% 
+  drop_na(value)
 ```
 
 ```{r geoid-validation-write}
