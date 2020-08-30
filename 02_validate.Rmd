@@ -18,6 +18,10 @@ dt <- read_parquet(here::here("data-processed", "misto_renamed-n.parquet"))
 dtl <- read_parquet(here::here("data-processed", "misto_long-geo.parquet"))
 ```
 
+```{r}
+setdiff(dt$prj_id, dtl$prj_id)
+```
+
 
 ```{r codes-in-data}
 obec_id_e <- unique(dt$g_obec_id)
@@ -195,7 +199,7 @@ dt_val_ids <- dt_zujfix %>%
                      g_kraj_id = CZNUTS))
 ```
 
-```{r geoid-validation-validate, validate = T}
+```{r geoid-validation-validate, validate = F}
 dt_val_ids_agent <- dt_val_ids %>% 
   mutate(across(starts_with("g_"), tolower)) %>% 
   create_agent() %>% 
@@ -211,7 +215,7 @@ dt_val_ids_agent <- dt_val_ids %>%
                  vars(g_kraj_nazev_csu), na_pass = T)
 ```
 
-```{r geoid-validation-interrogate, validate = T}
+```{r geoid-validation-interrogate, validate = F}
 dt_val_ids_agent %>% interrogate(extract_failed = F)
 ```
 
