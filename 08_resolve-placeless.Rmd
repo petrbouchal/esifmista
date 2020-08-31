@@ -8,8 +8,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(arrow)
+library(furrr)
 library(ptrr)
 library(readxl)
+library(progressr)
 
 library(CzechData)
 
@@ -157,49 +159,74 @@ dt_with_chkonp %>%
 ## Najít obce v jednotlivých CHKO a NP
 
 ```{r obce-v-chu}
-obce_v_chu <- zuj_geo %>% 
-  select(kod, nazev) %>% 
-  mutate(has_chu = map(geometry, ~st_intersects(.x, chu_geo %>% 
-                                                  st_transform(5514))))
-```
+obceschu_file <- here::here("data-processed", "zuj-s-chu.rds")
 
-```{r obce-s-chu}
-obce_s_chu <- obce_v_chu %>% 
-  mutate(chu_num = map(has_chu, `[[`, 1)) %>%
-  unnest(chu_num) %>% 
-  left_join(chu_geo %>% 
-              st_set_geometry(NULL) %>% 
-              select(-pocet) %>% 
-              mutate(chu_num = row_number()))
+if(file.exists(obceschu_file)) {
+  obce_s_chu <- read_rds(obceschu_file)
+} else {
+  
+  handlers(handler_progress(format = "[:bar] :percent ETA: :eta",
+                            complete = "◼",
+                            incomplete = " ",
+                            current = "▸"))
+  
+  chu_krovak <- chu_geo %>% 
+    st_transform(5514)
+  
+  plan(multiprocess)
+  with_progress(
+    {
+      p <- progressor(along = zuj_geo$kod)
+      zuj_v_chu <- zuj_geo %>% 
+        select(kod, nazev) %>% 
+        mutate(has_chu = future_map(geometry, 
+                                    function(x) {
+                                      p(sprintf("x=%s", x))
+                                      st_intersects(x, chu_krovak)
+                                    }))
+    }
+  )
+  
+  zuj_s_chu <- zuj_v_chu %>% 
+    mutate(chu_num = map(has_chu, `[[`, 1)) %>%
+    unnest(chu_num) %>% 
+    left_join(chu_geo %>% 
+                st_set_geometry(NULL) %>% 
+                select(-pocet) %>% 
+                mutate(chu_num = row_number()))
+  write_rds(zuj_s_chu, obceschu_file)
+}
 ```
 
 ```{r obce-s-chu-map}
-obce_s_chu %>% 
+zuj_s_chu %>% 
   st_simplify(preserveTopology = TRUE, dTolerance = 100) %>% 
   ggplot(aes(fill = paste(NAZEV, str_sub(KATEGCHU, 1, 2)))) +
-  geom_sf(colour = NA)
+  geom_sf(colour = NA) +
+  theme(legend.position = "bottom") +
+  labs(fill = "Chráněné území")
 ```
 
-```{r obce-s-chu-mapview}
-mapview::mapview(obce_s_chu, zcol = "NAZEV") %>% 
+```{r obce-s-chu-mapview, eval=FALSE}
+mapview::mapview(zuj_s_chu, zcol = "NAZEV") %>%
   leafem::addFeatures(chu_geo)
 ```
 
 ```{r obce-by-chu}
-obce_s_chu %>% 
+zuj_s_chu %>% 
   st_set_geometry(NULL) %>% 
   count(NAZEV, TYP)
 ```
+
 ```{r proj-by-chkonp}
 dt_chkonp %>% 
   count(chkonp_nazev)
 ```
 
-
 ```{r proj-obce-chu-merge}
-obce_s_chu_to_join <- obce_s_chu %>% 
+zuj_s_chu_to_join <- zuj_s_chu %>% 
   st_set_geometry(NULL) %>% 
-  select(obec_kod = kod, obec_nazev = nazev, 
+  select(zuj_id = kod, zuj_nazev = nazev, 
          chkonp_nazev = NAZEV, chkonp_typ = KATEGCHU) %>% 
   mutate(chkonp_nazev = if_else(chkonp_typ == "NP" & 
                                   chkonp_nazev %in% c("Šumava", "České Švýcarsko", "Podyjí"),
@@ -208,7 +235,7 @@ obce_s_chu_to_join <- obce_s_chu %>%
 dt_with_chuobce <- dt_with_chkonp %>% 
   mutate(chkonp_nazev = recode(chkonp_nazev,
                                `Kokořínsko` = "Kokořínsko - Máchův kraj")) %>% 
-  left_join(obce_s_chu_to_join) %>% 
+  left_join(zuj_s_chu_to_join) %>% 
   mutate(chkonp_idtext = chkonp_nazev,
          chkonp_nazev = str_remove(chkonp_nazev, "^NP "))
 ```
