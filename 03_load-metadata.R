@@ -182,3 +182,58 @@ mas_all %>%
   distinct(mas_nazev_simple)
 
 write_parquet(mas_all, here::here("data-processed", "mas-metadata.parquet"))
+
+
+# Zrizovatele prispevkovek ------------------------------------------------
+
+orgs_progper <- orgs_detail %>%
+  filter(end_date > "2015-01-01") %>%
+  # filter(end_date > lubridate::now()) %>%
+  select(-start_date, -end_date, -datumakt, -isektor_id, -ulice, -sidlo, -psc, -pocob) %>%
+  distinct()
+
+orgs_progper %>%
+  group_by(ico) %>%
+  mutate(pocet_radku = n()) %>%
+  filter(pocet_radku > 1) %>%
+  arrange(pocet_radku, ico)
+
+length(unique(orgs_progper$ico))
+length(unique(orgs_current$ico))
+
+table(dt$p_ico %in% orgs_progper$ico)
+
+zrizovani <- orgs_progper %>%
+  filter(poddruhuj_nazev %in% c("Příspěvkové organizace zřízené obcí",
+                                "Příspěvkové organizace zřízené MČ",
+                                "Příspěvkové organizace zřízené krajem")) %>%
+  distinct(ico, zrizovatel_id, druhuj_nazev, poddruhuj_nazev, ucjed_nazev) %>%
+  mutate(zrizovatel_id = na_if(zrizovatel_id, "")) %>%
+  drop_na(zrizovatel_id)
+
+zrizovani %>% count(poddruhuj_nazev)
+
+zrizovatele <- orgs_progper %>%
+  filter(druhuj_nazev %in% c("Obce", "Kraje") | poddruhuj_nazev == "Městská část") %>%
+  distinct(csuis_ucjed_id, ico, ico_lau1, nuts_id, ucjed_nazev, druhuj_nazev, poddruhuj_nazev) %>%
+  distinct(csuis_ucjed_id, ico, ico_lau1, nuts_id,  druhuj_nazev, poddruhuj_nazev, .keep_all = T)
+
+zrizovaci_vztahy <- zrizovani %>%
+  left_join(zrizovatele %>%
+              rename(zrizovatel_spid = csuis_ucjed_id,
+                     zrizovatel_ico = ico,
+                     zrizovatel_obec_kod = ico_lau1,
+                     zrizovatel_nuts = nuts_id,
+                     zrizovatel_nazev = ucjed_nazev,
+                     zrizovatel_druh = druhuj_nazev,
+                     zrizovatel_poddruh = poddruhuj_nazev),
+            by = c("zrizovatel_id" = "zrizovatel_spid")) %>%
+  replace_na(list(zrizovatel_poddruh = "")) %>%
+  mutate(zrizovatel_obec_kod = na_if(zrizovatel_obec_kod, "000000"),
+         zrizovatel_typ = if_else(zrizovatel_poddruh == "Městská část", zrizovatel_poddruh, zrizovatel_druh)
+  ) %>%
+  select(-zrizovatel_poddruh, -zrizovatel_druh) %>%
+  mutate(zrizovatel_nazev = str_remove(zrizovatel_nazev, "Městská část ") %>%
+           str_replace(" - ", "-"))
+
+write_parquet(zrizovaci_vztahy, here::here("data-processed", "zrizovatele.parquet"))
