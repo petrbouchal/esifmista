@@ -107,24 +107,24 @@ write_parquet(vyzvy, here::here("data-processed", "vyzvy-codes.parquet"))
 
 library(statnipokladna)
 
-if(!file.exists("data-input/orgs.rds")) {
+if(!file.exists(here::here("data-input", "orgs.parquet"))) {
   orgs_raw <- sp_get_codelist("ucjed", dest_dir = "data-input")
   druhuj <- sp_get_codelist("druhuj", dest_dir = "data-input")
 
   orgs <- orgs_raw %>%
     left_join(druhuj)
 
-  write_rds(orgs, "data-input/orgs.rds", compress = "gz")
+  write_parquet(orgs, here::here("data-input", "orgs.parquet"))
 
 } else {
-  orgs <- read_rds("data-input/orgs.rds")
+  orgs <- read_parquet(here::here("data-input", "orgs.parquet"))
 }
 
 orgs %>%
-  distinct(druhuj_id, poddruhuj_id, druhuj_nazev) %>% View()
+  count(druhuj_id, poddruhuj_id, druhuj_nazev)
 
 poddruhy <- statnipokladna::sp_get_codelist("poddruhuj")
-druhy <- statnipokladna::sp_get_codelist("poddruhuj")
+druhy <- statnipokladna::sp_get_codelist("druhuj")
 
 poddruhy_joinable <- poddruhy %>%
   mutate(across(c(poddruhuj_id, druhuj_id), ~str_remove(., "^0")),
