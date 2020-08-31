@@ -17,6 +17,8 @@ navbar:
       href: 03_explore.html
     - text: "Analýza geograficky složitých projektů"
       href: 04_explore-complicated-projects.html
+    - text: "Analýza projektů bez identifikace obce ZÚJ"
+      href: 06_explore-obecless-projects.html
   - text: Úpravy dat
     menu:
     - text: "Řešení projektů bez místa realizace"
