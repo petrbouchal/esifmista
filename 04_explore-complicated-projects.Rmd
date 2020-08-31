@@ -216,7 +216,7 @@ dtl_with_geostatus_places <- dtl %>%
 ```
 
 ```{r}
-data_geocheck_file <- here::here("data-processed", "data_geocheck.parquet")
+data_geocheck_file <- here::here("data-processed", "dt-geohierarchy-check.parquet")
 
 data_geocheck <- read_parquet(data_geocheck_file)
 

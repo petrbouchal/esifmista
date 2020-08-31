@@ -314,7 +314,7 @@ source("check-geo-hierarchy-fns.R")
 
 ```{r check-geo-hierarchy}
 
-data_geocheck_file <- here::here("data-processed", "data_geocheck.parquet")
+data_geocheck_file <- here::here("data-processed", "dt-geohierachy-check.parquet")
 
 if (file.exists(data_geocheck_file)) {
   data_geocheck <- read_parquet(data_geocheck_file)
