@@ -293,6 +293,7 @@ data_for_geocheck <- dtl %>%
 ```{r data-for-geocheck-inspect}
 head(data_for_geocheck)
 ```
+
 ```{r geocheck-counts}
 n_multilevel <- n_distinct(data_for_geocheck$prj_id)
 n_multilevel
@@ -395,7 +396,8 @@ dtl_zujobec <- dtl %>%
   filter(typ == "id") %>% 
   mutate(n_levels = length(unique(level)), 
          n_values = length(unique(value)),
-         zujobec = (n_levels == 2 & n_values == 1),
+         zujobec = setequal(level, c("zuj", "obec")) & n_values == n()/2,
+         # zujobec = (n_levels == 2 & n_values == 1),
          onelevelmultiunits = (n_levels == 1 & n_values > 1)) %>% 
   distinct(prj_id, onelevelmultiunits, zujobec)
 ```
