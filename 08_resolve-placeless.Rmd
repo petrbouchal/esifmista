@@ -106,14 +106,9 @@ Podíváme se na ně do hlavního datasetu:
 ```{r}
 dtl %>% 
   filter(typ == "id") %>% 
+  distinct(prj_id, prj_nazev, p_nazev, level) %>% 
   filter(prj_id %in% prj_no_obec$prj_id & prj_id %in% dt_chkonp$prj_id) %>% 
-  group_by(prj_id) %>% 
-  mutate(maxlevel = min(as.numeric(level)),
-         n_levels = length(unique(level))) %>% 
-  filter(as.numeric(level) == maxlevel) %>% 
-  group_by(op_id, prj_id, prj_nazev, p_nazev, level, n_levels) %>% 
-  summarise(n_units = length(unique(value))) %>% 
-  arrange(prj_id) %>% View()
+  left_join(dt_geostructure_bylvl)
 ```
 
 Jaká je struktura míst realizace u těch zbylých?
