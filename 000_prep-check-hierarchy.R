@@ -82,9 +82,7 @@ is_parent("CZ0513", "CZ051", "okres", "kraj", ids) # Brno
 dfs <- read_parquet("data-processed/sample_multilevel.parquet") %>%
   group_by(prj_id) %>%
   filter(n_distinct(level) > 1) %>%
-  mutate(level_num = as.numeric(level),
-         # change the name of ORP which is named oddly in original data
-         level = fct_recode(level, orp = "rozobec"))
+  mutate(level_num = as.numeric(level))
 
 unique(dfs$level)
 levels(dfs$level)

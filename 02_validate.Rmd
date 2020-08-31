@@ -26,7 +26,7 @@ setdiff(dt$prj_id, dtl$prj_id)
 ```{r codes-in-data}
 obec_id_e <- unique(dt$g_obec_id)
 kraj_id_e <- unique(dt$g_kraj_id)
-orp_id_e <- unique(dt$g_rozobec_id)
+orp_id_e <- unique(dt$g_orp_id)
 okres_id_e <- unique(dt$g_okres_id)
 zuj_id_e <- unique(dt$g_zuj_id)
 ```
@@ -67,12 +67,12 @@ head(zuj_n$kod_n)
 dt_validated <- dt %>% 
   mutate(valid_kraj = g_kraj_id %in% csu_kraj$CZNUTS,
          valid_obec = g_obec_id %in% obce_n$kod_n,
-         valid_orp = g_rozobec_id %in% csu_orp$CHODNOTA,
+         valid_orp = g_orp_id %in% csu_orp$CHODNOTA,
          valid_okres = g_okres_id %in% csu_okres$CHODNOTA,
          valid_zuj = g_zuj_id %in% zuj_n$kod_n) %>% 
   mutate(valid_kraj = if_else(is.na(g_kraj_id), NA, valid_kraj),
          valid_obec = if_else(is.na(g_obec_id), NA, valid_obec),
-         valid_orp = if_else(is.na(g_rozobec_id), NA, valid_orp),
+         valid_orp = if_else(is.na(g_orp_id), NA, valid_orp),
          valid_okres = if_else(is.na(g_okres_id), NA, valid_okres),
          valid_zuj = if_else(is.na(g_zuj_id), NA, valid_zuj)) %>% 
   select(matches(c("valid", "g_.*_id")))
@@ -119,12 +119,12 @@ Kontrola znova:
 dt_zujfix_validated <- dt_zujfix %>% 
   mutate(valid_kraj = g_kraj_id %in% csu_kraj$CZNUTS,
          valid_obec = g_obec_id %in% obce_n$kod_n,
-         valid_orp = g_rozobec_id %in% csu_orp$CHODNOTA,
+         valid_orp = g_orp_id %in% csu_orp$CHODNOTA,
          valid_okres = g_okres_id %in% csu_okres$CHODNOTA,
          valid_zuj = g_zuj_id %in% zuj_n$kod_n) %>% 
   mutate(valid_kraj = if_else(is.na(g_kraj_id), NA, valid_kraj),
          valid_obec = if_else(is.na(g_obec_id), NA, valid_obec),
-         valid_orp = if_else(is.na(g_rozobec_id), NA, valid_orp),
+         valid_orp = if_else(is.na(g_orp_id), NA, valid_orp),
          valid_okres = if_else(is.na(g_okres_id), NA, valid_okres),
          valid_zuj = if_else(is.na(g_zuj_id), NA, valid_zuj)) %>% 
   select(matches(c("valid", "g_.*_id")))
@@ -192,8 +192,8 @@ dt_val_ids <- dt_zujfix %>%
               select(g_okres_nazev_csu = TEXT, 
                      g_okres_id = CHODNOTA)) %>% 
   left_join(csu_orp %>% 
-              select(g_rozobec_nazev_csu = TEXT, 
-                     g_rozobec_id = CHODNOTA)) %>% 
+              select(g_orp_nazev_csu = TEXT, 
+                     g_orp_id = CHODNOTA)) %>% 
   left_join(csu_kraj %>% 
               select(g_kraj_nazev_csu = TEXT, 
                      g_kraj_id = CZNUTS))
@@ -207,8 +207,8 @@ dt_val_ids_agent <- dt_val_ids %>%
                  vars(g_zuj_nazev_csu), na_pass = T) %>% 
   col_vals_equal(g_obec_nazev, 
                  vars(g_obec_nazev_csu), na_pass = T) %>% 
-  col_vals_equal(g_rozobec_nazev, 
-                 vars(g_rozobec_nazev_csu), na_pass = T) %>% 
+  col_vals_equal(g_orp_nazev, 
+                 vars(g_orp_nazev_csu), na_pass = T) %>% 
   col_vals_equal(g_okres_nazev, 
                  vars(g_okres_nazev_csu), na_pass = T) %>% 
   col_vals_equal(g_kraj_nazev, 

@@ -208,7 +208,6 @@ dtl_with_geostatus_places <- dtl %>%
   filter(typ == "id") %>% 
   drop_na(value) %>% 
   left_join(places_geostatus %>% 
-              mutate(level = recode(level, orp = "rozobec")) %>% 
               select(prj_id, value, level, value_has_valid_parent)) %>% 
   left_join(prjs_geostatus %>% 
               select(prj_id, geostatus)) %>% 

@@ -249,8 +249,8 @@ weird_projs <- dtl_geo_counts %>%
   filter(total_geo_ids > 5) %>% 
   select(-geo_ids) %>% 
   spread(level, n_geos) %>% 
-  filter(kraj > obec | kraj > rozobec | kraj > okres | obec > zuj | kraj > zuj | okres > rozobec |
-           rozobec > obec | rozobec > zuj | okres > obec | okres > zuj)
+  filter(kraj > obec | kraj > orp | kraj > okres | obec > zuj | kraj > zuj | okres > orp |
+           orp > obec | orp > zuj | okres > obec | okres > zuj)
 
 weird_projs
 ```
@@ -286,8 +286,7 @@ data_for_geocheck <- dtl %>%
   filter(prj_id %in% multilevel_ids,
          typ == "id") %>%
   drop_na(value) %>% 
-  mutate(level_num = as.numeric(level),
-         level = fct_recode(level, orp = "rozobec")) %>%
+  mutate(level_num = as.numeric(level)) %>%
   select(prj_id, value, level, level_num)
 ```
 

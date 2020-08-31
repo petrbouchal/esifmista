@@ -42,6 +42,7 @@ dt <- dt0 %>%
          p_sidlo_id = sidlo_kod,
   ) %>%
   rename_all(str_replace, "(?!_)cislo$", "_id") %>%
+  rename_all(str_replace, "rozobec", "orp") %>%
   rename_at(vars(matches(geounits_pattern)), ~paste0("g_", .)) %>%
   rename_at(vars(matches(geounits_name_pattern)), ~paste0(., "_nazev")) %>%
   group_by(prj_id) %>%

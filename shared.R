@@ -2,11 +2,11 @@ library(magrittr)
 library(forcats)
 
 
-geounits <- c("zuj", "obec", "rozobec", "okres", "kraj")
-geounits_recoder <- c("zuj", "obec", "rozobec", "okres", "kraj")
+geounits <- c("zuj", "obec", "orp", "okres", "kraj")
+geounits_recoder <- c("zuj", "obec", "orp", "okres", "kraj")
 names(geounits_recoder) <- 1:5
 
-factor(c("okres", "kraj")) %>% fct_relevel(geounits)
+# factor(c("okres", "kraj")) %>% fct_relevel(geounits)
 
 col_blue <- "#428bca"
 col_red <- "#d9534f"
