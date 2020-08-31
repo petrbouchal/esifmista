@@ -2,11 +2,11 @@ library(magrittr)
 library(forcats)
 
 
-geounits <- c("zuj", "obec", "orp", "okres", "kraj")
-geounits_recoder <- c("zuj", "obec", "orp", "okres", "kraj")
-names(geounits_recoder) <- 1:5
+geolevels <- c("zuj", "obec", "orp", "okres", "kraj")
+geolevels_recoder <- c("zuj", "obec", "orp", "okres", "kraj")
+names(geolevels_recoder) <- 1:5
 
-# factor(c("okres", "kraj")) %>% fct_relevel(geounits)
+# factor(c("okres", "kraj")) %>% fct_relevel(geolevels)
 
 col_blue <- "#428bca"
 col_red <- "#d9534f"
@@ -22,7 +22,7 @@ make_long_geo <- function(data) {
     separate(name, c("g", "level", "typ")) %>%
     select(-g) %>%
     mutate(level = as_factor(level) %>%
-             fct_relevel(geounits)) %>%
+             fct_relevel(geolevels)) %>%
     ungroup()
 }
 

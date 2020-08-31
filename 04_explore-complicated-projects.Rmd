@@ -171,7 +171,7 @@ gst_for_upset <- dtl %>%
 ggplot2::update_geom_defaults("line", list(colour = "black"))
 ggplot(gst_for_upset) +
   geom_bar(mapping = aes(x = geos, fill = op_id), position = "stack") +
-  scale_x_upset(order_by = "degree", sets = geounits) +
+  scale_x_upset(order_by = "degree", sets = geolevels) +
   # scale_y_continuous(limits = c(0, 6e4)) +
   # scale_y_log10(limits = c(1, 1e5), n.breaks = 10,
   #               labels = scales::label_number(1)) +
@@ -187,7 +187,7 @@ ggplot2::update_geom_defaults("line", list(colour = "black"))
 
 ggplot(gst_for_upset) +
   geom_bar(mapping = aes(x = geos)) +
-  scale_x_upset(order_by = "degree", sets = geounits) +
+  scale_x_upset(order_by = "degree", sets = geolevels) +
   # scale_y_log10(n.breaks = 6, labels = scales::label_number(1)) +
   # scale_y_continuous(trans = scales::log_trans(), breaks = scales::pretty_breaks()) +
   ptrr::theme_ptrr(multiplot = T) +

@@ -28,8 +28,8 @@ files
 
 dt0 <- map_dfr(files, read_xlsx, skip = 1, .id = "op_id")
 
-geounits_pattern <- str_c("^", geounits, collapse = "|")
-geounits_name_pattern <- str_c(paste0(geounits, "$"), collapse = "|")
+geolevels_pattern <- str_c("^", geolevels, collapse = "|")
+geolevels_name_pattern <- str_c(paste0(geolevels, "$"), collapse = "|")
 
 dt <- dt0 %>%
   janitor::clean_names() %>%
@@ -43,8 +43,8 @@ dt <- dt0 %>%
   ) %>%
   rename_all(str_replace, "(?!_)cislo$", "_id") %>%
   rename_all(str_replace, "rozobec", "orp") %>%
-  rename_at(vars(matches(geounits_pattern)), ~paste0("g_", .)) %>%
-  rename_at(vars(matches(geounits_name_pattern)), ~paste0(., "_nazev")) %>%
+  rename_at(vars(matches(geolevels_pattern)), ~paste0("g_", .)) %>%
+  rename_at(vars(matches(geolevels_name_pattern)), ~paste0(., "_nazev")) %>%
   group_by(prj_id) %>%
   mutate(prj_radek = row_number()) %>%
   ungroup()
