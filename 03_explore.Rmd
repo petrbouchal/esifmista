@@ -58,20 +58,35 @@ dtl %>%
 
 ### Na které nejvyšší úrovni jsou projekty lokalizovány?
 
-```{r maxlevels, warning=F}
-maxlevels <- dtl %>% 
-  filter(!is.na(value) & typ != "shortid") %>% 
+```{r dt_geostructure_byprj, warning=F}
+dt_geostructure_byprj <- dtl %>% 
+  filter(!is.na(value) & typ == "id") %>% 
   # sample_n(10) %>% 
   mutate(level_num = as.numeric(level)) %>% 
-  select(prj_id, level, level_num, op_id) %>% 
+  select(prj_id, level, level_num, op_id, value) %>% 
   group_by(prj_id, op_id) %>% 
-  summarise(maxlevel = max(level_num), minlevel = min(level_num), .groups = "drop") %>% 
+  summarise(unique_units = length(unique(value)),
+            n_levels = length(unique(level)),
+            maxlevel = max(level_num), minlevel = min(level_num), 
+            n_units = n(),
+            .groups = "drop") %>% 
   mutate(across(c(maxlevel, minlevel), recode, !!!geolevels_recoder)) %>% 
   ungroup()
+
+write_parquet(dt_geostructure_byprj, here::here("data-processed", "dt_geostructure_by-prj.parquet"))
 ```
 
 ```{r}
-head(maxlevels)
+dt_geostructure_bylvl <- dtl %>% 
+  filter(!is.na(value) & typ == "id") %>% 
+  select(prj_id, level, op_id, value) %>% 
+  mutate(level_num = as.numeric(level)) %>% 
+  group_by(prj_id, op_id, level, level_num) %>% 
+  summarise(n_units = length(unique(value))) %>%
+  group_by(prj_id, op_id) %>%
+  mutate(min_level = level_num == min(level_num))
+
+write_parquet(dt_geostructure_bylvl, here::here("data-processed", "dt_geostructure_by-lvl.parquet"))
 ```
 
 ### Jaký podíl projektů nemá lokalizaci na obec nebo ZÚJ?
@@ -91,10 +106,10 @@ write_parquet(prj_no_obec, here::here("data-processed", "prj_id_noobec.parquet")
 ```
 
 ```{r}
-maxlevels %>% 
+dt_geostructure_byprj %>% 
   mutate(notoplevel = prj_id %in% prj_no_obec$prj_id) %>% 
   count(op_id, wt = mean(notoplevel)) %>%
-  bind_rows(maxlevels %>% 
+  bind_rows(dt_geostructure_byprj %>% 
               mutate(notoplevel = prj_id %in% prj_no_obec$prj_id) %>% 
               count(wt = mean(notoplevel)) %>% 
               mutate(op_id = "Celkem")) %>% 
@@ -153,8 +168,8 @@ ggplot2::update_geom_defaults("line", list(colour = "darkblue"))
 ```
 
 
-```{r maxlevels-show, warning=F}
-maxlevels %>% 
+```{r dt_geostructure_byprj-show, warning=F}
+dt_geostructure_byprj %>% 
   count(op_id, maxlevel) %>% 
   mutate(maxlevel = fct_relevel(maxlevel, geolevels)) %>% 
   spread(maxlevel, n)
