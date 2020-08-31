@@ -106,7 +106,7 @@ dt_zujfix <- dt %>%
   mutate(g_zuj_id_new = if_else(str_length(g_zuj_id) < 11,
                                 paste0(CZNUTS, g_zuj_shortid), g_zuj_id),
          g_zuj_id = g_zuj_id_new) %>% 
-  select(-g_zuj_id_new)
+  select(-g_zuj_id_new, -CZNUTS)
 
 dt_zujfix %>% 
   mutate(ln = str_length(g_zuj_id)) %>% 
