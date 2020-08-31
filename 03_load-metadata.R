@@ -132,7 +132,11 @@ poddruhy_joinable <- poddruhy %>%
   select(-druhuj_id)
 
 orgs_detail <- orgs %>%
-  left_join(poddruhy_joinable)
+  mutate(across(c(poddruhuj_id, druhuj_id), ~str_pad(., 2, pad = "0"))) %>%
+  left_join(poddruhy)
+
+orgs_detail %>%
+  count(druhuj_id, poddruhuj_id, druhuj_nazev, poddruhuj_nazev, sort = T)
 
 write_parquet(orgs_detail, here::here("data-processed", "orgs_sp.parquet"))
 
