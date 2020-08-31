@@ -91,6 +91,31 @@ dt_chkonp %>%
 
 Takže data o CHKO/NP nám pomůžou rozřešit projekty s chybějící lokalizací a pak ještě cca 30 projektů bez informace o obci.
 
+```{r}
+dt_chkonp %>%
+  left_join(prj_meta) %>% 
+  distinct(prj_id, op_id) %>% 
+  mutate(noobec = prj_id %in% prj_no_obec$prj_id, 
+         noplace = prj_id %in% prj_noplace) %>% 
+  filter(noobec) %>% 
+  distinct(prj_id, op_id)
+```
+
+Podíváme se na ně do hlavního datasetu:
+
+```{r}
+dtl %>% 
+  filter(typ == "id") %>% 
+  filter(prj_id %in% prj_no_obec$prj_id & prj_id %in% dt_chkonp$prj_id) %>% 
+  group_by(prj_id) %>% 
+  mutate(maxlevel = min(as.numeric(level)),
+         n_levels = length(unique(level))) %>% 
+  filter(as.numeric(level) == maxlevel) %>% 
+  group_by(op_id, prj_id, prj_nazev, p_nazev, level, n_levels) %>% 
+  summarise(n_units = length(unique(value))) %>% 
+  arrange(prj_id) %>% View()
+```
+
 Jaká je struktura míst realizace u těch zbylých?
 
 ```{r chkodata-geo-structure}
@@ -245,7 +270,15 @@ dt_with_chuobce %>%
   group_by(chkonp_nazev, chkonp_typ) %>% 
   count()
 ```
+
 ```{r rslt-write}
 write_parquet(dt_with_chuobce, here::here("data-processed", "dt_noplace_filled.parquet"))
 ```
 
+```{r rslt-reshape}
+dt_with_chuobce_reshaped <- dt_with_chuobce %>% 
+  mutate(level = "obec", level_orig = "chkonp") %>% 
+  rename_with(~str_remove(., "zuj_")) %>% 
+  select(-starts_with("chkonp"))
+
+```
