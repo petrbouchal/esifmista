@@ -24,6 +24,8 @@ make_long_geo <- function(data) {
     mutate(level = as_factor(level) %>%
              fct_relevel(geolevels)) %>%
     ungroup()
+    # ungroup() %>%
+    # spread(typ, value)
 }
 
 ptrr::set_ptrr_ggplot_fonts()
