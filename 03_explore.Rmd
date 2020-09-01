@@ -71,6 +71,7 @@ dt_geostructure_byprj <- dtl %>%
             n_units = n(),
             .groups = "drop") %>% 
   mutate(across(c(maxlevel, minlevel), recode, !!!geolevels_recoder)) %>% 
+  mutate(multilevel = n_levels > 1) %>% 
   ungroup()
 
 write_parquet(dt_geostructure_byprj, here::here("data-processed", "dt_geostructure_by-prj.parquet"))
@@ -84,7 +85,9 @@ dt_geostructure_bylvl <- dtl %>%
   group_by(prj_id, op_id, level, level_num) %>% 
   summarise(n_units = length(unique(value))) %>%
   group_by(prj_id, op_id) %>%
-  mutate(min_level = level_num == min(level_num))
+  mutate(min_level = level_num == min(level_num)) %>% 
+  mutate(multiunit = n_units > 1) %>%
+  ungroup()
 
 write_parquet(dt_geostructure_bylvl, here::here("data-processed", "dt_geostructure_by-lvl.parquet"))
 ```
@@ -177,8 +180,8 @@ dt_geostructure_byprj %>%
 
 ### Ve kterých projektech je více územních úrovní?
 
-```{r multilevel-list}
-dtl %>% 
+```{r multilevel-list, eval=FALSE}
+dtl %>%  
   filter(!is.na(value) & typ == "id") %>% 
   distinct(prj_id, level)
 ```
@@ -187,10 +190,7 @@ dtl %>%
 
 ```{r multilevel-data}
 multilevel <- dtl %>% 
-  filter(!is.na(value) & typ == "id") %>% 
-  group_by(prj_id) %>% 
-  mutate(n_urovni = length(unique(level)),
-         multilevel = n_urovni > 1) %>% 
+  left_join(dt_geostructure_byprj %>% select(prj_id, multilevel)) %>%  
   ungroup()
   # filter(multilevel) %>%
 ```
