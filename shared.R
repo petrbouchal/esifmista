@@ -22,7 +22,8 @@ make_long_geo <- function(data) {
     separate(name, c("g", "level", "typ")) %>%
     select(-g) %>%
     mutate(level = as_factor(level) %>%
-             fct_relevel(geolevels)) %>%
+             fct_relevel(geolevels) %>%
+             factor(ordered = T)) %>%
     ungroup()
     # ungroup() %>%
     # spread(typ, value)
