@@ -96,7 +96,8 @@ vyzvy <- purrr::map_df(vyzvyxml, function(x) {
   ids <- x %>% xml2::xml_child(3) %>% xml2::xml_text()
   descs <- x %>% xml2::xml_child(4) %>% xml2::xml_text()
 
-  tibble(vyzva_id = ids, vyzva_nazev = descs)
+  tibble(vyzva_id = ids, vyzva_nazev = descs) %>%
+    mutate(vyzva_nazev = str_remove(vyzva_nazev, "\\n$"))
 
 })
 
