@@ -48,7 +48,8 @@ write_parquet(zujokres, here::here("data-processed", "zuj-okres-csu.parquet"))
 czsoids_all <- zuj_csu %>%
   select(zuj_id = CHODNOTA, zuj_nazev = TEXT) %>%
   full_join(zujobec %>%
-              select(obec_id = CHODNOTA1, zuj_id = CHODNOTA2)) %>%
+              select(obec_id = CHODNOTA1, zuj_id = CHODNOTA2,
+                     obec_nazev = TEXT1)) %>%
   left_join(obecorp %>%
               select(orp_id = CHODNOTA1, orp_nazev = TEXT1,
                      obec_id = CHODNOTA2)) %>%
