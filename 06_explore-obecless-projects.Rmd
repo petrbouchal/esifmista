@@ -58,6 +58,12 @@ orgs <- read_parquet(here::here("data-processed", "orgs_sp.parquet"))
 prj_no_obec <- read_parquet(here::here("data-processed", "prj_id_noobec.parquet"))
 ```
 
+```{r data-geo}
+zuj_geo <- read_rds(here::here("data-processed", "geo_zuj-all.rds"))
+obce_geo <- read_rds(here::here("data-input", "obce_ruian.rds"))
+```
+
+
 ```{r subset data}
 dtl_noobec <- dtl %>% 
   filter(prj_id %in% prj_no_obec$prj_id) %>% 
