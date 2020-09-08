@@ -180,7 +180,9 @@ dtl_noobec_geocount %>%
 ```{r countrywide}
 dtl_noobec_geocount %>% 
   count(op_id, level, n_units, wt = length(unique(prj_id))) %>% 
-  spread(op_id, n)
+  spread(op_id, n) %>% 
+  group_by(level) %>% 
+  slice_max(n_units, n = 4)
 ```
 
 ### Jaký podíl projektů má veřejného žadatele?
