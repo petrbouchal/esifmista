@@ -22,12 +22,20 @@ dt <- read_parquet(here::here("data-processed",
 dtl <- read_parquet(here::here("data-processed", 
                                "misto_fix-02-gnames_long-geo.parquet"))
 
-ops <- read_parquet(here::here("data-processed", "op-codes.parquet"))
 prj_meta <- read_parquet(here::here("data-processed", "prj-esif-meta.parquet"))
-vyzvy <- read_parquet(here::here("data-processed", "vyzvy-codes.parquet"))
+dt_geostructure_byprj <- read_parquet(here::here("data-processed", "dt_geostructure_by-prj.parquet"))
+dt_geostructure_bylvl <- read_parquet(here::here("data-processed", "dt_geostructure_by-lvl.parquet"))
+
+source(here::here("read_metadata.R"))
 ```
 
-```{r}
+```{r data-basics}
+dts <- dt %>% 
+  select(op_id, starts_with("prj_"), starts_with("p_"), -prj_radek) %>% 
+  distinct()
+```
+
+```{r data-orgs}
 orgs <- read_parquet(here::here("data-processed", "orgs_sp.parquet"))
 ```
 

@@ -29,18 +29,26 @@ dt <- read_parquet(here::here("data-processed",
 dtl <- read_parquet(here::here("data-processed", 
                                "misto_fix-02-gnames_long-geo.parquet"))
 
-ops <- read_parquet(here::here("data-processed", "op-codes.parquet"))
 prj_meta <- read_parquet(here::here("data-processed", "prj-esif-meta.parquet"))
+
+ops <- read_parquet(here::here("data-processed", "op-codes.parquet"))
 vyzvy <- read_parquet(here::here("data-processed", "vyzvy-codes.parquet"))
 
 ids_and_names <- read_parquet(here::here("data-processed", 
                                          "czso-ids-all.parquet"))
-ids <- ids_and_names %>%
-  select(ends_with("_id")) %>%
-  rename_with(.fn = str_remove, pattern = "_id") %>%
-  mutate(zuj =  paste0(kraj, zuj),
-         obec = paste0(kraj, obec))
+
+dt_geostructure_byprj <- read_parquet(here::here("data-processed", "dt_geostructure_by-prj.parquet"))
+dt_geostructure_bylvl <- read_parquet(here::here("data-processed", "dt_geostructure_by-lvl.parquet"))
+
+source(here::here("read_metadata.R"))
 ```
+
+```{r data-basics}
+dts <- dt %>% 
+  select(op_id, starts_with("prj_"), starts_with("p_"), -prj_radek) %>% 
+  distinct()
+```
+
 
 ```{r data-orgs}
 orgs <- read_parquet(here::here("data-processed", "orgs_sp.parquet"))
