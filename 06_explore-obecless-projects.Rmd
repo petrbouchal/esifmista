@@ -151,11 +151,7 @@ dtl_noobec %>%
 ### Na jaké nejnižší úrovni jsou lokalizovány?
 
 ```{r lowest-misto}
-dtl_noobec %>% 
-  filter(typ == "id") %>% 
-  group_by(prj_id, op_id) %>% 
-  summarise(minlevel = min(as.numeric(level)), .groups = "drop") %>% 
-  mutate(minlevel = recode(minlevel, !!!geolevels_recoder)) %>% 
+dt_geostructure_byprj %>% 
   count(op_id, minlevel, wt = length(unique(prj_id))) %>% 
   spread(op_id, n)
 ```
