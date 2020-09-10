@@ -62,15 +62,14 @@ dtl %>%
 dt_geostructure_byprj <- dtl %>% 
   filter(!is.na(value) & typ == "id") %>% 
   # sample_n(10) %>% 
-  mutate(level_num = as.numeric(level)) %>% 
-  select(prj_id, level, level_num, op_id, value) %>% 
+  # mutate(level_num = as.numeric(level)) %>% 
+  select(prj_id, level, op_id, value) %>% 
   group_by(prj_id, op_id) %>% 
   summarise(unique_units = length(unique(value)),
             n_levels = length(unique(level)),
-            maxlevel = max(level_num), minlevel = min(level_num), 
+            maxlevel = max(level), minlevel = min(level), 
             n_units = n(),
             .groups = "drop") %>% 
-  mutate(across(c(maxlevel, minlevel), recode, !!!geolevels_recoder)) %>% 
   mutate(multilevel = n_levels > 1) %>% 
   ungroup()
 
@@ -81,11 +80,10 @@ write_parquet(dt_geostructure_byprj, here::here("data-processed", "dt_geostructu
 dt_geostructure_bylvl <- dtl %>% 
   filter(!is.na(value) & typ == "id") %>% 
   select(prj_id, level, op_id, value) %>% 
-  mutate(level_num = as.numeric(level)) %>% 
-  group_by(prj_id, op_id, level, level_num) %>% 
+  group_by(prj_id, op_id, level) %>% 
   summarise(n_units = length(unique(value))) %>%
   group_by(prj_id, op_id) %>%
-  mutate(min_level = level_num == min(level_num)) %>% 
+  mutate(min_level = level == min(level)) %>% 
   mutate(multiunit = n_units > 1) %>%
   ungroup()
 
@@ -284,8 +282,8 @@ data_for_geocheck <- dtl %>%
   filter(prj_id %in% multilevel_ids,
          typ == "id") %>%
   drop_na(value) %>% 
-  mutate(level_num = as.numeric(level)) %>%
-  select(prj_id, value, level, level_num)
+  # mutate(level_num = as.numeric(level)) %>%
+  select(prj_id, value, level)
 ```
 
 ```{r data-for-geocheck-inspect}
@@ -321,7 +319,7 @@ if (file.exists(data_geocheck_file)) {
   data_geocheck <- data_for_geocheck %>%
     ungroup() %>%
     group_by(prj_id) %>%
-    nest(geodata = c(level, value, level_num)) %>%
+    nest(geodata = c(level, value)) %>%
     mutate(geocheck = map(geodata, check_all_parents, ids)) %>%
     unnest(c(geocheck)) %>% 
     select(-geodata)

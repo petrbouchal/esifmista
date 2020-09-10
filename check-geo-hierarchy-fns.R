@@ -69,36 +69,31 @@ check_all_parents <- function(df, id_table) {
   #' @examples
   #' # ADD_EXAMPLES_HERE
   get_relevant_parents <- function(val, lev, data) {
-    lev_num <- as.numeric(lev)
 
     # recall `df` contains cols
     # - value
     # - level
-    # - level_num
 
     data %>%
       # only levels higher than that of the checked value
-      filter(level_num > lev_num) %>%
+      filter(level > lev) %>%
       # distinct
-      distinct(value, level, level_num) %>%
+      distinct(value, level) %>%
       # rename cols
       rename(parent = value,
-             parent_level = level,
-             parent_level_num = level_num) %>%
+             parent_level = level) %>%
       mutate(value = val,
-             level = lev,
-             level_num = lev_num)
+             level = lev)
   }
 
   # create numeric level for unambiguous comparison
-  df <- df %>% mutate(level_num = as.numeric(level))
 
   # print(df)
 
   # select distinct values, exclude kraj (top level with no need to check)
 
   unique_values_nokraj <- df %>%
-    distinct(value, level, level_num) %>%
+    distinct(value, level) %>%
     filter(level != "kraj")
 
   relevant_parents <- map2_dfr(unique_values_nokraj$value,
@@ -114,9 +109,7 @@ check_all_parents <- function(df, id_table) {
                                      parent,
                                      level,
                                      parent_level),
-                                is_parent, id_table)) %>%
-    select(-ends_with("_num"))
-
+                                is_parent, id_table))
 }
 
 make_pb <- function(n = 1000) {
