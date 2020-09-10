@@ -372,9 +372,10 @@ prjs_fishy_hierarchies <- prjs_geocheck %>%
   filter(!all_ok) %>% 
   distinct(prj_id, all_ok)
 
-prjs_nogeo <- dtl %>% 
+prjs_nogeo <- dt %>% 
+  mutate(nogeo = is.na(g_zuj_id) & is.na(g_obec_id) & is.na(g_orp_id) & is.na(g_okres_id) & is.na(g_kraj_id)) %>% 
   group_by(prj_id) %>% 
-  summarise(no_geo = all(is.na(value)))
+  summarise(no_geo = all(nogeo))
 
 table(prjs_nogeo$no_geo)
 nrow(prjs_fishy_hierarchies)
