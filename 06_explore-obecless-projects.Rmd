@@ -122,9 +122,8 @@ if (file.exists(dtl_pcheck_file)) {
 
 ```{r incpect sidlo check}
 dtl_noobec_pcheck %>% 
-  mutate(level_num = as.numeric(level)) %>% 
   group_by(prj_id) %>% 
-  filter(level_num == min(level_num)) %>% 
+  filter(level == min(level)) %>% 
   filter(n() == 1) %>% 
   ungroup() %>% 
   count(op_id, level, sidlo_in_geo) %>% 
@@ -158,14 +157,12 @@ dt_geostructure_byprj %>%
 
 ### Kolik z nich jsou celostátní?
 
-```{r }
+```{r countrywide-prep}
 dtl_noobec_geocount <- dtl_noobec %>% 
   filter(typ == "nazev") %>% 
   group_by(prj_id, op_id) %>% 
-  mutate(level_num = as.numeric(level),
-         minlevel_num = min(level_num),
-         minlevel = recode(minlevel_num, !!!geolevels_recoder)) %>% 
-  filter(level_num == minlevel_num) %>% 
+  mutate(minlevel = min(level)) %>% 
+  filter(level == minlevel) %>% 
   mutate(n_units = length(unique(value))) %>% 
   ungroup() %>% 
   arrange(prj_id, prj_radek)
