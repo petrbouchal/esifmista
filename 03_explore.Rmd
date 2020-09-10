@@ -53,7 +53,7 @@ write_parquet(prj_esif_meta, here::here("data-processed", "prj-esif-meta.parquet
 ```{r}
 dtl %>% 
   ungroup() %>% 
-  summarise(n_distinct(prj_id))
+  summarise(length(unique(prj_id)))
 ```
 
 ### Na které nejvyšší úrovni jsou projekty lokalizovány?
