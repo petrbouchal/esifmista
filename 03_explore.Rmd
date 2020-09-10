@@ -387,10 +387,10 @@ nrow(prjs_fishy_hierarchies)
 
 ```{r}
 dtl_zujobec <- dtl %>% 
-  select(prj_id, value, level, typ) %>% 
-  group_by(prj_id) %>% 
-  drop_na(value) %>% 
   filter(typ == "id") %>% 
+  drop_na(value) %>% 
+  select(prj_id, value, level) %>% 
+  group_by(prj_id) %>% 
   mutate(n_levels = length(unique(level)), 
          n_values = length(unique(value)),
          zujobec = setequal(level, c("zuj", "obec")) & n_values == n()/2,
