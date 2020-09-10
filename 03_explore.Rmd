@@ -214,26 +214,14 @@ multilevel %>%
 
 ## Množství územních jednotek pro jednotlivé projekty {.tabset .tabset-pills .tabset-fade}
 
-```{r n-units-per-level-build}
-dtl_geo_counts <- dtl %>% 
-  filter(typ == "id" & !is.na(value)) %>% 
-  # filter(prj_id == "CZ.05.1.24/0.0/0.0/18_096/0008287") %>% 
-  select(op_id, prj_id, level, value) %>% 
-  group_by(op_id, prj_id, level) %>% 
-  nest(geo_ids = value) %>% 
-  mutate(n_geos = map_int(geo_ids, nrow))
-```
-
 ### Histogram
 
 ```{r n-units-per-level-hist, echo = F, warning=F, message=F}
 library(ggridges)
 
-dtl_geo_counts %>% 
-  drop_na(n_geos) %>% 
-  ungroup() %>% 
+dt_geostructure_bylvl %>% 
   group_by(op_id) %>% 
-  ggplot(aes(n_geos, level)) +
+  ggplot(aes(n_units, level)) +
   geom_density_ridges(fill = "darkblue", colour = "white") +
   facet_wrap(~op_id, scales = "free") +
   theme_ptrr("both", multiplot = T)
@@ -242,11 +230,9 @@ dtl_geo_counts %>%
 ### Body
 
 ```{r n-units-per-level-point, echo = F, warning=F, message=F}
-dtl_geo_counts %>% 
-  drop_na(n_geos) %>% 
-  ungroup() %>% 
+dt_geostructure_bylvl %>% 
   group_by(op_id) %>% 
-  ggplot(aes(n_geos, level)) +
+  ggplot(aes(n_units, level)) +
   geom_point(alpha = .05, position = position_jitter(width = .5, height = .5)) +
   facet_wrap(~op_id, scales = "free_x") +
   theme_ptrr("both", multiplot = T)
@@ -260,12 +246,11 @@ dtl_geo_counts %>%
 # tohle by se mělo (logicky?) odchytit v obecné kontrole hierarchie, takže není
 # třeba to dál integrovat
 
-weird_projs <- dtl_geo_counts %>% 
+weird_projs <- dt_geostructure_bylvl %>% 
   group_by(prj_id) %>% 
-  mutate(total_geo_ids = sum(n_geos)) %>% 
+  mutate(total_geo_ids = sum(n_units)) %>% 
   filter(total_geo_ids > 5) %>% 
-  select(-geo_ids) %>% 
-  spread(level, n_geos) %>% 
+  spread(level, n_units) %>% 
   filter(kraj > obec | kraj > orp | kraj > okres | obec > zuj | kraj > zuj | okres > orp |
            orp > obec | orp > zuj | okres > obec | okres > zuj)
 
