@@ -193,6 +193,8 @@ multilevel <- dtl %>%
   left_join(dt_geostructure_byprj %>% select(prj_id, multilevel)) %>%  
   ungroup()
   # filter(multilevel) %>%
+
+multilevel_ids <- unique(multilevel[multilevel$multilevel,]$prj_id)
 ```
 
 
@@ -291,10 +293,6 @@ weird_projs_full
 ## Validita územní hierarchie {.tabset}
 
 ### Analýza
-
-```{r define-scope}
-multilevel_ids <- unique(multilevel[multilevel$multilevel,]$prj_id)
-```
 
 ```{r data-for-geocheck}
 data_for_geocheck <- dtl %>% 
