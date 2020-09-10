@@ -282,6 +282,189 @@ Příspěvkovky v OP Z převážně obec a kraj.
 
 ## Detekce názvů obcí v názvech projektu
 
+```{r geodetekce-prep}
+texty <- dtl %>%
+  filter(prj_id %in% prj_no_obec$prj_id,
+         !p_ico %in% prijemci_public) %>%
+  distinct(prj_nazev, prj_anotace, p_ico, p_nazev, prj_id) %>%
+  # sample_n(1000) %>%
+  left_join(prj_meta) %>%
+  left_join(vyzvy)
+
+zuj_nazvy <- zuj_geo %>%
+  st_set_geometry(NULL) %>%
+  bind_rows(obce_geo %>%
+              st_set_geometry(NULL) %>% 
+              mutate(typuj = "obec")) %>%
+  select(kod, nazev, starts_with("mluv_pad_"), typuj) %>%
+  pivot_longer(c(nazev, starts_with("mluv"))) %>%
+  separate_rows(value, sep = ";") %>%
+  drop_na(value) %>%
+  distinct(kod, value, typuj, .keep_all = T) %>%
+  mutate(value = str_squish(value),
+         value = paste0("\\b", value, "\\b")) %>%
+  ungroup()
+
+detect_any_name <- function(txt, nazvy) {
+  check_rslt <- map_lgl(nazvy$value, ~grepl(.x, txt))
+  
+  nazvyn <- zuj_nazvy %>%
+    filter(check_rslt) %>%
+    group_by(kod) %>%
+    filter(nchar(value) == max(nchar(value)))
+  
+  # nazvyn <- zuj_nazvy[check_rslt,]
+  # nazvyn <- nazvyn[nchar(nazvyn$value) == max(nchar(nazvyn$value)),]
+  
+  as.list(unique(nazvyn$kod))
+}
+
+# detect_any_name("chomutov a most")
+# detect_any_name("Most")
+# detect_any_name("Chomutov")
+# detect_any_name("Most, Chomutov")
+# detect_any_name("Chomutov, Most")
+#
+# detect_any_name("Praha Brno")
+# detect_any_name("Brno Praha")
+# detect_any_name("Praha Opava")
+#
+# detect_any_name("Bohuňovice")
+# detect_any_name("Bohuňov")
+# detect_any_name("Brně")
+# detect_any_name("Bohuňovicemi")
+# detect_any_name("Bohuňovic")
+```
+
+
+```{r geodetekce-run}
+geonames_in_prjtext_file <- here::here("data-processed", "geonames_in_prjtexts.parquet")
+
+if(file.exists(geonames_in_prjtext_file)) {
+  prj_geoname_matched <- read_parquet(geonames_in_prjtext_file)
+} else {
+  
+  handlers(handler_progress(format = "[:bar] :percent ETA: :eta",
+                            complete = "◼",
+                            incomplete = " ",
+                            current = "▸"))
+  
+  plan(multiprocess)
+  tictoc::tic()
+  with_progress({
+    dtx <- texty
+    # dtx <- texty[1:200,]
+    p <- progressor(along = dtx$prj_id)
+    prj_geoname_matched <- dtx %>%
+      mutate(geonames_in_prjtitle = future_map(prj_nazev,
+                                               function(x) {
+                                                 p(sprintf("x=%s", x))
+                                                 detect_any_name(x, zuj_nazvy)
+                                               }),
+             geonames_in_prjtitle = map(geonames_in_prjtitle, as.character),
+             geonames_in_prjanot = future_map(prj_anotace,
+                                              function(x) {
+                                                p(sprintf("x=%s", x))
+                                                detect_any_name(x, zuj_nazvy)
+                                              }),
+             geonames_in_prjanot = map(geonames_in_prjanot, as.character),
+      )
+  })
+  tictoc::toc()
+  
+  prj_geoname_matched <- prj_geoname_matched %>%
+    select(prj_id, geonames_in_prjanot, geonames_in_prjtitle)
+  
+  write_parquet(prj_geoname_matched,
+                geonames_in_prjtext_file)
+}
+```
+
+```{r geodetekce-validate}
+
+prj_geoname_validated_file <- here::here("data-processed", "geonames_in_prjtexts-validated.parquet")
+
+if(file.exists(prj_geoname_validated_file)) {
+  
+  prj_geoname_checked2 <- read_parquet(prj_geoname_validated_file)
+  
+} else {
+  
+  typuzemi <- zuj_nazvy %>% 
+    select(obec = kod, uzemi_level = typuj) %>% 
+    mutate(uzemi_level = recode(uzemi_level, momc = "zuj")) %>% 
+    distinct()
+  
+  prj_geoname_for_check <- prj_geoname_matched %>%
+    unnest(cols = c(geonames_in_prjanot)) %>% 
+    mutate(kde = "anotace") %>% 
+    select(prj_id, kde, obec = geonames_in_prjanot) %>% 
+    bind_rows(prj_geoname_matched %>% 
+                unnest(cols = c(geonames_in_prjtitle)) %>% 
+                select(prj_id, obec = geonames_in_prjtitle) %>% 
+                mutate(kde = "nazev")) %>% 
+    distinct(prj_id, obec, kde) %>% 
+    left_join(dtl %>% 
+                filter(typ == "id") %>% 
+                select(prj_id, level, value)) %>% 
+    left_join(typuzemi)  
+  
+  plan(multiprocess)
+  with_progress({
+    # group_by(prj_id) %>% 
+    # nest() %>% 
+    # ungroup() %>% 
+    # sample_n(100) %>% 
+    # unnest() %>% 
+    p2 <- progressor(along = prj_geoname_for_check$prj_id)
+    prj_geoname_checked <- prj_geoname_for_check %>% 
+      mutate(obec_in_misto = future_pmap_lgl(list(obec,
+                                                  value,
+                                                  uzemi_level,
+                                                  level),
+                                             function(first, second, third, fourth) {
+                                               # p2(sprintf("x=%s", second))
+                                               p2()
+                                               is_parent(first, second, third, fourth, ids_short)
+                                             }))
+  })
+  
+  prj_geoname_checked2 <- prj_geoname_checked %>% 
+    left_join(dts) %>% 
+    filter(obec_in_misto) %>% 
+    left_join(ids_and_names %>% 
+                select(obec = obec_id, obec_nazev) %>% 
+                distinct()) %>% 
+    mutate(prjtxt = if_else(kde == "anotace", prj_anotace, prj_nazev),
+           orp_obec = str_detect(prjtxt, paste("ORP", obec_nazev)),
+           obec_is_sidlo = str_sub(p_sidlo_id, 6, 11) == obec,
+           okres_obec = str_detect(prjtxt, paste("[Oo]kres([eu]?)", obec_nazev)))
+  
+  write_parquet(prj_geoname_checked2, prj_geoname_validated_file)
+}
+
+prj_ids_with_geonames <- prj_geoname_checked2 %>% distinct(prj_id) %>% pull()
+prj_orp_in_txt <- unique(prj_geoname_checked2[prj_geoname_checked2$orp_obec,])
+prj_okres_in_txt <- unique(prj_geoname_checked2[prj_geoname_checked2$okres_obec,])
+```
+
+```{r geodetekce-orpokres-check}
+prj_geoname_checked2 %>% 
+  count(orp_obec, okres_obec)
+```
+
+
+```{r geodetekce-orpokres-overview}
+prj_geoname_checked2 %>% 
+  distinct(prj_id, op_id, okres_obec, orp_obec) %>% 
+  count(op_id, okres_obec, orp_obec) %>% 
+  spread(op_id, n)
+```
+
+```{r geodetekce-orpokres-opz}
+prj_geoname_checked2 %>% 
+  filter(op_id == "OP Z", okres_obec | orp_obec)
+```
 ## OP Z
 
 ```{r opz-subset}
