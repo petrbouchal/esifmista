@@ -295,16 +295,6 @@ n_multilevel <- n_distinct(data_for_geocheck$prj_id)
 n_multilevel
 ```
 
-```{r build-geo-hierarchy}
-ids_and_names <- read_parquet(here::here("data-processed", 
-                                         "czso-ids-all.parquet"))
-ids <- ids_and_names %>%
-  select(ends_with("_id")) %>%
-  rename_with(.fn = str_remove, pattern = "_id") %>%
-  mutate(zuj =  paste0(kraj, zuj),
-         obec = paste0(kraj, obec))
-```
-
 ```{r check-geo-hierarchy}
 
 source("check-geo-hierarchy-fns.R")
