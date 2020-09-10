@@ -87,7 +87,7 @@ dt %>%
 
 dt_long_g <- make_long_geo(dt)
 
-write_parquet(dt_long_g%>% 
+write_parquet(dt_long_g %>% 
                 drop_na(value), here::here("data-processed", "misto_long-geo.parquet"))
 ```
 
