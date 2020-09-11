@@ -624,10 +624,6 @@ vyzvy_map_mas <- vyzvy %>%
          str_detect(vyzva_id, "^0[1-9]_"))
 ```
 
-```{r}
-dtl_noobec_diag <- dtl_noobec_basic %>%  
-  replace_na(list(druhuj_nazev = "nic", poddruhuj_nazev = "nic")) %>% 
-  mutate(xp_public = !is.na(druhuj_nazev),
 ```{r praha-projekty}
 prj_id_misto_onlypraha <- dtl_noobec %>% 
   filter(typ == "id") %>% 
@@ -680,6 +676,55 @@ dt_mas_ided <- dt_mas %>%
   
 ```
 
+
+#### OP Z/IROP početné výzvy
+
+Takže z OP Z by mělo jít dobře dovodit místo realizace - podle výzev, adresy příjemce a případně jména obce detekovaného z textů - u těchto výzev:
+
+-   SVL
+-   mikrojesle, předškolní, péče o děti
+-   sociální podnikání
+
+```{r vyzvy-opz-irop}
+vyzvy_deti <- vyzvy %>% 
+  filter(str_detect(vyzva_nazev, "péče|PÉČE"), str_detect(vyzva_nazev, "děti|DĚTI"),
+         str_detect(vyzva_id, "^0[36]_"))
+
+vyzvy_svl <- vyzvy %>% 
+  filter(str_detect(vyzva_nazev, "SVL"),
+         str_detect(vyzva_id, "^0[36]_"))
+
+vyzvy_socpod <- vyzvy %>% 
+  filter(str_detect(vyzva_nazev, "((sociální)|(SOCIÁLNÍ))(ho|HO)?.*((podni)|(PODNI))"),
+         str_detect(vyzva_id, "^0[36]_"))
+
+vyzvy_deti
+vyzvy_svl
+vyzvy_socpod
+
+dtl_noobec_basic %>% 
+  filter(vyzva_id %in% c(vyzvy_socpod$vyzva_id, vyzvy_svl$vyzva_id, vyzvy_deti$vyzva_id)) %>% 
+  count(vyzva_nazev, sort = T)
+```
+
+Zkontrolovat ty, u kterých sídlo nemusí indikovat místo realizace
+
+-   sídla v Praze, Brně
+-   příjemce s více projekty
+-   nesoulad sídla (kraje sídla?) s krajem realizace nebo detekovanou obcí
+
+Ad 2 toto jsou nejčastější žadatelé
+
+```{r vyzvy-opz-irop-prijemci}
+dtl_noobec_basic %>% 
+  filter(op_id == "OP Z") %>%
+  filter(vyzva_id %in% c(vyzvy_socpod$vyzva_id, vyzvy_svl$vyzva_id, vyzvy_deti$vyzva_id)) %>%
+  count(p_nazev, sort = T) %>% 
+  mutate(cumsum = cumsum(n),
+         cumshare = cumsum/sum(n)) %>% 
+  head(20)
+```
+
 #### Výzvy pro Prahu
 
 ```{r praha-vyzvy}
@@ -688,6 +733,17 @@ pha_vyzvy <- vyzvy %>%
          str_detect(vyzva_id, "^03_"))
 pha_vyzvy
 ```
+
+### Kompilace
+
+```{r build-diag}
+dtl_noobec_diag <- dtl_noobec_basic %>% 
+  left_join(dt_geostructure_byprj %>% select(prj_id, maxlevel, unique_units)) %>%
+  left_join(dt_mas_ided) %>%
+  replace_na(list(druhuj_nazev = "nic", 
+                  poddruhuj_nazev = "nic",
+                  xmastext = FALSE)) %>% 
+  mutate(xp_public = druhuj_nazev != "nic",
          xsidlo_in_name = str_detect(p_nazev, fixed(dtl_noobec_basic$p_sidlo_nazev)),
          xsidlo_in_prjtitle = str_detect(prj_nazev, 
                                          fixed(dtl_noobec_basic$p_sidlo_nazev)),
@@ -701,25 +757,42 @@ pha_vyzvy
                                    "([Šš]ablon)|([Rr]ozvoj škol)|([Pp]odpora škol)"),
          xvyzva_vs = str_detect(vyzva_nazev, "(VŠ)|([Vv]ysok.+škol)") & 
            str_detect(vyzva_id, "^0[0-9]_"),
-         xorp_in_title = str_detect(prj_nazev, "ORP [A-Z]*\\b"),
-         xorp_in_anot = str_detect(prj_anotace, "ORP [A-Z]*\\b"),
+         xorp_in_text = prj_id %in% prj_orp_in_txt$prj_id,
          xta = op_kat == "125",
+         xkapnno = vyzva_nazev == "Budování kapacit a profesionalizace NNO" & n_units == 1,
+         xvs = str_detect(p_nazev, "[Vv]ysoká škola|[Uu]niver[sz]ita|[Vv]ysoké učení"),
+         xnarodni = maxlevel == "kraj" & unique_units > 11,
          xfiremvzdel = str_detect(vyzva_nazev, "[Pp]odnikové vzdělávání"),
-         xgeo_in_title = prj_id %in% prj_with_matched_geoname,
+         xgeo_in_text = prj_id %in% prj_ids_with_geonames,
          xzatepleni = str_detect(vyzva_nazev, "ENERGETICKÉ ÚSPORY V BYTOVÝCH DOMECH"),
+         xvyzva_praha = vyzva_id %in% pha_vyzvy$vyzva_id,
+         xmisto_praha = prj_id %in% prj_id_misto_onlypraha,
+         xvyzva_socpod = vyzva_id %in% vyzvy_socpod$vyzva_id,
+         xvyzva_svl = vyzva_id %in%  vyzvy_svl$vyzva_id,
+         xvyzva_deti = vyzva_id %in% vyzvy_deti$vyzva_id,
          xdskupina = vyzva_id %in% ds_vyzvy$vyzva_id) %>% 
-  mutate(matched = xdskupina | xsidlo_in_name | xvyzva_mas | xp_mas | 
-           xzatepleni | xp_kraj | xp_obec | xta |
+  mutate(matched = xdskupina | xsidlo_in_name | xvyzva_mas | xp_mas | xmastext |
+           xzatepleni | xp_kraj | xp_obec | xta | xkapnno |
            # xp_public |
-           xorp_in_title | xvyzva_skoly | xfiremvzdel | xorp_in_anot | 
-           xvyzva_vs
-         # | xgeo_in_title
-         )
+           xvyzva_deti | xvyzva_svl | xvyzva_socpod |
+           xorp_in_text | xvyzva_skoly | xfiremvzdel | 
+           xvyzva_vs | xnarodni | xvyzva_praha | xvs | xmisto_praha
+         | xgeo_in_text
+  )
 
+write_parquet(dtl_noobec_diag, here::here("data-processed", "dtl-noobec-diag.parquet"))
+```
+
+### Přehled
+
+```{r}
 dtl_noobec_diag %>% 
   group_by(op_id) %>% 
   select(starts_with("x"), matched) %>% 
-  skimr::skim()
+  skimr::skim() %>% 
+  select(op_id, skim_variable, logical.mean) %>% 
+  mutate(logical.mean = round(logical.mean, 2)) %>% 
+  spread(op_id, logical.mean)
 ```
 
 ```{r}
@@ -728,11 +801,70 @@ dtl_noobec_diag %>%
   spread(matched, n)
 ```
 
+### Shody diagnostických proměnných (upset plot)
+
+```{r}
+library(ggupset)
+
+diag_for_upset <- dtl_noobec_diag %>% 
+  filter(op_id == "OP VVV") %>% 
+  select(prj_id, op_id, starts_with("x"), -xp_public) %>% 
+  gather("var", "val", -prj_id, -op_id) %>% 
+  filter(val) %>%
+  group_by(prj_id, op_id) %>% 
+  summarise(xvars = list(var))
+
+ggplot(diag_for_upset) +
+  geom_bar(mapping = aes(x = xvars, fill = op_id), position = "stack") +
+  scale_x_upset(n_intersections = 40) +
+  # scale_y_continuous(limits = c(0, 6e4)) +
+  # scale_y_log10(limits = c(1, 1e5), n.breaks = 10,
+  #               labels = scales::label_number(1)) +
+  # scale_y_continuous(trans = scales::log_trans(), breaks = scales::pretty_breaks()) +
+  ptrr::theme_ptrr(plot.margin = margin(l = 40)) +
+  scale_fill_brewer(type = "qual")
+  
+```
+
+```{r}
+prj_id_unmatched <- dtl_noobec_diag %>% 
+  filter(!matched) %>% 
+  pull(prj_id)
+```
+
+Na jaké úrovni jsou lokalizovány nezachycené projekty?
+
+```{r}
+dt_geostructure_byprj %>% 
+  filter(prj_id %in% prj_id_unmatched) %>% 
+  count(op_id, minlevel) %>% 
+  spread(minlevel, n)
+```
+
+```{r}
+dt_geostructure_byprj %>% 
+  filter(prj_id %in% prj_id_unmatched) %>% 
+  count(op_id, minlevel, n_units) %>% 
+  spread(minlevel, n)
+```
+
+
 ```{r}
 dtl_noobec_diag %>% 
   filter(op_id == "OP Z" & !matched) %>% 
   count(vyzva_nazev, vyzva_id, sort = T)
 ```
+
+
+
+```{r}
+dtl %>% 
+  filter(prj_id %in% prj_id_unmatched) %>% 
+  head()
+```
+### Explorace nezachycených
+
+#### OP Z
 
 ```{r}
 dtl_noobec_diag %>% 
@@ -741,11 +873,30 @@ dtl_noobec_diag %>%
   geom_histogram(aes(n_units))
 ```
 
+#### Typy organizací
+
+```{r}
+dtl_noobec_diag %>% 
+  filter(!matched) %>% 
+  group_by(op_id) %>% 
+  count(druhuj_nazev, poddruhuj_nazev, sort = T)
+```
+#### Nejčastější výzvy
+
+```{r}
+dtl_noobec_diag %>% 
+  # filter(druhuj_nazev == "OSS" & !matched) %>% 
+  filter(!matched) %>% 
+  count(op_id, vyzva_nazev, sort = T) 
+```
+
+
 ```{r}
 dtl_noobec_diag %>% 
   filter(op_id == "OP Z" & !matched) %>% 
-  count(xgeo_in_title)
+  count(xgeo_in_text)
 ```
+#### Výzvy OP Z podle počtu území
 
 ```{r}
 dtl_noobec_diag %>% 
@@ -758,118 +909,6 @@ dtl_noobec_diag %>%
   arrange(whtvr)
 ```
 
-Takže z OP Z by mělo jít dobře dovodit místo realizace - podle výzev, adresy příjemce a případně jména obce detekovaného z textů - u těchto výzev:
-
--   SVL
--   mikrojesle, předškolní, péče o děti
--   sociální podnikání
-
-```{r}
-vyzvy_opz_deti <- vyzvy %>% 
-  filter(str_detect(vyzva_nazev, "péče"), str_detect(vyzva_nazev, "děti"),
-         str_detect(vyzva_id, "^03_"))
-
-vyzvy_opz_svl <- vyzvy %>% 
-  filter(str_detect(vyzva_nazev, "SVL"),
-         str_detect(vyzva_id, "^03_"))
-
-vyzvy_opz_socpod <- vyzvy %>% 
-  filter(str_detect(vyzva_nazev, "Podpora sociálního podnikání"),
-         str_detect(vyzva_id, "^03_"))
-
-vyzvy_opz_deti
-vyzvy_opz_svl
-vyzvy_opz_socpod
-```
-
-Zkontrolovat ty, u kterých sídlo nemusí indikovat místo realizace
-
--   sídla v Praze, Brně
--   příjemce s více projekty
--   nesoulad sídla (kraje sídla?) s krajem realizace nebo detekovanou obcí
-
-Ad 2 toto jsou nejčastější žadatelé
-
-```{r}
-dtl_noobec_diag %>% 
-  filter(op_id == "OP Z" & !matched) %>%
-  count(p_nazev, sort = T) %>% 
-  mutate(cumsum = cumsum(n),
-         cumshare = cumsum/sum(n)) %>% 
-  head(20)
-```
-
-```{r}
-prj_opz_deti <- dtl_noobec_diag %>% 
-  filter(op_id == "OP Z" & !matched) %>% 
-  filter(vyzva_id %in% vyzvy_opz_deti$vyzva_id)
-
-prj_opz_svl <- dtl_noobec_diag %>% 
-  filter(op_id == "OP Z" & !matched) %>% 
-  filter(vyzva_id %in% vyzvy_opz_svl$vyzva_id)
-
-prj_opz_socpod <- dtl_noobec_diag %>% 
-  filter(op_id == "OP Z" & !matched) %>% 
-  filter(vyzva_id %in% vyzvy_opz_socpod$vyzva_id)
-```
-
-```{r}
-prj_opz_deti %>% 
-  count(p_nazev, sort = T)
-```
-
-```{r}
-prj_opz_socpod %>% 
-  count(p_nazev, sort = T)
-```
-
-```{r}
-prj_opz_svl %>% 
-  count(p_nazev, sort = T)
-```
-
-```{r}
-prj_opz_svl %>% 
-  group_by(p_nazev) %>% 
-  mutate(pocet = n()) %>% 
-  ungroup() %>% 
-  filter(pocet > 2) %>% 
-  arrange(desc(pocet))
-```
-
-```{r}
-prj_opz_socpod %>% 
-  group_by(p_nazev) %>% 
-  mutate(pocet = n()) %>% 
-  ungroup() %>% 
-  filter(pocet > 2) %>% 
-  arrange(desc(pocet))
-```
-
-```{r}
-prj_opz_deti %>% 
-  group_by(p_nazev) %>% 
-  mutate(pocet = n()) %>% 
-  ungroup() %>% 
-  filter(pocet > 2) %>% 
-  arrange(desc(pocet))
-```
-
-```{r}
-dtl_noobec_diag %>% 
-  filter(op_id == "OP Z" & !matched,
-         druhuj_nazev == "Dobrovolné svazky obcí")
-```
-
-```{r}
-```
-
-```{r}
-dtl_noobec_diag %>% 
-  filter(op_id == "OP VVV" & !matched) %>% 
-  count(vyzva_nazev, vyzva_id, sort = T)
-```
-
 ```{r}
 dtl_noobec_diag %>% 
   filter(op_id == "OP PIK" & !matched) %>% 
@@ -878,12 +917,13 @@ dtl_noobec_diag %>%
 
 ```{r}
 dtl_noobec_diag %>% 
-  filter(op_id == "OP D" & !matched) %>% View()
+  filter(op_id == "OP D" & !matched) %>%
   count(vyzva_nazev, vyzva_id, sort = T)
 ```
 
 ```{r}
 dtl_noobec_diag %>% 
   filter(op_id == "IROP" & !matched) %>% 
+  filter(minlevel == "kraj") %>% 
   count(vyzva_nazev, vyzva_id, sort = T)
 ```
