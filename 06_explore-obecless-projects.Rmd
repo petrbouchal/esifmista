@@ -307,15 +307,15 @@ detect_any_name <- function(txt, nazvy) {
   
   # print(all(!check_rslt))
   
-  # if(any(check_rslt)) {
-    # nazvyn <- nazvy %>%
+  if(any(check_rslt)) {
+    nazvyn <- nazvy %>%
       filter(check_rslt) %>%
       group_by(kod) %>%
       filter(nchar(value) == max(nchar(value), na.rm = T))
     rslt <- as.list(unique(nazvyn$kod))
-  # } else {
-    # rslt <- as.list(character())
-  # }
+  } else {
+    rslt <- as.list(character())
+  }
   
   # print(nrow(nazvyn))
   # nazvyn <- zuj_nazvy[check_rslt,]
