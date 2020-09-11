@@ -589,17 +589,15 @@ NB projekt CZ.01.3.12/0.0/0.0/15\_026/0007008 (E.ON) - 3 kraje a všechny jejich
 
 ## Sestavit klasifikační dataset
 
-### Jen projekty a příjemci + základní geoinfo
-
 ```{r}
-prj_geoname_matched <- read_parquet(here::here("data-processed", 
-                                               "geonames_in_prjtexts.parquet"))
+prj_geoname_matched <- read_parquet(here::here("data-processed",
+                                              "geonames_in_prjtexts.parquet")) %>%
+ mutate(n_names_in_title = map_int(geonames_in_prjtitle, length),
+        n_names_in_anot = map_int(geonames_in_prjanot, length))
 
-prj_with_matched_geoname <- prj_geoname_matched %>% 
-  mutate(n_names_in_title = map_int(geonames_in_prjtitle, length),
-         n_names_in_anot = map_int(geonames_in_prjanot, length)) %>% 
-  filter(n_names_in_title > 0 | n_names_in_anot > 0) %>% 
-  pull(prj_id)
+prj_with_matched_geoname <- prj_geoname_matched %>%
+ filter(n_names_in_title > 0 | n_names_in_anot > 0) %>%
+ pull(prj_id)
 ```
 
 ```{r}
