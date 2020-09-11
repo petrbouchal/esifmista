@@ -600,7 +600,9 @@ prj_with_matched_geoname <- prj_geoname_matched %>%
  pull(prj_id)
 ```
 
-```{r}
+### Základ
+
+```{r base-data}
 dtl_noobec_basic <- dtl_noobec %>% 
   select(starts_with("prj_"), starts_with("p_"), -prj_radek, op_id) %>% 
   distinct() %>% 
@@ -614,7 +616,9 @@ dtl_noobec_basic <- dtl_noobec %>%
   mutate(p_nazev_beznno = str_remove_all(p_nazev, mas_pravniformy_regex))
 ```
 
-```{r}
+### Některé markery
+
+```{r mas-vyzvy}
 vyzvy_map_mas <- vyzvy %>%
   filter(str_detect(vyzva_nazev, "[Mm]ístní akční|[Mm]ístních akčních|MAS"),
          str_detect(vyzva_id, "^0[1-9]_"))
