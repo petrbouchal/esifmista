@@ -26,48 +26,6 @@ dtl <- read_parquet(here::here("data-processed",
 source("read_metadata.R")
 ```
 
-# Clustering podle kombinace míst a úrovní
-
-```{r}
-cnts <- dtl %>% 
-  filter(typ == "id") %>% 
-  group_by(op_id, prj_id, level) %>% 
-  summarise(cnt = sum(!is.na(value)))
-
-cnts_w <- cnts %>% 
-  spread(level, cnt, fill = 0)
-```
-
-```{r}
-cnts %>% 
-  filter(cnt > 1) %>%
-  ggplot(aes(x = cnt)) +
-  geom_histogram() +
-  facet_grid(op_id ~ level)
-```
-
-
-```{r}
-rownames(cnts_w) <- cnts_w$prj_id
-cnts_w_n <- cnts_w %>% 
-  ungroup() %>% 
-  filter(op_id == "OP_ZP") %>% 
-  select(-prj_id, -op_id) %>% 
-  scale()
-
-rownames(cnts_w_n)
-
-kmns <- cnts_w_n %>% 
-  kmeans(4)
-
-```
-
-```{r}
-fviz_cluster(kmns, data = cnts_w_n, ggtheme = ptrr::theme_ptrr("both"))
-```
-
-nic moc...
-
 ## Výskyt divných projektů v různých skupinách
 
 
