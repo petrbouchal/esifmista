@@ -305,15 +305,23 @@ zuj_nazvy <- zuj_geo %>%
 detect_any_name <- function(txt, nazvy) {
   check_rslt <- map_lgl(nazvy$value, ~grepl(.x, txt))
   
-  nazvyn <- zuj_nazvy %>%
-    filter(check_rslt) %>%
-    group_by(kod) %>%
-    filter(nchar(value) == max(nchar(value)))
+  # print(all(!check_rslt))
   
+  # if(any(check_rslt)) {
+    # nazvyn <- nazvy %>%
+      filter(check_rslt) %>%
+      group_by(kod) %>%
+      filter(nchar(value) == max(nchar(value), na.rm = T))
+    rslt <- as.list(unique(nazvyn$kod))
+  # } else {
+    # rslt <- as.list(character())
+  # }
+  
+  # print(nrow(nazvyn))
   # nazvyn <- zuj_nazvy[check_rslt,]
   # nazvyn <- nazvyn[nchar(nazvyn$value) == max(nchar(nazvyn$value)),]
   
-  as.list(unique(nazvyn$kod))
+  return(rslt)
 }
 
 # detect_any_name("chomutov a most")
@@ -331,6 +339,7 @@ detect_any_name <- function(txt, nazvy) {
 # detect_any_name("Brně")
 # detect_any_name("Bohuňovicemi")
 # detect_any_name("Bohuňovic")
+# detect_any_name("fshdkjsdhfk")
 ```
 
 
