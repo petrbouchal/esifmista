@@ -628,6 +628,66 @@ vyzvy_map_mas <- vyzvy %>%
 dtl_noobec_diag <- dtl_noobec_basic %>%  
   replace_na(list(druhuj_nazev = "nic", poddruhuj_nazev = "nic")) %>% 
   mutate(xp_public = !is.na(druhuj_nazev),
+```{r praha-projekty}
+prj_id_misto_onlypraha <- dtl_noobec %>% 
+  filter(typ == "id") %>% 
+  left_join(dt_geostructure_byprj) %>% 
+  filter(n_units == 1) %>% 
+  filter(value %in% c("CZ010", "CZ010554782")) %>% 
+  pull(prj_id)
+length(prj_id_misto_onlypraha)
+```
+
+```{r mas-projekty}
+mas_texty <- mas_all %>% 
+  mutate(mas_nazev_alt = mas_nazev_simple %>% 
+           str_replace("MAS [-\\-]", "MAS") %>% 
+           str_replace("Místní akční skupina", "MAS")) %>% 
+  distinct(mas_nazev, mas_nazev_alt, mas_nazev_simple)
+
+mas_nazvy <- c(mas_all$mas_nazev, mas_all$mas_nazev_simple, mas_texty$mas_nazev_alt) %>% unique()
+
+mas_regex <- paste(unique(mas_nazvy), collapse = "|") %>% 
+  str_replace_all("\\.", "\\\\.") %>% 
+  str_replace_all("\\+", "\\\\+")
+
+komunal_ico <- orgs %>% 
+  select(druhuj_nazev, ico, poddruhuj_nazev) %>% 
+  filter(druhuj_nazev == "Obce" | poddruhuj_nazev == "Příspěvkové organizace zřízené obcí") %>% 
+  distinct()
+
+dt_mas <- dt %>% 
+  filter(!p_nazev %in% mas_nazvy) %>% 
+  distinct(prj_id, prj_nazev, p_nazev, prj_anotace, p_ico, op_id) %>% 
+  mutate(masnazev = str_extract(prj_nazev, mas_regex),
+         masanot = str_extract(prj_anotace, mas_regex)) %>% 
+  filter(!is.na(masnazev) | !is.na(masanot)) %>% 
+  mutate(mastext = if_else(is.na(masnazev), masanot, masnazev) %>% 
+           str_remove_all(mas_pravniformy_regex)) %>% 
+  filter(mastext != "Bystřička")
+
+mas_rematcher <- mas_texty %>% 
+  mutate(origo = mas_nazev) %>% 
+  gather("typ", "nazev", -mas_nazev_simple) %>% 
+  distinct()
+
+setdiff(dt_mas$mastext, mas_rematcher$nazev)
+
+dt_mas_ided <- dt_mas %>% 
+  left_join(mas_rematcher %>% select(mastext = nazev, mas_nazev_simple)) %>% 
+  distinct(prj_id, mas_nazev_simple) %>% 
+  mutate(xmastext = T)
+  
+```
+
+#### Výzvy pro Prahu
+
+```{r praha-vyzvy}
+pha_vyzvy <- vyzvy %>% 
+  filter(str_detect(vyzva_nazev, "v Praze|pro Prahu|(pro|v) hl\\. m\\. Pra(hu|ze)"),
+         str_detect(vyzva_id, "^03_"))
+pha_vyzvy
+```
          xsidlo_in_name = str_detect(p_nazev, fixed(dtl_noobec_basic$p_sidlo_nazev)),
          xsidlo_in_prjtitle = str_detect(prj_nazev, 
                                          fixed(dtl_noobec_basic$p_sidlo_nazev)),
