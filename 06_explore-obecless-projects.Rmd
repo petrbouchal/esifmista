@@ -397,19 +397,19 @@ if(file.exists(prj_geoname_validated_file)) {
 } else {
   
   typuzemi <- zuj_nazvy %>% 
-    select(obec = kod, uzemi_level = typuj) %>% 
+    select(uzemi = kod, uzemi_level = typuj) %>% 
     mutate(uzemi_level = recode(uzemi_level, momc = "zuj")) %>% 
     distinct()
   
   prj_geoname_for_check <- prj_geoname_matched %>%
     unnest(cols = c(geonames_in_prjanot)) %>% 
     mutate(kde = "anotace") %>% 
-    select(prj_id, kde, obec = geonames_in_prjanot) %>% 
+    select(prj_id, kde, uzemi = geonames_in_prjanot) %>% 
     bind_rows(prj_geoname_matched %>% 
                 unnest(cols = c(geonames_in_prjtitle)) %>% 
-                select(prj_id, obec = geonames_in_prjtitle) %>% 
+                select(prj_id, uzemi = geonames_in_prjtitle) %>% 
                 mutate(kde = "nazev")) %>% 
-    distinct(prj_id, obec, kde) %>% 
+    distinct(prj_id, uzemi, kde) %>% 
     left_join(dtl %>% 
                 filter(typ == "id") %>% 
                 select(prj_id, level, value)) %>% 
@@ -424,7 +424,7 @@ if(file.exists(prj_geoname_validated_file)) {
     # unnest() %>% 
     p2 <- progressor(along = prj_geoname_for_check$prj_id)
     prj_geoname_checked <- prj_geoname_for_check %>% 
-      mutate(obec_in_misto = future_pmap_lgl(list(obec,
+      mutate(obec_in_misto = future_pmap_lgl(list(uzemi,
                                                   value,
                                                   uzemi_level,
                                                   level),
@@ -434,20 +434,26 @@ if(file.exists(prj_geoname_validated_file)) {
                                                is_parent(first, second, third, fourth, ids_short)
                                              }))
   })
+  prj_geoname_checked %>% 
+    group_by(prj_id) %>% 
+    summarise(any_obec_in_misto = any(obec_in_misto)) %>% 
+    ungroup() %>% 
+    count(any_obec_in_misto)
   
   prj_geoname_checked2 <- prj_geoname_checked %>% 
     left_join(dts) %>% 
     filter(obec_in_misto) %>% 
     left_join(ids_and_names %>% 
-                select(obec = obec_id, obec_nazev) %>% 
+                select(uzemi = obec_id, uzemi_nazev = obec_nazev) %>% 
                 distinct()) %>% 
     mutate(prjtxt = if_else(kde == "anotace", prj_anotace, prj_nazev),
-           orp_obec = str_detect(prjtxt, paste("(ORP|rozšířenou působností)", obec_nazev)),
-           obec_is_sidlo = str_sub(p_sidlo_id, 6, 11) == obec,
-           okres_obec = str_detect(prjtxt, paste("[Oo]kres([eu]?)", obec_nazev)))
+           orp_obec = str_detect(prjtxt, paste("(ORP|rozšířenou působností)", uzemi_nazev)),
+           uzemi_is_sidlo = str_sub(p_sidlo_id, 6, 11) == uzemi_nazev,
+           okres_obec = str_detect(prjtxt, paste("[Oo]kres([eu]?)", uzemi_nazev)))
   
   write_parquet(prj_geoname_checked2, prj_geoname_validated_file)
 }
+
 
 prj_ids_with_geonames <- prj_geoname_checked2 %>% distinct(prj_id) %>% pull()
 prj_orp_in_txt <- unique(prj_geoname_checked2[prj_geoname_checked2$orp_obec,])
