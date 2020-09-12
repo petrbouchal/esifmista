@@ -865,6 +865,18 @@ ggplot(diag_for_upset) +
   scale_fill_brewer(type = "qual")
   
 ```
+Potenciální problém: firemní vzdělávání + plošné projekty (> 11 krajů):
+
+```{r}
+dt_noobec_diag %>% 
+  filter(xfiremvzdel) %>% 
+  left_join(dt_geostructure_byprj) %>% 
+  select(prj_id, unique_units, druhuj_nazev, poddruhuj_nazev) %>% 
+  left_join(dts) %>%
+  count(unique_units, druhuj_nazev)
+```
+
+Při pohledu na ty projekty je to většinou nesmysl - je tam ale pár státních podniků, bank
 
 ```{r}
 prj_id_unmatched <- dt_noobec_diag %>% 
