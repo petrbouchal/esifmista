@@ -780,9 +780,9 @@ dt_noobec_diag <- dt_noobec_basic %>%
            poddruhuj_nazev == "Příspěvkové organizace zřízené krajem",
          xp_obec = druhuj_nazev == "Obce" | 
            poddruhuj_nazev == "Příspěvkové organizace zřízené obcí",
-         xp_mc = poddruhuj_nazev %in% c("Městská část", 
-                                        "Příspěvkové organizace zřízené MČ"), 
-         xvyzva_mas = vyzva_id %in% vyzvy_map_mas$vyzva_id,
+         xp_mc = poddruhuj_nazev %in% c("Městská část"), 
+         xp_mcp = poddruhuj_nazev %in% c("Příspěvkové organizace zřízené MČ"), 
+         xvyzva_mas = vyzva_id %in% vyzvy_mas$vyzva_id,
          xvyzva_skoly = str_detect(vyzva_nazev, 
                                    "([Šš]ablon)|([Rr]ozvoj škol)|([Pp]odpora škol)"),
          xvyzva_vs = str_detect(vyzva_nazev, "(VŠ)|([Vv]ysok.+škol)") & 
