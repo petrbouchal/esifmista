@@ -277,3 +277,9 @@ dt_with_chuobce_reshaped <- dt_with_chuobce %>%
   select(-starts_with("chkonp"))
 
 ```
+
+
+```{r}
+write_parquet(dt_with_chuobce, here::here("data-processed", "dt_noplace_filled.parquet"))
+```
+
