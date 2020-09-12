@@ -13,7 +13,12 @@ library(readxl)
 
 library(CzechData)
 
+library(tictoc)
+library(progressr)
+library(furrr)
+
 source(here::here("shared.R"))
+source(here::here("check-geo-hierarchy-fns.R"))
 ```
 
 ```{r data}
@@ -39,7 +44,294 @@ dts <- dt %>%
 orgs <- read_parquet(here::here("data-processed", "orgs_sp.parquet"))
 ```
 
-```{r}
+```{r data-subset-ids}
+prj_no_obec <- read_parquet(here::here("data-processed", "prj_id_noobec.parquet"))
+```
 
+```{r data-geo}
+zuj_geo <- read_rds(here::here("data-processed", "geo_zuj-all.rds"))
+obce_geo <- read_rds(here::here("data-input", "obce_ruian.rds"))
+```
+
+```{r subset data}
+dtl_noobec <- dtl %>% 
+  filter(prj_id %in% prj_no_obec$prj_id) %>% 
+  drop_na(value)
+```
+
+
+```{r specific prepped data}
+dt_noobec_diag <- read_parquet(here::here("data-processed", "dtl-noobec-diag.parquet"))
+dtl_geodetected <- read_parquet(here::here("data-processed", "geonames_in_prjtexts-validated.parquet")) %>% 
+  select(prj_id, uzemi, uzemi_nazev, uzemi_level, orp_obec, uzemi_is_sidlo, okres_obec) %>% 
+  distinct()
+```
+
+# Vytvořit rozcestník rozpadů
+
+```{r mark-rozpady, rows.print=15}
+dt_rozpady <- dt_noobec_diag %>% 
+  filter(!xnonhierarch) %>% 
+  select(prj_id, op_id, starts_with("x")) %>% 
+  left_join(dt_geostructure_byprj) %>% 
+  mutate(rozpad = case_when(xorp_in_text ~ "detekce_orp-ORP XY v názvu nebo anotaci", # před MAS a detekcí jmen
+                            xmastext ~ "obce_v_mas-MAS v názvu nebo anotaci projektu",
+                            xta ~ "obec_sidla-projekt TP podle kódu kategorie intervence", # co nejdřív
+                            xp_mas ~ "obce_v_mas-MAS je příjemce",
+                            xp_mc ~ "mc-žadatel je MČ",
+                            xp_mcp ~ "mc-žadatel je PO MČ",
+                            xmisto_praha ~ "praha-Praha je jediný kraj realizace",
+                            xvyzva_skoly ~ "obec_sidla-výzva pro školy",
+                            xp_kraj & minlevel == "kraj" ~ "obce_v_kraj-příjemce je kraj nebo jeho PO",
+                            xzatepleni ~ "obec_sidla-výzva na zateplení",
+                            # u firemního vzdělání bereme pouze sidlo i když tam 
+                            # žadatel uvedl X krajů, což asi 500 z nich udělalo,
+                            # většinou nesmyslně
+                            xfiremvzdel ~ "obec_sidla-výzva na firemní vzdělávání", 
+                            xdskupina ~ "obec_sidla-výzva na dětské skupiny",
+                            xvs ~ "obec_sidla-VŠ podle názvu žadatele",
+                            xvyzva_vs ~ "obec_sidla-Výzva pro VŠ",
+                            xkapnno ~ "obec_sidla-Výzva na kapacity NNO",
+                            xp_obec ~ "obec_sidla-Žadatel je obec nebo její PO",
+                            xvyzva_socpod ~ "obec_sidla-Výzva sociální podnikání",
+                            xvyzva_svl ~ "obec_sidla-Výzva pro SVL",
+                            xvyzva_deti ~ "obec_sidla-Výzva na péči o děti/předškolní atd.",
+                            xnarodni ~ "plosny-Projekt ve více než 11 krajích",
+                            xokres_in_text ~ "detekce_okres-okres XY v názvu nebo anotaci",
+                            xvyzva_mas & !xmastext & !xp_mas ~ "obec_sidla-výzva pro MAS (neidentifikovaná MAS)",
+                            xgeo_in_text ~ "detekce_uzemi-Název obce/MČ v názvu nebo anotaci",
+                            xvyzva_praha ~ "praha-výzva pro Prahu", # až po detekci jmen a po "příjemce je MČ/její PO"
+                            xsidlo_in_prjtitle ~ "obec_sidla-obec sídla žadatele je v názvu projektu",
+                            xsidlo_in_name ~ "obec_sidla-obec sídla žadatele je v názvu žadatele",
+                            minlevel == "orp" & n_units == 1 ~ "obce_v_orp-1 ORP",
+                            minlevel == "okres" & n_units == 1 ~ "obce_v_okres-1 okres",
+                            minlevel == "kraj" & n_units == 1 ~ "obce_v_kraj-1 kraj",
+                            minlevel == "orp" & n_units > 1 ~ "obce_v_orp-více ORP",
+                            minlevel == "okres" & n_units > 1 ~ "obce_v_okres-více okresů",
+                            minlevel == "kraj" & n_units > 1 ~ "obce_v_kraj-více krajů"
+  )) %>% 
+  select(-starts_with("x")) %>% 
+  separate(rozpad, into = c("rozpad_typ", "rozpad_duvod"), sep = "-", fill = "right")
+
+dt_rozpady %>% 
+  count(op_id, rozpad_typ) %>% 
+  spread(op_id, n)
+```
+
+
+```{r rows.print = 25}
+dt_rozpady %>% 
+  count(rozpad_typ, sort = T)
+
+dt_rozpady %>% 
+  filter(op_id == "OP Z") %>% 
+  count(rozpad_typ, rozpad_duvod, sort = T)
+```
+# Tvorba rozpadů
+
+```{r}
+dt_rozpad_key <- dt_rozpady %>% 
+  mutate(rozpad_jak = case_when(str_detect(rozpad_typ, "obce_v_") ~ str_remove(rozpad_typ, "obce_v_"),
+                                str_detect(rozpad_typ, "detekce") ~ str_remove(rozpad_typ, "etekce"),
+                                TRUE ~ NA_character_,)) %>% 
+  select(prj_id, rozpad_jak)
+
+table(dt_rozpad_key$rozpad_jak)
+table(is.na(dt_rozpad_key$rozpad_jak))
+```
+
+```{r}
+rozpadac_na_obce <- ids_short %>% 
+  select(obec, orp, okres, kraj) %>% 
+  gather("rozpad_jak", "value", -obec) %>% 
+  bind_rows(mas_all %>% 
+              select(obec = obec_kod, value = mas_nazev_simple) %>% 
+              mutate(rozpad_jak = "mas") %>% 
+              distinct())
+```
+
+## Mechanický rozpad (včetně detekovaných MAS)
+
+```{r}
+mas_updater <- dt_noobec_diag %>% 
+  # select(prj_id, xvyzva_mas, xp_mas, mas_nazev_simple, 
+  #        p_nazev, p_nazev_beznno, xmastext) %>% 
+  filter(xvyzva_mas & (xmastext | xp_mas) | xp_mas | xmastext) %>% 
+  mutate(masnazev = case_when(xmastext ~ mas_nazev_simple,
+                              xp_mas ~ p_nazev_beznno,
+                              !is.na(mas_nazev_simple) ~ mas_nazev_simple
+  ),
+  rozpad_jak = "mas") %>% 
+  select(masnazev, prj_id, rozpad_jak)
+```
+
+```{r}
+setdiff(mas_updater$masnazev, rozpadac_na_obce$value)
+mas_updater %>% skimr::skim()
+
+mas_updater %>% 
+  filter(is.na(masnazev)) %>% 
+  count(xmastext, xp_mas, xvyzva_mas)
+```
+
+
+```{r rozpad-simple}
+dtl_rozpadle_simple <- dtl_noobec %>% 
+  filter(typ == "id") %>% 
+  select(prj_id, level, value) %>% 
+  filter(!prj_id %in% prj_id_nonhier, 
+         prj_id %in% dt_rozpad_key$prj_id[!is.na(dt_rozpad_key$rozpad_jak)]) %>%
+  left_join(dt_geostructure_bylvl) %>% 
+  filter(min_level) %>% 
+  select(prj_id, level, value) %>% 
+  left_join(dt_rozpad_key) %>% 
+  filter(rozpad_jak %in% c("orp", "okres", "kraj", "mas")) %>% 
+  left_join(mas_updater) %>%
+  mutate(value = if_else(rozpad_jak == "mas", masnazev, value),
+         level = "obec") %>% 
+  select(-masnazev) %>% 
+  left_join(rozpadac_na_obce) %>%
+  select(prj_id, level, value = obec) %>% 
+  left_join(dt_rozpady %>% select(prj_id, rozpad_typ))
+```
+
+```{r}
+dtl_rozpadle_simple %>% 
+  # group_by(rozpad_jak) %>% 
+  skimr::skim()
+```
+
+```{r}
+dtl_rozpadle_simple$obec %in% obce_geo$kod
+```
+
+## Rozpad z detekovaných ORP a okresů
+
+```{r rozpad-detek-orp-okresy}
+rozpadac_detekovanych <- ids_and_names %>% 
+  select(id = orp_id, uzemi_nazev = orp_nazev, obec = obec_id) %>% 
+  mutate(rozpad_jak = "d_orp") %>% 
+  distinct() %>% 
+  bind_rows(ids_and_names %>% 
+              select(id = okres_id, uzemi_nazev = okres_nazev, obec = obec_id) %>% 
+              mutate(rozpad_jak = "d_okres") %>% 
+              distinct())
+
+dtl_rozpadle_detekce <- dtl_geodetected %>% 
+  left_join(dt_rozpady %>% select(prj_id, rozpad_typ)) %>% 
+  filter(rozpad_typ %in% c("detekce_orp", "detekce_okres")) %>% 
+  select(prj_id, uzemi_nazev, rozpad_typ) %>% 
+  left_join(dt_rozpad_key) %>% 
+  left_join(rozpadac_detekovanych) %>% 
+  drop_na(id) %>% 
+  select(prj_id, value = obec, rozpad_typ) %>% 
+  mutate(level = "obec")
+```
+```{r}
+skimr::skim(dtl_rozpadle_detekce)
+```
+## Detekované obce
+
+```{r rozpad-detekovane-obce}
+dtl_rozpadle_detekceobce <- dtl_geodetected %>% 
+  left_join(dt_rozpady) %>% 
+  filter(rozpad_typ == "detekce_uzemi") %>% 
+  select(prj_id, value = uzemi, level = uzemi_level, rozpad_typ)
+```
+
+## Sídla žadatelů
+
+```{r rozpad-sidla-zatadelu}
+dtl_rozpadle_sidla <- dt_rozpady %>% 
+  filter(rozpad_typ == "obec_sidla") %>% 
+  select(prj_id, rozpad_typ) %>% 
+  left_join(dts) %>% 
+  mutate(obec = p_sidlo_id, level = "obec") %>% 
+  select(prj_id, value = obec, level, rozpad_typ)
+```
+
+## MČ
+
+```{r rozpad-MC}
+zrizovaci_vztahy <- read_parquet(here::here("data-processed", "zrizovatele.parquet"))
+
+dtl_rozpadle_mc <- dt_rozpady %>% 
+  filter(rozpad_typ == "mc") %>% 
+  left_join(dts %>% select(prj_id, p_nazev, ico = p_ico)) %>% 
+  left_join(zrizovaci_vztahy) %>% 
+  # MC poznáme tak, že nejsou v sadě zřizovatelů
+  # u MČ jen upravíme název, aby seděl s ČSÚ
+  # u ostatních vezmeme upravený název zřizující MČ
+  mutate(zuj_nazev = if_else(!is.na(poddruhuj_nazev), 
+                         str_remove(zrizovatel_nazev, "Městská část "),
+                         str_remove(p_nazev, "Městská část ")
+                         )) %>% 
+  select(prj_id, zuj_nazev, p_nazev, rozpad_typ) %>%
+  mutate(level = "zuj") %>% 
+  left_join(ids_and_names %>% 
+              select(zuj_nazev, zuj_id)) %>% 
+  select(prj_id, rozpad_typ, level, value = zuj_id)
+
+skimr::skim(dtl_rozpadle_mc)  
+```
+
+## Praha
+
+```{r praha}
+dtl_rozpadle_praha <- dt_rozpady %>% 
+  filter(rozpad_typ == "praha") %>% 
+  mutate(level = "obec", value = "554782") %>% 
+  select(prj_id, level, value, rozpad_typ)
+```
+
+## Plošné projekty
+
+```{r}
+dtl_rozpadle_plosne <- dtl_noobec %>% 
+  left_join(dt_rozpady) %>% 
+  filter(rozpad_typ == "plosny") %>% 
+  rename(kraj = value) %>% 
+  left_join(ids_short %>% distinct(obec, kraj)) %>% 
+  mutate(level = "obec") %>% 
+  select(prj_id, level, rozpad_typ, value = obec)
+```
+
+
+# Slepení rozpadů
+
+```{r}
+vysledek <- bind_rows(dtl_rozpadle_detekce,
+                      dtl_rozpadle_detekceobce,
+                      dtl_rozpadle_sidla,
+                      dtl_rozpadle_simple,
+                      dtl_rozpadle_praha,
+                      dtl_rozpadle_mc) %>% 
+  mutate(rozpadnuto = T)
+```
+
+```{r}
+skimr::skim(vysledek)
+```
+
+
+```{r, rows.print = 20}
+vysledek %>% 
+  distinct(prj_id, rozpadnuto, rozpad_typ) %>% 
+  full_join(dt_rozpady) %>% 
+  replace_na(list(rozpadnuto = F)) %>%
+  count(rozpad_typ, rozpadnuto) %>% 
+  spread(rozpadnuto, n)
+```
+
+```{r}
+vysledek %>% 
+  filter(is.na(value))
+```
+
+```{r}
+vysledek %>% 
+  left_join(prj_meta) %>% 
+  count(level, rozpad_typ) %>% 
+  spread(level, n)
 ```
 
