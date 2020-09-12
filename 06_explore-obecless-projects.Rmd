@@ -640,8 +640,8 @@ dt_noobec_basic <- dtl_noobec %>%
 ### Některé markery
 
 ```{r mas-vyzvy}
-vyzvy_map_mas <- vyzvy %>%
-  filter(str_detect(vyzva_nazev, "[Mm]ístní akční|[Mm]ístních akčních|MAS"),
+vyzvy_mas <- vyzvy %>%
+  filter(str_detect(vyzva_nazev, "[Mm]ístní akční sk|[Mm]ístních akčních sk|MAS"),
          str_detect(vyzva_id, "^0[1-9]_"))
 ```
 
