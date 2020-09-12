@@ -59,6 +59,12 @@ dtl_noobec <- dtl %>%
   drop_na(value)
 ```
 
+```{r data-geostatus}
+dt_geostatus <- read_parquet(here::here("data-processed", "projects-geo-check-groups.parquet"))
+prj_id_nonhier <- dt_geostatus %>% filter(geostatus == "více míst nehierarchicky") %>% 
+  pull(prj_id)
+```
+
 
 ```{r specific prepped data}
 dt_noobec_diag <- read_parquet(here::here("data-processed", "dtl-noobec-diag.parquet"))
