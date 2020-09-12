@@ -639,6 +639,12 @@ dt_noobec_basic <- dtl_noobec %>%
 
 ### Některé markery
 
+```{r broken-hierarchy}
+prj_id_nonhier <- dt_geostatus %>% filter(geostatus == "více míst nehierarchicky") %>% 
+  pull(prj_id)
+```
+
+
 ```{r mas-vyzvy}
 vyzvy_mas <- vyzvy %>%
   filter(str_detect(vyzva_nazev, "[Mm]ístní akční sk|[Mm]ístních akčních sk|MAS"),
@@ -765,6 +771,7 @@ dt_noobec_diag <- dt_noobec_basic %>%
                   poddruhuj_nazev = "nic",
                   xmastext = FALSE)) %>% 
   mutate(xp_public = druhuj_nazev != "nic",
+         xnonhierarch = prj_id %in% prj_id_nonhier,
          xsidlo_in_name = str_detect(p_nazev, fixed(dt_noobec_basic$p_sidlo_nazev)),
          xsidlo_in_prjtitle = str_detect(prj_nazev, 
                                          fixed(dt_noobec_basic$p_sidlo_nazev)),
