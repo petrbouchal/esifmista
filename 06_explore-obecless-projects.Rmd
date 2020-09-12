@@ -832,6 +832,15 @@ dt_noobec_diag %>%
   spread(matched, n)
 ```
 
+Co dělat s TP?
+
+```{r}
+dt_noobec_diag %>% 
+  filter(xta) %>% 
+  count(minlevel, n_units)
+```
+
+
 ### Shody diagnostických proměnných (upset plot)
 
 ```{r}
