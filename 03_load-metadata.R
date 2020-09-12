@@ -201,7 +201,7 @@ orgs_progper %>%
   arrange(pocet_radku, ico)
 
 length(unique(orgs_progper$ico))
-length(unique(orgs_current$ico))
+# length(unique(orgs_current$ico))
 
 table(dt$p_ico %in% orgs_progper$ico)
 
