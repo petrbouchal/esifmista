@@ -125,7 +125,7 @@ dt_rozpady %>%
 ```
 
 
-```{r rows.print = 25}
+```{r rozpady-explore, rows.print = 25}
 dt_rozpady %>% 
   count(rozpad_typ, sort = T)
 
@@ -135,7 +135,7 @@ dt_rozpady %>%
 ```
 # Tvorba rozpadů
 
-```{r}
+```{r rozpady-key}
 dt_rozpad_key <- dt_rozpady %>% 
   mutate(rozpad_jak = case_when(str_detect(rozpad_typ, "obce_v_") ~ str_remove(rozpad_typ, "obce_v_"),
                                 str_detect(rozpad_typ, "detekce") ~ str_remove(rozpad_typ, "etekce"),
@@ -146,7 +146,7 @@ table(dt_rozpad_key$rozpad_jak)
 table(is.na(dt_rozpad_key$rozpad_jak))
 ```
 
-```{r}
+```{r rozpadac-obce}
 rozpadac_na_obce <- ids_short %>% 
   select(obec, orp, okres, kraj) %>% 
   gather("rozpad_jak", "value", -obec) %>% 
@@ -158,7 +158,7 @@ rozpadac_na_obce <- ids_short %>%
 
 ## Mechanický rozpad (včetně detekovaných MAS)
 
-```{r}
+```{r mas-updater}
 mas_updater <- dt_noobec_diag %>% 
   # select(prj_id, xvyzva_mas, xp_mas, mas_nazev_simple, 
   #        p_nazev, p_nazev_beznno, xmastext) %>% 
@@ -171,13 +171,9 @@ mas_updater <- dt_noobec_diag %>%
   select(masnazev, prj_id, rozpad_jak)
 ```
 
-```{r}
+```{r mas-updater-check}
 setdiff(mas_updater$masnazev, rozpadac_na_obce$value)
 mas_updater %>% skimr::skim()
-
-mas_updater %>% 
-  filter(is.na(masnazev)) %>% 
-  count(xmastext, xp_mas, xvyzva_mas)
 ```
 
 
@@ -201,7 +197,7 @@ dtl_rozpadle_simple <- dtl_noobec %>%
   left_join(dt_rozpady %>% select(prj_id, rozpad_typ))
 ```
 
-```{r}
+```{r rozpad-simple-check}
 dtl_rozpadle_simple %>% 
   # group_by(rozpad_jak) %>% 
   skimr::skim()
@@ -233,7 +229,7 @@ dtl_rozpadle_detekce <- dtl_geodetected %>%
   select(prj_id, value = obec, rozpad_typ) %>% 
   mutate(level = "obec")
 ```
-```{r}
+```{r rozpad-detek-orp-okresy-check}
 skimr::skim(dtl_rozpadle_detekce)
 ```
 ## Detekované obce
@@ -244,6 +240,11 @@ dtl_rozpadle_detekceobce <- dtl_geodetected %>%
   filter(rozpad_typ == "detekce_uzemi") %>% 
   select(prj_id, value = uzemi, level = uzemi_level, rozpad_typ)
 ```
+
+```{r rozpad-detekovane-obce-check}
+skimr::skim(dtl_rozpadle_detekceobce)
+```
+
 
 ## Sídla žadatelů
 
@@ -292,7 +293,7 @@ dtl_rozpadle_praha <- dt_rozpady %>%
 
 ## Plošné projekty
 
-```{r}
+```{r rozpad-plosne}
 dtl_rozpadle_plosne <- dtl_noobec %>% 
   filter(typ == "id") %>% 
   left_join(dt_rozpady) %>% 
@@ -306,7 +307,7 @@ dtl_rozpadle_plosne <- dtl_noobec %>%
 
 # Slepení rozpadů
 
-```{r}
+```{r slepeni}
 vysledek <- bind_rows(dtl_rozpadle_detekce,
                       dtl_rozpadle_detekceobce,
                       dtl_rozpadle_sidla,
@@ -316,12 +317,12 @@ vysledek <- bind_rows(dtl_rozpadle_detekce,
   mutate(rozpadnuto = T)
 ```
 
-```{r}
+```{r slepeni-check}
 skimr::skim(vysledek)
 ```
 
 
-```{r, rows.print = 20}
+```{r slepeni-review, rows.print = 20}
 vysledek %>% 
   distinct(prj_id, rozpadnuto, rozpad_typ) %>% 
   full_join(dt_rozpady) %>% 
@@ -330,12 +331,7 @@ vysledek %>%
   spread(rozpadnuto, n)
 ```
 
-```{r}
-vysledek %>% 
-  filter(is.na(value))
-```
-
-```{r}
+```{r slepeni-check-levels}
 vysledek %>% 
   left_join(prj_meta) %>% 
   count(level, rozpad_typ) %>% 
