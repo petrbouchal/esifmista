@@ -457,9 +457,14 @@ if(file.exists(prj_geoname_validated_file)) {
                 rename(uzemi = kod, uzemi_nazev = nazev) %>% 
                 distinct()) %>% 
     mutate(prjtxt = if_else(kde == "anotace", prj_anotace, prj_nazev),
-           orp_obec = str_detect(prjtxt, paste("(ORP|rozšířenou působností)", uzemi_nazev)),
-           uzemi_is_sidlo = str_sub(p_sidlo_id, 6, 11) == uzemi_nazev,
-           okres_obec = str_detect(prjtxt, paste("[Oo]kres([eu]?)", uzemi_nazev)))
+           orp_obec = str_detect(prjtxt, 
+                                 paste("(ORP|rozšířenou působností)", obec_nazev)),
+           uzemi_is_sidlo = str_sub(p_sidlo_id, 6, 11) == obec_id,
+           okres_obec = str_detect(prjtxt, paste("[Oo]kres([eu]?)", obec_nazev))) %>% 
+    # vyhodit z celého seznamu detekovaných ta místa, kde 
+    # detekujeme např. "okres X" a přitom okres X neexistuje
+    filter(!(okres_obec & !obec_nazev %in% ids_and_names$okres_nazev),
+           !(orp_obec & !obec_nazev %in% ids_and_names$orp_nazev))
   
   write_parquet(prj_geoname_checked2, prj_geoname_validated_file)
 }
