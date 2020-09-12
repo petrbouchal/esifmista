@@ -40,6 +40,8 @@ ids_and_names <- read_parquet(here::here("data-processed",
 dt_geostructure_byprj <- read_parquet(here::here("data-processed", "dt_geostructure_by-prj.parquet"))
 dt_geostructure_bylvl <- read_parquet(here::here("data-processed", "dt_geostructure_by-lvl.parquet"))
 
+dt_geostatus <- read_parquet(here::here("data-processed", "projects-geo-check-groups.parquet"))
+
 source(here::here("read_metadata.R"))
 ```
 
@@ -288,11 +290,19 @@ texty <- dtl %>%
   left_join(prj_meta) %>%
   left_join(vyzvy)
 
-zuj_nazvy <- zuj_geo %>%
+zuj_nazvy0 <- zuj_geo %>%
   st_set_geometry(NULL) %>%
   bind_rows(obce_geo %>%
               st_set_geometry(NULL) %>% 
-              mutate(typuj = "obec")) %>%
+              mutate(typuj = "obec"))
+
+zuj_a_obce <- zuj_nazvy0 %>% 
+  select(kod, nazev, lau2_kod) %>% 
+  separate(lau2_kod, into = c(NA, "obec_id")) %>% 
+  left_join(ids_and_names %>% select(obec_id, obec_nazev)) %>% 
+  distinct()
+
+zuj_nazvy <- zuj_nazvy0 %>% 
   select(kod, nazev, starts_with("mluv_pad_"), typuj) %>%
   pivot_longer(c(nazev, starts_with("mluv"))) %>%
   separate_rows(value, sep = ";") %>%
@@ -443,8 +453,8 @@ if(file.exists(prj_geoname_validated_file)) {
   prj_geoname_checked2 <- prj_geoname_checked %>% 
     left_join(dts) %>% 
     filter(obec_in_misto) %>% 
-    left_join(ids_and_names %>% 
-                select(uzemi = obec_id, uzemi_nazev = obec_nazev) %>% 
+    left_join(zuj_a_obce %>% 
+                rename(uzemi = kod, uzemi_nazev = nazev) %>% 
                 distinct()) %>% 
     mutate(prjtxt = if_else(kde == "anotace", prj_anotace, prj_nazev),
            orp_obec = str_detect(prjtxt, paste("(ORP|rozšířenou působností)", uzemi_nazev)),
