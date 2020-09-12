@@ -847,7 +847,7 @@ dt_noobec_diag %>%
 library(ggupset)
 
 diag_for_upset <- dt_noobec_diag %>% 
-  filter(op_id == "OP VVV") %>% 
+  # filter(op_id == "OP VVV") %>% 
   select(prj_id, op_id, starts_with("x"), -xp_public) %>% 
   gather("var", "val", -prj_id, -op_id) %>% 
   filter(val) %>%
