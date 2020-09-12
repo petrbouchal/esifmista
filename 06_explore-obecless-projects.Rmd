@@ -948,6 +948,13 @@ dt_noobec_diag %>%
   filter(op_id == "OP Z" & !matched) %>% 
   count(xgeo_in_text)
 ```
+
+```{r}
+dt_noobec_diag %>% 
+  filter(op_id == "OP VVV" & !matched) %>% 
+  count(vyzva_nazev, sort = T)
+```
+
 #### Výzvy OP Z podle počtu území
 
 ```{r}
