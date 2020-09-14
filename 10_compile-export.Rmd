@@ -78,7 +78,7 @@ dss_sample <- dss %>%
 ```
 
 ```{r}
-writexl::write_xlsx(dss_sample %>% rename(obec_kod = value, obec_kod_orig = id_orig), here::here("data-export", "sample_export.xlsx"))
+writexl::write_xlsx(dss_sample %>% rename(obec_kod = value, obec_kod_orig = id_orig), here::here("sample_export.xlsx"))
 ```
 
 
@@ -86,6 +86,6 @@ writexl::write_xlsx(dss_sample %>% rename(obec_kod = value, obec_kod_orig = id_o
 writexl::write_xlsx(dss %>% 
                       filter(op_id == "OP Z" & chunk == "1.0") %>% 
                       rename(obec_kod = value, obec_kod_orig = id_orig) %>% 
-                      collect(), here::here("data-export", "opz-one-chunk.xlsx"))
+                      collect(), here::here("opz-one-chunk.xlsx"))
 ```
 
