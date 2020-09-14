@@ -10,6 +10,59 @@ source("shared.R")
 library(fontawesome)
 ```
 
+## srpen-září 2020
+
+### Zkušební exporty:
+
+- [jeden kus OPZ (cca 500 000 řádků z celkem cca 7 mil.)](opz-one-chunk.xlsx)
+- [vzorek projektů zahrnující různé OP a typy řešených mezer v datech](sample_export.xlsx)
+
+V datovém exportu jsou následující položky:
+
+- `prj_id`: kód projektu
+- `op_id`: zkratka OP
+- `value`: kód obce nebo ZÚJ podle číselníku ČSÚ
+- vysvětlení způsobu rozpadu na třech úrovních
+  - `obec_puvod`: typ dovození obce (chybějící místo; bez obce; zúžení)
+  - `rozpad_typ`: způsob rozpadu/dovození (kód)
+  - `rozpad_duvod`: bližší zdůvodnění) rozpadu/dovození obce
+- `level`: geografická úroveň idenfitikátoru (obec/zuj)
+- `radek`: pořadové číslo řádků v rámci projektu
+- `level_orig`: nejjemnější geografická úroveň, na které byl projekt lokalizován v původních datech
+- `id_orig`: všechna území, která na této úrovni projekt lokalizovala (oddělená čárkou)
+- `chunk`: díl souboru (pro export do dílčích XLSX souborů)
+
+### Otázky k výstupní datové formě:
+
+Výstup bude mít cca 20 excelových souborů po cca 20 MB. (Lze i větší soubory, ale je to pak pro uživatele dat nešikovné)
+
+- které další položky tam chceme přidat?
+- chceme obce podle ČSÚ (př. 554728), nebo podle původních dat (př. CZ010554728)?
+- formát (XLSX, CSV?)
+- podle čeho rozdělovat do souborů, pokud budeme ()
+
+### Stav:
+
+- hotové překlady všech projektů do obecní úrovně, až na výjimku 119 projektů
+  - projekty bez místa realizace: rozpadnuty na obce v daných CHKO/NP
+  - projekty bez údaje o obci: rozpadnuto a dovozeno několika způsoby podle výzev, příjemců, názvu a anotace projektu atd. Kde to bylo možné, je výsledná lokalizace na ZÚJ (městské části), jinak obce
+  - projekty s více úrovněmi místa realizace: zúženy na obce a ZÚJ
+
+Zádrhele:
+
+- cca 1000 projektů je v původních datech lokalizováno na více než 11 krajů, tj. téměř plošné projekty. Jejich mechanický rozpad na všechny obce generuje obrovské množství řádků
+- spousta těchto projektů by při pečlivém třídění šla lokalizovat přesněji, ale muselo by se jít projekt po projektu nebo alespoň výzvu po výzvě, kde ale výzva může být jen několik desítek projektů (velké výzvy jsou v našich rozpadech rozpoznané a ošetřené)
+- u některých projektů OP Z na firemní vzdělávání původně lokalizovaných na 11+ krajů jsme museli udělat úvahu, že se dějí pouze v místě sídla - většinou takové určení bylo nesmyslné (malé firmy), ale někde to mohlo být realistické (státní podniky, velké firmy)
+- u projektů, které jsme do obce zařadili podle detekce geografického názvu v názvu nebo anotaci projektu bude malé množství falešných pozitiv - např. pokud v anotaci stojí, že projekt se týká území "mimo ORP Blansko", projekt je přesto rozpadnut na obce ORP Blansko, protože běžnou technologií není možné tyto nuance spolehlivě zachytit.
+
+Pokud by se ukázalo, že toto je velký problém, je možné se u projektů s takto dovozenou obcí vrátit k původním údajům (viz popis položek výše).
+
+### To do:
+
+- detailnější popis výstupních dat
+- včetně toho, jak jednotlivá dovození obcí fungují a kde může být problém
+- aktualizace technické dokumentace
+
 ## 10. 8. 2020
 
 ### Kontrola interní validity názvů a identifikátorů
