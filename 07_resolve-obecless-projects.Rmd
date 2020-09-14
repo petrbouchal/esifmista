@@ -188,6 +188,7 @@ dtl_rozpadle_simple <- dtl_noobec %>%
   left_join(dt_geostructure_bylvl) %>% 
   filter(min_level) %>% 
   select(prj_id, level, value) %>% 
+  mutate(level_orig = level, id_orig = value) %>% 
   left_join(dt_rozpad_key) %>% 
   filter(rozpad_jak %in% c("orp", "okres", "kraj", "mas")) %>% 
   left_join(mas_updater) %>%
@@ -195,7 +196,7 @@ dtl_rozpadle_simple <- dtl_noobec %>%
          level = "obec") %>% 
   select(-masnazev) %>% 
   left_join(rozpadac_na_obce) %>%
-  select(prj_id, level, value = obec) %>% 
+  select(prj_id, level, value = obec, id_orig, level_orig) %>% 
   left_join(dt_rozpady %>% select(prj_id, rozpad_typ))
 ```
 
@@ -221,15 +222,24 @@ rozpadac_detekovanych <- ids_and_names %>%
               mutate(rozpad_jak = "d_okres") %>% 
               distinct())
 
+origgeo <- dtl_noobec %>% 
+  filter(typ == "id") %>% 
+  left_join(dt_geostructure_bylvl %>% select(prj_id, level, min_level)) %>% 
+  filter(min_level) %>% 
+  group_by(prj_id, level_orig = level) %>% 
+  summarise(id_orig = paste(value, collapse = ", ")) %>% 
+  select(prj_id, id_orig, level_orig)
+
 dtl_rozpadle_detekce <- dtl_geodetected %>% 
-  left_join(dt_rozpady %>% select(prj_id, rozpad_typ)) %>% 
+  left_join(dt_rozpady %>% select(prj_id, rozpad_typ, minlevel)) %>% 
   filter(rozpad_typ %in% c("detekce_orp", "detekce_okres")) %>% 
-  select(prj_id, uzemi_nazev, rozpad_typ) %>% 
+  select(prj_id, uzemi_nazev, rozpad_typ, minlevel) %>% 
   left_join(dt_rozpad_key) %>% 
   left_join(rozpadac_detekovanych) %>% 
   drop_na(id) %>% 
-  select(prj_id, value = obec, rozpad_typ) %>% 
-  mutate(level = "obec")
+  mutate(level = "obec") %>% 
+  left_join(origgeo) %>% 
+  select(prj_id, level, value = obec, rozpad_typ, id_orig, level_orig)
 ```
 ```{r rozpad-detek-orp-okresy-check}
 skimr::skim(dtl_rozpadle_detekce)
@@ -239,8 +249,10 @@ skimr::skim(dtl_rozpadle_detekce)
 ```{r rozpad-detekovane-obce}
 dtl_rozpadle_detekceobce <- dtl_geodetected %>% 
   left_join(dt_rozpady) %>% 
-  filter(rozpad_typ == "detekce_uzemi") %>% 
-  select(prj_id, value = uzemi, level = uzemi_level, rozpad_typ)
+  filter(rozpad_typ == "detekce_uzemi") %>%
+  left_join(origgeo) %>% 
+  select(prj_id, value = uzemi, level = uzemi_level, rozpad_typ,
+         level_orig, id_orig)
 ```
 
 ```{r rozpad-detekovane-obce-check}
@@ -251,12 +263,16 @@ skimr::skim(dtl_rozpadle_detekceobce)
 ## Sídla žadatelů
 
 ```{r rozpad-sidla-zatadelu}
-dtl_rozpadle_sidla <- dt_rozpady %>% 
+dtl_rozpadle_sidla <- dtl_noobec %>%
+  filter(typ == "id") %>% 
+  left_join(dt_rozpady) %>% 
   filter(rozpad_typ == "obec_sidla") %>% 
-  select(prj_id, rozpad_typ) %>% 
+  select(prj_id, rozpad_typ, minlevel) %>% 
   left_join(dts) %>% 
-  mutate(obec = p_sidlo_id, level = "obec") %>% 
-  select(prj_id, value = obec, level, rozpad_typ)
+  mutate(obec = str_sub(p_sidlo_id, 6, 11), level = "obec") %>% 
+  left_join(origgeo) %>% 
+  select(prj_id, value = obec, level, rozpad_typ, level_orig, id_orig) %>% 
+  distinct()
 ```
 
 ## MČ
@@ -264,7 +280,9 @@ dtl_rozpadle_sidla <- dt_rozpady %>%
 ```{r rozpad-MC}
 zrizovaci_vztahy <- read_parquet(here::here("data-processed", "zrizovatele.parquet"))
 
-dtl_rozpadle_mc <- dt_rozpady %>% 
+dtl_rozpadle_mc <- dtl %>% 
+  filter(typ == "id") %>% 
+  left_join(dt_rozpady) %>% 
   filter(rozpad_typ == "mc") %>% 
   left_join(dts %>% select(prj_id, p_nazev, ico = p_ico)) %>% 
   left_join(zrizovaci_vztahy) %>% 
@@ -273,13 +291,13 @@ dtl_rozpadle_mc <- dt_rozpady %>%
   # u ostatních vezmeme upravený název zřizující MČ
   mutate(zuj_nazev = if_else(!is.na(poddruhuj_nazev), 
                              str_remove(zrizovatel_nazev, "Městská část "),
-                             str_remove(p_nazev, "Městská část ")
-  )) %>% 
-  select(prj_id, zuj_nazev, p_nazev, rozpad_typ) %>%
+                             str_remove(p_nazev, "Městská část ")),
+         id_orig = value, level_orig = level) %>% 
+  select(prj_id, zuj_nazev, p_nazev, rozpad_typ, id_orig, level_orig) %>%
   mutate(level = "zuj") %>% 
   left_join(ids_and_names %>% 
               select(zuj_nazev, zuj_id)) %>% 
-  select(prj_id, rozpad_typ, level, value = zuj_id)
+  select(prj_id, rozpad_typ, level, value = zuj_id, level_orig, id_orig)
 
 skimr::skim(dtl_rozpadle_mc)  
 ```
@@ -287,10 +305,13 @@ skimr::skim(dtl_rozpadle_mc)
 ## Praha
 
 ```{r praha}
-dtl_rozpadle_praha <- dt_rozpady %>% 
+dtl_rozpadle_praha <- dtl_noobec %>%
+  filter(typ == "id") %>% 
+  left_join(dt_rozpady) %>% 
   filter(rozpad_typ == "praha") %>% 
+  mutate(level_orig = minlevel, id_orig = value) %>% 
   mutate(level = "obec", value = "554782") %>% 
-  select(prj_id, level, value, rozpad_typ)
+  select(prj_id, level, value, level_orig, id_orig, rozpad_typ)
 ```
 
 ## Plošné projekty
@@ -302,8 +323,9 @@ dtl_rozpadle_plosne <- dtl_noobec %>%
   filter(rozpad_typ == "plosny") %>% 
   rename(kraj = value) %>% 
   left_join(ids_short %>% distinct(obec, kraj)) %>% 
+  rename(level_orig = level, id_orig = kraj) %>% 
   mutate(level = "obec") %>% 
-  select(prj_id, level, rozpad_typ, value = obec)
+  select(prj_id, level, rozpad_typ, value = obec, id_orig, level_orig)
 ```
 
 
@@ -319,14 +341,19 @@ vysledek <- bind_rows(dtl_rozpadle_detekce,
                       dtl_rozpadle_mc) %>% 
   ungroup() %>% 
   mutate(rozpadnuto = T,
+         level_orig = as.character(level_orig),
          level = factor(level, levels = geolevels, ordered = T)) %>% 
   left_join(dt_rozpady %>% select(prj_id, op_id, rozpad_duvod)) %>% 
-  mutate(obec_puvod = "dovození obce-ZUJ pokud tato úroveň chyběla",
-         rozpad_duvod = NA_character_,
-         nazev_orig = NA_character_,
-         level_orig = NA_character_) %>% 
+  mutate(obec_puvod = "dovození obce-ZUJ pokud tato úroveň chyběla") %>% 
+  group_by(prj_id) %>% 
+  mutate(radek = row_number()) %>% 
   group_by(obec_puvod, rozpad_typ, op_id)
 ```
+
+```{r}
+table(vysledek$rozpad_typ, is.na(vysledek$id_orig))
+```
+
 
 ```{r slepeni-check}
 skimr::skim(vysledek)
@@ -352,10 +379,12 @@ vysledek %>%
 # Export
 
 ```{r slepeno-export}
-write_parquet(vysledek %>% group_by(obec_puvod, 
-                                    op_id, rozpad_typ) %>%
-                select(prj_id, op_id, level, level_orig, 
-                       rozpad_typ, rozpad_duvod, obec_puvod),
+write_parquet(vysledek %>% 
+                group_by(op_id) %>% 
+                mutate(chunk = floor(row_number()/5e5) + 1) %>% 
+                group_by(obec_puvod, op_id, chunk, rozpad_typ) %>%
+                select(prj_id, radek, op_id, level, value, level_orig, id_orig, 
+                       rozpad_typ, rozpad_duvod, obec_puvod, chunk),
               here::here("data-processed", "dtl-obecless-rozpadnute-all", "all.parquet"),
               compression = "snappy")
 

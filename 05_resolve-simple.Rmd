@@ -62,14 +62,19 @@ dtl_smpl <- dtl %>%
   # count(geostatus)
   filter(!(geostatus == "obec a ZUJ se kryjí" & level == "zuj")) %>% 
   select(prj_id, op_id, value, level, rozpad_typ = geostatus) %>% 
+  group_by(op_id) %>% 
   mutate(obec_puvod = "obec-ZUJ u projektů, kde byly zadány",
          rozpad_typ = as.character(rozpad_typ),
          rozpad_duvod = NA_character_,
-         nazev_orig = NA_character_,
-         level_orig = NA_character_) %>% 
-  group_by(obec_puvod, rozpad_typ, op_id) %>% 
-  select(prj_id, op_id, level, level_orig, rozpad_typ, 
-         rozpad_duvod, obec_puvod)
+         id_orig = value,
+         level_orig = as.character(level),
+         value = str_sub(value, 6, 11),
+         chunk = floor(row_number()/3e6) + 1) %>% 
+  group_by(prj_id) %>% 
+  mutate(radek = row_number()) %>% 
+  group_by(obec_puvod, op_id, chunk, rozpad_typ) %>% 
+  select(prj_id, radek, op_id, level, value, level_orig, id_orig, rozpad_typ, 
+         rozpad_duvod, obec_puvod, chunk)
 ```
 
 ```{r}

@@ -285,22 +285,26 @@ dt_with_chuobce_reshaped <- dt_with_chuobce %>%
   mutate(level = if_else(zuj_id %in% ids_short$obec, "obec", "zuj"), 
          level_orig = "chkonp") %>% 
   rename_with(~str_remove(., "zuj_")) %>% 
-  rename(nazev_orig = chkonp_idtext, value = id) %>% 
+  rename(id_orig = chkonp_idtext, value = id) %>% 
   mutate(obec_puvod = "doplnění obce-ZUJ podle chráněných území",
          rozpad_typ = "nic",
          level = factor(level, levels = geolevels, ordered = T),
          rozpad_duvod = NA_character_,
-         nazev_orig = NA_character_,
-         level_orig = NA_character_) %>% 
+         id_orig = NA_character_,
+         level_orig = "chkonp") %>% 
   left_join(prj_meta %>% select(prj_id, op_id)) %>% 
-  group_by(obec_puvod, rozpad_typ, op_id)
+  group_by(op_id) %>% 
+  mutate(chunk = floor(row_number()/5e5) + 1) %>% 
+  group_by(prj_id) %>% 
+  mutate(radek = row_number()) %>% 
+  group_by(obec_puvod, op_id, chunk, rozpad_typ)
 ```
 
 
 ```{r}
 write_parquet(dt_with_chuobce_reshaped %>% 
-                select(prj_id, op_id, level, level_orig, 
-                       rozpad_typ, rozpad_duvod, obec_puvod),
+                select(prj_id, radek, op_id, level, value, level_orig, id_orig,
+                       rozpad_typ, rozpad_duvod, obec_puvod, chunk),
               here::here("data-processed", "dtl_resolved_placeless", "all.parquet"))
 write_parquet(dt_with_chuobce_reshaped, 
               here::here("data-processed", "dt_noplace_filled-chudetail.parquet"))
