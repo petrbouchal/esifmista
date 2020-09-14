@@ -656,7 +656,7 @@ prj_id_misto_onlypraha <- dtl_noobec %>%
   filter(typ == "id") %>% 
   left_join(dt_geostructure_byprj) %>% 
   filter(n_units == 1) %>% 
-  filter(value %in% c("CZ010", "CZ010554782")) %>% 
+  filter(value %in% c("CZ010", "CZ010554782", "CZ0100")) %>% 
   pull(prj_id)
 length(prj_id_misto_onlypraha)
 ```
