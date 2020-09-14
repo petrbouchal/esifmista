@@ -1,7 +1,7 @@
 name: Rozpočty obcí a měst v krizi
 output_dir: docs
 include: []
-exclude: ["LICENSE.md", "*.csv", "*.rds", "data-input", "data-processed", "renv", "renv.lock", "archive", "prep", "*.sh"]
+exclude: ["LICENSE.md", "*.csv", "*.rds", "data-input", "data-processed", "renv", "renv.lock", "archive", "prep", "*.sh", ".py"]
 navbar:
   title: "Místa realizace ESIF: čištění dat"
   left:
@@ -21,8 +21,16 @@ navbar:
       href: 06_explore-obecless-projects.html
   - text: Úpravy dat
     menu:
-    - text: "Řešení projektů bez místa realizace"
+    - text: "Projekty s určením obce"
+      href: 05_resolve-simple.html
+    - text: "Projekty bez určení obce/ZÚJ"
+      href: 07_resolve-obecless-projects.html
+    - text: "Projekty bez místa realizace"
       href: 08_resolve-placeless.html
+    - text: "Projekty s nehierarchickým určením místa"
+      href: 09_resolve-complicated.html
+    - text: "Kompilace a export"
+      href: 10_compile-export.html
   - text: "Záznam kroků a poznatků"
     href: log.html
   - text: Dokumentace
