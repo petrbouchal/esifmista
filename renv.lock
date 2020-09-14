@@ -157,10 +157,10 @@
     },
     "arrow": {
       "Package": "arrow",
-      "Version": "1.0.0",
+      "Version": "1.0.0.20200814",
       "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "513ceb7857a3c03a174cd5e2b809a159"
+      "Repository": null,
+      "Hash": "c55111dcc5ae96a377ed3e762090d0ca"
     },
     "askpass": {
       "Package": "askpass",
@@ -1241,7 +1241,8 @@
       "Package": "renv",
       "Version": "0.12.0",
       "Source": "Repository",
-      "Repository": "CRAN"
+      "Repository": "CRAN",
+      "Hash": "7340c71f46a0fd16506cfa804e224e44"
     },
     "repr": {
       "Package": "repr",
@@ -1263,6 +1264,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "bb5996d0bd962d214a11140d77589917"
+    },
+    "reticulate": {
+      "Package": "reticulate",
+      "Version": "1.16",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5db95d35ae4605b46cea66b6e3bcab3e"
     },
     "rex": {
       "Package": "rex",
@@ -1635,5 +1643,9 @@
       "Repository": "CRAN",
       "Hash": "e900bc5f049697942cc2d4d2e7e8f857"
     }
+  },
+  "Python": {
+    "Version": "3.6.5",
+    "Type": "virtualenv"
   }
 }
