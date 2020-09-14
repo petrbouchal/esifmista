@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Lokalizace projektů bez údaje o obci/ZÚJ realizace"
 output: html_document
 ---
 
@@ -30,7 +30,9 @@ dtl <- read_parquet(here::here("data-processed",
 prj_meta <- read_parquet(here::here("data-processed", "prj-esif-meta.parquet"))
 dt_geostructure_byprj <- read_parquet(here::here("data-processed", "dt_geostructure_by-prj.parquet"))
 dt_geostructure_bylvl <- read_parquet(here::here("data-processed", "dt_geostructure_by-lvl.parquet"))
+```
 
+```{r metadata}
 source(here::here("read_metadata.R"))
 ```
 
@@ -270,9 +272,9 @@ dtl_rozpadle_mc <- dt_rozpady %>%
   # u MČ jen upravíme název, aby seděl s ČSÚ
   # u ostatních vezmeme upravený název zřizující MČ
   mutate(zuj_nazev = if_else(!is.na(poddruhuj_nazev), 
-                         str_remove(zrizovatel_nazev, "Městská část "),
-                         str_remove(p_nazev, "Městská část ")
-                         )) %>% 
+                             str_remove(zrizovatel_nazev, "Městská část "),
+                             str_remove(p_nazev, "Městská část ")
+  )) %>% 
   select(prj_id, zuj_nazev, p_nazev, rozpad_typ) %>%
   mutate(level = "zuj") %>% 
   left_join(ids_and_names %>% 
@@ -313,8 +315,17 @@ vysledek <- bind_rows(dtl_rozpadle_detekce,
                       dtl_rozpadle_sidla,
                       dtl_rozpadle_simple,
                       dtl_rozpadle_praha,
+                      dtl_rozpadle_plosne,
                       dtl_rozpadle_mc) %>% 
-  mutate(rozpadnuto = T)
+  ungroup() %>% 
+  mutate(rozpadnuto = T,
+         level = factor(level, levels = geolevels, ordered = T)) %>% 
+  left_join(dt_rozpady %>% select(prj_id, op_id, rozpad_duvod)) %>% 
+  mutate(obec_puvod = "dovození obce-ZUJ pokud tato úroveň chyběla",
+         rozpad_duvod = NA_character_,
+         nazev_orig = NA_character_,
+         level_orig = NA_character_) %>% 
+  group_by(obec_puvod, rozpad_typ, op_id)
 ```
 
 ```{r slepeni-check}
@@ -337,4 +348,26 @@ vysledek %>%
   count(level, rozpad_typ) %>% 
   spread(level, n)
 ```
+
+# Export
+
+```{r slepeno-export}
+write_parquet(vysledek %>% group_by(obec_puvod, 
+                                    op_id, rozpad_typ) %>%
+                select(prj_id, op_id, level, level_orig, 
+                       rozpad_typ, rozpad_duvod, obec_puvod),
+              here::here("data-processed", "dtl-obecless-rozpadnute-all", "all.parquet"),
+              compression = "snappy")
+
+ads <- open_dataset(here::here("data-processed", "dtl-obecless-rozpadnute-all"))
+
+ads_grouped <- ads %>% group_by(rozpad_typ, op_id)
+
+write_dataset(ads_grouped, here::here("data-processed", "dtl-obecless-rozpadnute"), format = "feather")
+```
+
+```{r}
+fs::file_size(here::here("data-processed", "dtl-obecless-rozpadnute.parquet"))
+```
+
 
