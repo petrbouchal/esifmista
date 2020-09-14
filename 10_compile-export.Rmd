@@ -1,0 +1,32 @@
+---
+title: "Kompilace dat"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(arrow)
+
+library(reticulate)
+# use_python("/Library/Frameworks/Python.framework/Versions/3.6/bin/python3")
+```
+
+```{python resave}
+import pyarrow as pa
+import pyarrow.parquet as pq
+
+dt1 = pq.read_table("data-processed/dtl-obecless-rozpadnute-all/")
+dt2 = pq.read_table("data-processed/dtl_resolved_placeless/")
+dt3 = pq.read_table("data-processed/dtl_resolved_smpl/")
+
+# dt2p = dt2.to_pandas()
+
+dtcc = pa.concat_tables([dt2, dt1, dt3])
+
+# dtcc.to_pandas()
+
+pq.write_to_dataset(dtcc, "data-processed/dtl-all-py", 
+                    partition_cols=["obec_puvod", "rozpad_typ", "op_id"])
+
+```
