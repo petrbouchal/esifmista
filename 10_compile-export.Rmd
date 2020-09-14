@@ -12,21 +12,80 @@ library(reticulate)
 # use_python("/Library/Frameworks/Python.framework/Versions/3.6/bin/python3")
 ```
 
-```{python resave}
+```{python libs}
 import pyarrow as pa
 import pyarrow.parquet as pq
+import math
+```
 
+
+```{python load}
 dt1 = pq.read_table("data-processed/dtl-obecless-rozpadnute-all/")
 dt2 = pq.read_table("data-processed/dtl_resolved_placeless/")
 dt3 = pq.read_table("data-processed/dtl_resolved_smpl/")
+```
 
+
+```{python inspect}
+dt3
+```
+
+
+
+```{python concat}
 # dt2p = dt2.to_pandas()
 
-dtcc = pa.concat_tables([dt2, dt1, dt3])
+dtcc = pa.concat_tables([dt1, dt2, dt3])
 
+# dtcc2 = dtcc.add_column(9, "chnk", 1:)
 # dtcc.to_pandas()
+```
 
-pq.write_to_dataset(dtcc, "data-processed/dtl-all-py", 
-                    partition_cols=["obec_puvod", "rozpad_typ", "op_id"])
+```{r}
+fs::dir_delete(here::here("data-output", "dtl-all-py"))
+```
+
+```{python resave}
+pq.write_to_dataset(dtcc, "data-output/dtl-all-py", 
+                    partition_cols=["obec_puvod", "op_id", "chunk", "rozpad_typ"])
 
 ```
+
+```{r, eval=F}
+dss <- open_dataset(here::here("data-output", "dtl-all-py"))
+```
+
+```{r, eval=F}
+dss %>% 
+  select(chunk, op_id) %>% 
+  collect() %>% 
+  count(chunk, op_id)
+```
+
+```{r}
+prj_smpl <- dss %>% 
+  select(prj_id, op_id, rozpad_typ, obec_puvod) %>% 
+  collect() %>% 
+  distinct() %>% 
+  group_by(op_id, rozpad_typ, obec_puvod) %>% 
+  sample_n(min(n(), 10))
+```
+
+```{r}
+dss_sample <- dss %>% 
+  filter(prj_id %in% prj_smpl$prj_id) %>% 
+  collect()
+```
+
+```{r}
+writexl::write_xlsx(dss_sample %>% rename(obec_kod = value, obec_kod_orig = id_orig), here::here("data-export", "sample_export.xlsx"))
+```
+
+
+```{r}
+writexl::write_xlsx(dss %>% 
+                      filter(op_id == "OP Z" & chunk == "1.0") %>% 
+                      rename(obec_kod = value, obec_kod_orig = id_orig) %>% 
+                      collect(), here::here("data-export", "opz-one-chunk.xlsx"))
+```
+
