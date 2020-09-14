@@ -34,12 +34,12 @@ V datovém exportu jsou následující položky:
 
 ### Otázky k výstupní datové formě:
 
-Výstup bude mít cca 20 excelových souborů po cca 20 MB. (Lze i větší soubory, ale je to pak pro uživatele dat nešikovné)
+Výstup bude mít cca 20 excelových souborů po cca 20 MB. (Lze i větší soubory, ale je to pak pro uživatele dat nešikovné).
 
 - které další položky tam chceme přidat?
-- chceme obce podle ČSÚ (př. 554728), nebo podle původních dat (př. CZ010554728)?
+- chceme obce podle ČSÚ (př. 554782), nebo podle původních dat (př. CZ010554782)?
 - formát (XLSX, CSV?)
-- podle čeho rozdělovat do souborů, pokud budeme ()
+- podle čeho rozdělovat do souborů, pokud budeme? (zatím počítám s OP a pak tak, aby v souboru bylo jen cca 500 000 řádků)
 
 ### Stav:
 
@@ -51,7 +51,7 @@ Výstup bude mít cca 20 excelových souborů po cca 20 MB. (Lze i větší soub
 Zádrhele:
 
 - cca 1000 projektů je v původních datech lokalizováno na více než 11 krajů, tj. téměř plošné projekty. Jejich mechanický rozpad na všechny obce generuje obrovské množství řádků
-- spousta těchto projektů by při pečlivém třídění šla lokalizovat přesněji, ale muselo by se jít projekt po projektu nebo alespoň výzvu po výzvě, kde ale výzva může být jen několik desítek projektů (velké výzvy jsou v našich rozpadech rozpoznané a ošetřené)
+- spousta těchto projektů by při pečlivém třídění šla lokalizovat přesněji, ale muselo by se jít projekt po projektu nebo alespoň výzvu po výzvě, kde ale výzva může být jen několik desítek projektů (výzvy s mnoha projekty jsou v našich rozpadech rozpoznané a ošetřené)
 - u některých projektů OP Z na firemní vzdělávání původně lokalizovaných na 11+ krajů jsme museli udělat úvahu, že se dějí pouze v místě sídla - většinou takové určení bylo nesmyslné (malé firmy), ale někde to mohlo být realistické (státní podniky, velké firmy)
 - u projektů, které jsme do obce zařadili podle detekce geografického názvu v názvu nebo anotaci projektu bude malé množství falešných pozitiv - např. pokud v anotaci stojí, že projekt se týká území "mimo ORP Blansko", projekt je přesto rozpadnut na obce ORP Blansko, protože běžnou technologií není možné tyto nuance spolehlivě zachytit.
 
