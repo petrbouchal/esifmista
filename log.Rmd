@@ -24,7 +24,7 @@ Jen u několika desítek míst lehce neseděly názvy - velká a malá písmena,
 
 tj. jak časté jsou projekty, které se realizovaly např. zároveň v kraji X a obci O, která neleží v kraji X?
 
-![](03_explore_files/figure-html/geostatus-plot-abse-1.png)
+![Graf absolutních počtů projektů podle OP a kombinace území](03_explore_files/figure-html/geostatus-plot-abs-1.png)
 
 #### `r fa("question-circle", fill = col_orange)` Není to příliš časté, ale život nám to zkomplikuje
 
