@@ -32,7 +32,14 @@ prj_meta <- read_parquet(here::here("data-processed", "prj-esif-meta.parquet"))
 dt_chkonp <- read_parquet(here::here("data-processed", "prj_chkonp.parquet"))
 
 prj_no_obec <- read_parquet(here::here("data-processed", "prj_id_noobec.parquet"))
+dt_geostructure_bylvl <- read_parquet(here::here("data-processed", "dt_geostructure_by-lvl.parquet"))
+dt_geostructure_byprj <- read_parquet(here::here("data-processed", "dt_geostructure_by-prj.parquet"))
 ```
+
+```{r}
+source(here::here("read_metadata.R"))
+```
+
 
 ```{r geodata}
 zuj_geo <- read_rds(here::here("data-processed", "geo_zuj-all.rds"))
@@ -182,7 +189,7 @@ dt_with_chkonp %>%
 obceschu_file <- here::here("data-processed", "zuj-s-chu.rds")
 
 if(file.exists(obceschu_file)) {
-  obce_s_chu <- read_rds(obceschu_file)
+  zuj_s_chu <- read_rds(obceschu_file)
 } else {
   
   handlers(handler_progress(format = "[:bar] :percent ETA: :eta",
@@ -235,7 +242,7 @@ mapview::mapview(zuj_s_chu, zcol = "NAZEV") %>%
 ```{r obce-by-chu}
 zuj_s_chu %>% 
   st_set_geometry(NULL) %>% 
-  count(NAZEV, TYP)
+  count(NAZEV, KATEGCHU)
 ```
 
 ```{r proj-by-chkonp}
