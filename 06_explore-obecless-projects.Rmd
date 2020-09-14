@@ -792,7 +792,7 @@ dt_noobec_diag <- dt_noobec_basic %>%
          xta = op_kat == "125",
          xkapnno = vyzva_nazev == "Budování kapacit a profesionalizace NNO" & n_units == 1,
          xvs = str_detect(p_nazev, "[Vv]ysoká škola|[Uu]niver[sz]ita|[Vv]ysoké učení"),
-         xnarodni = maxlevel == "kraj" & unique_units > 11,
+         xnarodni = minlevel == "kraj" & unique_units > 11,
          xfiremvzdel = str_detect(vyzva_nazev, "[Pp]odnikové vzdělávání"),
          xgeo_in_text = prj_id %in% prj_ids_with_geonames,
          xzatepleni = str_detect(vyzva_nazev, "ENERGETICKÉ ÚSPORY V BYTOVÝCH DOMECH"),
