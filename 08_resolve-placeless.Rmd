@@ -273,20 +273,36 @@ dt_with_chuobce %>%
   count()
 ```
 
-```{r rslt-write}
-write_parquet(dt_with_chuobce, here::here("data-processed", "dt_noplace_filled.parquet"))
+# Export
+
+```{r}
+dir.create(here::here("data-processed", "dtl_resolved_placeless"))
 ```
+
 
 ```{r rslt-reshape}
 dt_with_chuobce_reshaped <- dt_with_chuobce %>% 
-  mutate(level = "obec", level_orig = "chkonp") %>% 
+  mutate(level = if_else(zuj_id %in% ids_short$obec, "obec", "zuj"), 
+         level_orig = "chkonp") %>% 
   rename_with(~str_remove(., "zuj_")) %>% 
-  select(-starts_with("chkonp"))
-
+  rename(nazev_orig = chkonp_idtext, value = id) %>% 
+  mutate(obec_puvod = "doplnění obce-ZUJ podle chráněných území",
+         rozpad_typ = "nic",
+         level = factor(level, levels = geolevels, ordered = T),
+         rozpad_duvod = NA_character_,
+         nazev_orig = NA_character_,
+         level_orig = NA_character_) %>% 
+  left_join(prj_meta %>% select(prj_id, op_id)) %>% 
+  group_by(obec_puvod, rozpad_typ, op_id)
 ```
 
 
 ```{r}
-write_parquet(dt_with_chuobce, here::here("data-processed", "dt_noplace_filled.parquet"))
+write_parquet(dt_with_chuobce_reshaped %>% 
+                select(prj_id, op_id, level, level_orig, 
+                       rozpad_typ, rozpad_duvod, obec_puvod),
+              here::here("data-processed", "dtl_resolved_placeless", "all.parquet"))
+write_parquet(dt_with_chuobce_reshaped, 
+              here::here("data-processed", "dt_noplace_filled-chudetail.parquet"))
 ```
 
