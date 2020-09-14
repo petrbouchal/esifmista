@@ -62,6 +62,7 @@ Pokud by se ukázalo, že toto je velký problém, je možné se u projektů s t
 - detailnější popis výstupních dat
 - včetně toho, jak jednotlivá dovození obcí fungují a kde může být problém
 - aktualizace technické dokumentace
+- sestavit mechanismus na rozřešení těch (zatím) [119 projektů, které mají nesouvislou lokalizaci](04_explore-complicated-projects.html)
 
 ## 10. 8. 2020
 
