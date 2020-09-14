@@ -1,0 +1,17 @@
+---
+title: "Dokumentace výstupu"
+output: 
+  html_document:
+    default
+  word_document:
+    default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Stáhnout jako [Word](codebook.docx) [PDF](codebook.pdf)
+
+
+
