@@ -51,7 +51,7 @@ pq.write_to_dataset(dtcc, "data-output/dtl-all-py",
 
 ```
 
-```{r, eval=F}
+```{r, eval=T}
 dss <- open_dataset(here::here("data-output", "dtl-all-py"))
 ```
 
