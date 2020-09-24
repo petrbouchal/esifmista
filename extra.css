@@ -2,6 +2,7 @@
 body {font-family: "IBM Plex Sans", "Helvetica", Helvetica, sans-serif, sans}
 
 a {color: #00f}
+a:hover {color: #00f}
 
 .tocify {
   border: 0px;
@@ -127,12 +128,12 @@ h1, h2, h3, h4, h5 {color: #0000ff;}
  background-color:#00f
 }
 
-.nav-tabs>li.active>a 
-.nav-tabs>li.active>a.focus 
+.nav-tabs>li.active>a
+.nav-tabs>li.active>a.focus
 .nav-tabs>li.active>a.hover {
-  background-color: #00f; 
+  background-color: #00f;
   color: #fff;
-  
+
 }
 
 .nav-tabs>li>a {
