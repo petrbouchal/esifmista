@@ -379,25 +379,15 @@ vysledek %>%
 # Export
 
 ```{r slepeno-export}
-write_parquet(vysledek %>% 
+write_dataset(vysledek %>% 
                 group_by(op_id) %>% 
                 mutate(chunk = floor(row_number()/5e5) + 1) %>% 
                 group_by(obec_puvod, op_id, chunk, rozpad_typ) %>%
                 select(prj_id, radek, op_id, level, value, level_orig, id_orig, 
-                       rozpad_typ, rozpad_duvod, obec_puvod, chunk),
-              here::here("data-processed", "dtl-obecless-rozpadnute-all", "all.parquet"),
-              compression = "snappy")
-
-ads <- open_dataset(here::here("data-processed", "dtl-obecless-rozpadnute-all"))
-
-ads_grouped <- ads %>% group_by(rozpad_typ, op_id)
-
-write_dataset(ads_grouped, here::here("data-processed", "dtl-obecless-rozpadnute"),
-              format = "feather")
+                       rozpad_typ, rozpad_duvod, obec_puvod, chunk), 
+              here::here("data-processed", "dtl-obecless-rozpadnute"),
+              format = "parquet")
 ```
 
-```{r}
-fs::file_size(here::here("data-processed", "dtl-obecless-rozpadnute.parquet"))
-```
 
 
