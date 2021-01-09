@@ -51,7 +51,9 @@ dss_sample <- dss %>%
 ```
 
 ```{r}
-writexl::write_xlsx(dss_sample %>% rename(obec_kod = value, obec_kod_orig = id_orig), here::here("sample_export.xlsx"))
+writexl::write_xlsx(dss_sample %>% rename(obec_kod = value, 
+                                          obec_kod_orig = id_orig),
+                    here::here("sample_export.xlsx"))
 ```
 
 
