@@ -8,47 +8,20 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(arrow)
 
-library(reticulate)
-# use_python("/Library/Frameworks/Python.framework/Versions/3.6/bin/python3")
 ```
 
-```{python libs}
-import pyarrow as pa
-import pyarrow.parquet as pq
-import math
-```
+```{r resave}
+dt1 = open_dataset("data-processed/dtl-obecless-rozpadnute-all/")
+dt2 = open_dataset("data-processed/dtl_resolved_placeless/")
+dt3 = open_dataset("data-processed/dtl_resolved_smpl/")
 
+all <- list(dt1, dt2, dt3) %>% map_dfr(collect)
 
-```{python load}
-dt1 = pq.read_table("data-processed/dtl-obecless-rozpadnute-all/")
-dt2 = pq.read_table("data-processed/dtl_resolved_placeless/")
-dt3 = pq.read_table("data-processed/dtl_resolved_smpl/")
-```
+names(all)
 
-
-```{python inspect}
-dt3
-```
-
-
-
-```{python concat}
-# dt2p = dt2.to_pandas()
-
-dtcc = pa.concat_tables([dt1, dt2, dt3])
-
-# dtcc2 = dtcc.add_column(9, "chnk", 1:)
-# dtcc.to_pandas()
-```
-
-```{r}
-fs::dir_delete(here::here("data-output", "dtl-all-py"))
-```
-
-```{python resave}
-pq.write_to_dataset(dtcc, "data-output/dtl-all-py", 
-                    partition_cols=["obec_puvod", "op_id", "chunk", "rozpad_typ"])
-
+write_dataset(all, path = here::here("data-output", "dtl-all-arrow"), 
+              partitioning = c("obec_puvod", "op_id", "chunk", "rozpad_typ"), 
+              format = "parquet")
 ```
 
 ```{r, eval=T}
