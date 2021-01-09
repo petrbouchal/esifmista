@@ -16,11 +16,6 @@
       }
     ]
   },
-  "Python": {
-    "Version": "3.6.5",
-    "Type": "virtualenv",
-    "Name": null
-  },
   "Packages": {
     "BH": {
       "Package": "BH",
@@ -1359,13 +1354,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "bb5996d0bd962d214a11140d77589917"
-    },
-    "reticulate": {
-      "Package": "reticulate",
-      "Version": "1.16",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "5db95d35ae4605b46cea66b6e3bcab3e"
     },
     "rex": {
       "Package": "rex",
