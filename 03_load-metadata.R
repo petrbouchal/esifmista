@@ -201,30 +201,30 @@ zrizovani <- orgs_progper %>%
   filter(poddruhuj_nazev %in% c("Příspěvkové organizace zřízené obcí",
                                 "Příspěvkové organizace zřízené MČ",
                                 "Příspěvkové organizace zřízené krajem")) %>%
-  distinct(ico, zrizovatel_id, druhuj_nazev, poddruhuj_nazev, ucjed_nazev) %>%
-  mutate(zrizovatel_id = na_if(zrizovatel_id, "")) %>%
+  distinct(ico, zrizovatel_id, druhuj_nazev, poddruhuj_nazev, nazev) %>%
   drop_na(zrizovatel_id)
 
 zrizovani %>% count(poddruhuj_nazev)
 
 zrizovatele <- orgs_progper %>%
-  filter(druhuj_nazev %in% c("Obce", "Kraje") | poddruhuj_nazev == "Městská část") %>%
-  distinct(csuis_ucjed_id, ico, ico_lau1, nuts_id, ucjed_nazev, druhuj_nazev, poddruhuj_nazev) %>%
-  distinct(csuis_ucjed_id, ico, ico_lau1, nuts_id,  druhuj_nazev, poddruhuj_nazev, .keep_all = T)
+  filter(druhuj %in% c("3", "4") | poddruhuj_id == "301") %>% # obec, kraj, MČ
+  distinct(csuis_ucjed_id, ico, zuj_id, nuts_id, nazev, druhuj_nazev, poddruhuj_nazev) %>%
+  distinct(csuis_ucjed_id, ico, zuj_id, nuts_id, druhuj_nazev, poddruhuj_nazev, .keep_all = T)
 
 zrizovaci_vztahy <- zrizovani %>%
   left_join(zrizovatele %>%
               rename(zrizovatel_spid = csuis_ucjed_id,
                      zrizovatel_ico = ico,
-                     zrizovatel_obec_kod = ico_lau1,
+                     zrizovatel_obec_kod = zuj_id,
                      zrizovatel_nuts = nuts_id,
-                     zrizovatel_nazev = ucjed_nazev,
+                     zrizovatel_nazev = nazev,
                      zrizovatel_druh = druhuj_nazev,
                      zrizovatel_poddruh = poddruhuj_nazev),
             by = c("zrizovatel_id" = "zrizovatel_spid")) %>%
   replace_na(list(zrizovatel_poddruh = "")) %>%
   mutate(zrizovatel_obec_kod = na_if(zrizovatel_obec_kod, "000000"),
-         zrizovatel_typ = if_else(zrizovatel_poddruh == "Městská část", zrizovatel_poddruh, zrizovatel_druh)
+         zrizovatel_typ = if_else(zrizovatel_poddruh == "Městská část",
+                                  zrizovatel_poddruh, zrizovatel_druh)
   ) %>%
   select(-zrizovatel_poddruh, -zrizovatel_druh) %>%
   mutate(zrizovatel_nazev = str_remove(zrizovatel_nazev, "Městská část ") %>%
