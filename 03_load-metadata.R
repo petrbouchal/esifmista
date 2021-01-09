@@ -159,7 +159,7 @@ mas_all %>%
   spread(year, n)
 
 dt <- read_parquet(here::here("data-processed","misto_renamed-n.parquet"),
-                   col_select = "p_nazev")
+                   col_select = c("p_nazev", "p_ico"))
 
 p_nazev_simple <- dt %>%
   distinct(p_nazev) %>%
