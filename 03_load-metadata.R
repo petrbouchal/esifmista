@@ -120,7 +120,7 @@ if(!file.exists(here::here("data-input", "orgs.parquet"))) {
 druhuj <- sp_get_codelist("druhuj")
 poddruhuj <- sp_get_codelist("poddruhuj")
 
-orgs_detail <- orgs_raw %>%
+orgs_detail <- orgs %>%
   left_join(druhuj) %>%
   left_join(poddruhuj)
 
