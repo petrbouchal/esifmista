@@ -108,11 +108,13 @@ write_parquet(vyzvy, here::here("data-processed", "vyzvy-codes.parquet"))
 library(statnipokladna)
 
 if(!file.exists(here::here("data-input", "orgs.parquet"))) {
-  orgs_raw <- sp_get_codelist("ucjed", dest_dir = "data-input")
-  druhuj <- sp_get_codelist("druhuj", dest_dir = "data-input")
+  orgs_raw <- sp_get_codelist("ucjed")
+  druhuj <- sp_get_codelist("druhuj")
+  poddruhuj <- sp_get_codelist("poddruhuj")
 
   orgs <- orgs_raw %>%
-    left_join(druhuj)
+    left_join(druhuj) %>%
+    left_join(poddruhuj)
 
   write_parquet(orgs, here::here("data-input", "orgs.parquet"))
 
