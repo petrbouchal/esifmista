@@ -392,7 +392,8 @@ ads <- open_dataset(here::here("data-processed", "dtl-obecless-rozpadnute-all"))
 
 ads_grouped <- ads %>% group_by(rozpad_typ, op_id)
 
-write_dataset(ads_grouped, here::here("data-processed", "dtl-obecless-rozpadnute"), format = "feather")
+write_dataset(ads_grouped, here::here("data-processed", "dtl-obecless-rozpadnute"),
+              format = "feather")
 ```
 
 ```{r}
