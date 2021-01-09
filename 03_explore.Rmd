@@ -297,7 +297,7 @@ n_multilevel
 
 ```{r check-geo-hierarchy}
 
-source("check-geo-hierarchy-fns.R")
+source(here::here("check-geo-hierarchy-fns.R"))
 
 data_geocheck_file <- here::here("data-processed", "dt-geohierarchy-check.parquet")
 
