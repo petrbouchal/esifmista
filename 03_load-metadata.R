@@ -122,7 +122,8 @@ poddruhuj <- sp_get_codelist("poddruhuj")
 
 orgs_detail <- orgs %>%
   left_join(druhuj) %>%
-  left_join(poddruhuj)
+  left_join(poddruhuj) %>%
+  mutate_if(is.character, na_if, "")
 
 orgs_detail %>%
   count(druhuj_id, poddruhuj_id, druhuj_nazev, poddruhuj_nazev, sort = T)
