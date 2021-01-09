@@ -33,9 +33,9 @@ as <- action_levels(stop_at = 1)
 
 ### Máme všude ID projektu?
 
-```{r no-id, validate = T}
+```{r no-id, validate = F}
 dt %>% 
-  create_agent("project IDs") %>% 
+  create_agent(label = "project IDs") %>% 
   col_vals_not_null(c(op_id, prj_id)) %>% 
   interrogate(extract_failed = F)
 ```
@@ -45,7 +45,7 @@ dt %>%
 Délky:
 
 
-```{r, validate = T}
+```{r}
 op_ids <- c("OP Z", "OP D", "OP VVV", "OP PIK", 
             "OP TP", "OP PPR", "OP ZP", "IROP")
 
@@ -53,9 +53,9 @@ op_ids %in% dt$op_id
 ```
 
 
-```{r, validate = T}
+```{r, validate = F}
 dt %>% 
-  create_agent("project number", actions = al) %>% 
+  create_agent(label = "project number", actions = al) %>% 
   col_is_character(starts_with("g_")) %>%
   col_vals_in_set(op_id, op_ids) %>%
   col_vals_regex(prj_id, ".{12,15}", brief = "Proj num len") %>% 
@@ -100,20 +100,20 @@ dt_noplace <- dt_long_g %>%
   ungroup() 
 ```
 
-```{r, message=F}
+```{r noplace-agent, message=F}
 dtnopl_agent <- dt_noplace %>% 
   create_agent() %>% 
   col_vals_equal(all_na, FALSE)
 ```
 
 
-```{r, message=F, validate = T}
+```{r noplace-validate, message=F, validate = F}
 dtnopl_agent %>% 
   interrogate(extract_failed = F)
 ```
 
 
-```{r, message=F}
+```{r noplace-faillist, message=F}
 dtnopl_agent %>% 
   interrogate() %>% 
   get_data_extracts(i = 1)
@@ -165,7 +165,7 @@ dt_long_g %>%
 
 ### Je ve všech řádcích každého projektu to stejné sídlo? 
 
-```{r prij-sidlo-id-mismatch, validate = T}
+```{r prij-sidlo-id-mismatch, validate = F}
 dt %>% 
   group_by(prj_id) %>% 
   summarise(sidlo_id_unique = length(unique(p_sidlo_id)),
@@ -215,7 +215,7 @@ dt_long_sidla <- dt %>%
   select(op_id, prj_id, typ, value)
 ```
 
-```{r prij-sidlo-mismatch-list, validate = T}
+```{r prij-sidlo-mismatch-list, validate = F}
 dt_long_sidla %>% 
   pivot_wider(id_cols = c(prj_id, prj_radek),
               names_from = typ, values_from = value) %>% 
@@ -232,7 +232,7 @@ dt_long_sidla %>%
 
 Do recipients move seat? Change names?
 
-```{r prij-sidlo-change, validate = T}
+```{r prij-sidlo-change, validate = F}
 dt %>% 
   group_by(p_ico) %>% 
   summarise(distinct_seats = length(unique(p_sidlo_id)),
@@ -245,13 +245,13 @@ dt %>%
 
 ## Údaje o projektech v CHKO/NP
 
-```{r}
+```{r chko-load}
 prj_chkonp <- read_parquet(here::here("data-processed", "prj_chkonp.parquet"))
 ```
 
-```{r}
+```{r chko-validate}
 prj_chkonp %>% 
-  create_agent(actions = action_levels(stop_at = 1)) %>% 
+  create_agent(actions = action_levels(warn_at = 1, stop_at = .3)) %>% 
   col_vals_in_set(prj_id, unique(dt$prj_id)) %>% 
   interrogate()
 ```
