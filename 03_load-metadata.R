@@ -4,6 +4,7 @@ library(czso)
 library(dplyr)
 library(xml2)
 library(readxl)
+library(tidyverse)
 
 source("shared.R")
 
@@ -83,9 +84,6 @@ write_parquet(ops, here::here("data-processed", "op-codes.parquet"))
 
 # Metadata vyzev ----------------------------------------------------------
 
-library(xml2)
-library(tidyverse)
-
 xmldoc <- xml2::read_xml("https://ms14opendata.mssf.cz/SeznamVyzev.xml")
 
 xmldoc
@@ -145,7 +143,7 @@ write_parquet(orgs_detail, here::here("data-processed", "orgs_sp.parquet"))
 
 # MAS metadata ------------------------------------------------------------
 
-masczsofile <- tempfile()
+masczsofile <- here::here("data-input/mas-czso.xlsx")
 download.file("https://www.czso.cz/documents/10180/23194580/data_pro_mas_2014_2019_b_aktualizace_k_30_6_2020.xlsx/3e6bf657-507b-4592-a6b9-959392e934ba?version=1.1",
               masczsofile)
 
@@ -170,13 +168,16 @@ mas_all %>%
   count(mas_nazev_simple, year) %>%
   spread(year, n)
 
-p_nazev_simple <- dtl %>%
+dt <- read_parquet(here::here("data-processed","misto_renamed-n.parquet"),
+                   col_select = "p_nazev")
+
+p_nazev_simple <- dt %>%
   distinct(p_nazev) %>%
   mutate(p_nazev_simple = str_remove_all(p_nazev, mas_pravniformy_regex)) %>%
   pull()
 
-(unique(mas_all$mas_nazev) %in% unique(dtl$p_nazev)) %>% table()
-(unique(mas_all$mas_nazev_simple) %in% unique(dtl$p_nazev)) %>% table()
+(unique(mas_all$mas_nazev) %in% unique(dt$p_nazev)) %>% table()
+(unique(mas_all$mas_nazev_simple) %in% unique(dt$p_nazev)) %>% table()
 (unique(mas_all$mas_nazev_simple) %in% p_nazev_simple) %>% table()
 
 mas_all %>%
