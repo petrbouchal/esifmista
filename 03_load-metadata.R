@@ -182,7 +182,8 @@ write_parquet(mas_all, here::here("data-processed", "mas-metadata.parquet"))
 orgs_progper <- orgs_detail %>%
   filter(end_date > "2015-01-01") %>%
   # filter(end_date > lubridate::now()) %>%
-  select(-start_date, -end_date, -datumakt, -isektor_id, -ulice, -sidlo, -psc, -pocob) %>%
+  select(-start_date, -end_date, -datumakt, -isektor_id, -ulice, -sidlo,
+         -psc, -pocob) %>%
   distinct()
 
 orgs_progper %>%
