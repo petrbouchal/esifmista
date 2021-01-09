@@ -109,12 +109,7 @@ library(statnipokladna)
 
 if(!file.exists(here::here("data-input", "orgs.parquet"))) {
   orgs_raw <- sp_get_codelist("ucjed")
-  druhuj <- sp_get_codelist("druhuj")
-  poddruhuj <- sp_get_codelist("poddruhuj")
 
-  orgs <- orgs_raw %>%
-    left_join(druhuj) %>%
-    left_join(poddruhuj)
 
   write_parquet(orgs, here::here("data-input", "orgs.parquet"))
 
@@ -122,26 +117,17 @@ if(!file.exists(here::here("data-input", "orgs.parquet"))) {
   orgs <- read_parquet(here::here("data-input", "orgs.parquet"))
 }
 
-orgs %>%
-  count(druhuj_id, poddruhuj_id, druhuj_nazev)
+druhuj <- sp_get_codelist("druhuj")
+poddruhuj <- sp_get_codelist("poddruhuj")
 
-poddruhy <- statnipokladna::sp_get_codelist("poddruhuj")
-druhy <- statnipokladna::sp_get_codelist("druhuj")
-
-poddruhy_joinable <- poddruhy %>%
-  mutate(across(c(poddruhuj_id, druhuj_id), ~str_remove(., "^0")),
-         poddruhuj_id = paste0(druhuj_id, poddruhuj_id)) %>%
-  select(-druhuj_id)
-
-orgs_detail <- orgs %>%
-  mutate(across(c(poddruhuj_id, druhuj_id), ~str_pad(., 2, pad = "0"))) %>%
-  left_join(poddruhy)
+orgs_detail <- orgs_raw %>%
+  left_join(druhuj) %>%
+  left_join(poddruhuj)
 
 orgs_detail %>%
   count(druhuj_id, poddruhuj_id, druhuj_nazev, poddruhuj_nazev, sort = T)
 
 write_parquet(orgs_detail, here::here("data-processed", "orgs_sp.parquet"))
-
 
 # MAS metadata ------------------------------------------------------------
 
