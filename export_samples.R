@@ -8,17 +8,15 @@ op_z_onechunk <- dta %>%
   filter(op_id == "OP Z", chunk == 1) %>%
   collect()
 
-sample_export <- dta
-
 typy_duvody <- dta %>%
-  select(rozpad_typ, rozpad_duvod) %>%
+  select(obec_puvod, rozpad_typ, rozpad_duvod) %>%
   collect() %>%
-  count(rozpad_typ, rozpad_duvod)
+  count(obec_puvod, rozpad_typ, rozpad_duvod)
 
 dta_proj <- dta %>%
-  select(prj_id, op_id, rozpad_typ, rozpad_duvod) %>%
+  select(prj_id, op_id, obec_puvod, rozpad_typ, rozpad_duvod) %>%
   collect() %>%
-  group_by(op_id, rozpad_typ, rozpad_duvod) %>%
+  group_by(op_id, obec_puvod, rozpad_typ, rozpad_duvod) %>%
   sample_n(10, replace = T) %>%
   distinct(prj_id) %>%
   pull(prj_id)
