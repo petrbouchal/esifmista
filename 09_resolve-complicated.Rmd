@@ -1,0 +1,38 @@
+---
+title: "Řešení projektů s nehierarchickým určením míst realizace"
+---
+
+```{r setup}
+library(tidyverse)
+library(arrow)
+library(readxl)
+library(writexl)
+library(fs)
+```
+
+```{r data-load}
+source("load_core_data.R")
+source("read_metadata.R")
+```
+
+```{r data}
+prjs_geostatus <- read_parquet(here::here("data-processed",
+                                          "projects-geo-check-groups.parquet"))
+places_geostatus <- read_parquet(here::here("data-processed",
+                                            "places-geo-check.parquet"))
+```
+
+```{r}
+prj_id_nh <- prjs_geostatus %>% filter(geostatus == "více míst nehierarchicky") %>% 
+  pull(prj_id)
+plcnh <- places_geostatus %>% filter(prj_id %in% prj_id_nh)
+```
+
+```{r}
+plcnh %>% 
+  left_join(dts) %>% 
+  inner_join(dtl %>% spread(typ, value) %>% 
+               select(prj_id, nazev = nazev, level, value = id))
+```
+
+

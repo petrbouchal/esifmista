@@ -1,0 +1,164 @@
+---
+title: "Náhled komplikovaných projektů"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = F, message = F)
+
+library(crosstalk)
+library(leaflet)
+library(plotly)
+library(tidyverse)
+library(sf)
+library(arrow)
+```
+
+```{r dt}
+source("load_core_data.R")
+
+prjgeo <- read_rds("prjgeo.rds")
+
+gkraj <- read_rds("gkraj.rds")
+
+republika <- gkraj %>% 
+  summarise(n = n()) %>% 
+  st_as_sf() %>% 
+  st_simplify(preserveTopology = T, dTolerance = 500) %>% 
+  st_transform(4326)
+```
+
+
+```{r shd}
+ddd0 <- highlight_key(prjgeo %>% 
+                        select(kod, nazev, typuj, prj_id), 
+                      ~prj_id, group = "a")
+
+ddd <- highlight_key(prjgeo %>% 
+                       sf::st_set_geometry(NULL) %>% 
+                       select(kod, nazev, typuj, prj_id), 
+                     ~prj_id, group = "a")
+ddd2 <- highlight_key(prjgeo %>% 
+                        sf::st_set_geometry(NULL) %>% 
+                        left_join(dts %>% select(prj_id, op_id, prj_nazev)) %>% 
+                        distinct(prj_id, op_id, prj_nazev), ~prj_id, group = "a")
+ddd3 <- highlight_key(prjgeo %>% 
+                        sf::st_set_geometry(NULL) %>% 
+                        left_join(dts) %>% 
+                        select(prj_id,
+                               prj_nazev,
+                               prj_anotace,
+                               p_nazev,
+                               p_sidlo_nazev) %>% 
+                        distinct(), ~prj_id, group = "a")
+
+ddd_zuj <- highlight_key(prjgeo %>% filter(typuj == "zuj"), group = "a", ~prj_id)
+ddd_obec <- highlight_key(prjgeo %>% filter(typuj == "obec"), group = "a", ~prj_id)
+ddd_orp <- highlight_key(prjgeo %>% filter(typuj == "orp"), group = "a", ~prj_id)
+ddd_kraj <- highlight_key(prjgeo %>% filter(typuj == "kraj"), group = "a", ~prj_id)
+ddd_okres <- highlight_key(prjgeo %>% filter(typuj == "okres"), group = "a", ~prj_id)
+```
+
+```{r p}
+# pplot <- ggplot() +
+#   geom_sf(data = republika, colour = NA, fill = "white") +
+#   geom_sf(data =  ddd_zuj, aes(group = prj_id, ids = prj_id,
+#                            text = nazev), fill = NA, color = "green") +
+#   geom_sf(data =  ddd_okres, aes(group = prj_id, ids = prj_id,
+#                            text = nazev), fill = NA, color = "blue") +
+#   geom_sf(data =  ddd_kraj, aes(group = prj_id, ids = prj_id,
+#                            text = nazev), fill = NA, color = "orange") +
+#   geom_sf(data =  ddd_orp, aes(group = prj_id, ids = prj_id,
+#                            text = nazev), fill = NA, color = "pink") +
+#   geom_sf(data =  ddd_obec, aes(group = prj_id, ids = prj_id,
+#                            text = nazev), fill = NA, color = "red")
+```
+
+```{r l}
+# factpal <- colorFactor(topo.colors(5), prjgeo$typuj)
+# leaflet(ddd0, width = "100%") %>%
+#     addTiles() %>%
+#     addPolygons(data = ddd0, color = ~factpal(typuj))
+```
+
+
+
+```{css}
+.mytbl {
+  font-family: IBM Plex Sans;
+}
+```
+
+
+```{r n}
+library(reactable)
+# DT::datatable(ddd2, 
+#               selection = list(mode = "single"), rownames = T,
+#               filter = "top",
+#               options = list(sDom  = '<"top">rt<"bottom">ip',
+#                              pageLength = 5))
+reactable::reactable(ddd2, filterable = T, defaultPageSize = 5,
+                     rownames = T,
+                     class = "mytbl",
+                     columns = list(
+                       .rownames = colDef(minWidth = 50),
+                       prj_id = colDef(minWidth = 180), 
+                       op_id = colDef(minWidth = 70),
+                       prj_nazev = colDef(minWidth = 300)
+                     ),
+                     selection = "multiple",
+                     onClick = "select")
+```
+
+```{r po}
+plot_ly() %>%
+  add_sf(data = republika, name = "hranice", showlegend = F,
+         hoverinfo = "none") %>%
+  add_sf(data = ddd0, split = ~nazev, color = ~typuj, showlegend = FALSE,
+         hoverinfo = 'text')
+
+```
+
+```{r s}
+# ggplotly(pplot)
+```
+
+```{r x}
+# reactable(ddd, filterable = T, , 
+#           # columns = list(prj_id = colDef(show = F)),
+#           class = "mytbl")
+# reactable(ddd)
+
+DT::datatable(ddd, selection = list(mode = "none"), rownames = F,
+              filter = "top",
+              options = list(sDom  = '<"top"><"bottom">',
+                             columnDefs = list(list(visible=FALSE,
+                                                    targets=3))))
+```
+
+```{r}
+# DT::datatable(ddd3, selection = list(mode = "none"), rownames = F,
+#               filter = "none",
+#               options = list(sDom  = '<"top"><"bottom">',
+#                              columnDefs = list(list(visible=FALSE,
+#                                                     targets=0))))
+
+reactable(ddd3, filterable = T, class = "mytbl", 
+          columns = list(prj_id = colDef(show = F), prj_anotace = colDef(minWidth = 300)))
+
+```
+
+
+```{r ppp, eval = F}
+plot_ly() %>%
+  add_sf(data = republika, frame = NULL, color = I("grey")) %>%
+  # add_sf(data = ddd, color = ~typuj, frame = ~numbr) %>% 
+  add_sf(data = ddd, color = ~typuj)
+# animation_opts(transition = 0, redraw = FALSE) %>%
+# animation_slider(
+# currentvalue = list(prefix = "prj ", 
+# font = list(color="red"))
+# )
+```
+
+
