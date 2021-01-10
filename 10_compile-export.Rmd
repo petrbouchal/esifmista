@@ -10,32 +10,46 @@ library(arrow)
 
 ```
 
-```{r resave}
-dt1 = open_dataset("data-processed/dtl-obecless-rozpadnute-all/")
+```{r load parts}
+dt1 = open_dataset("data-processed/dtl-obecless-rozpadnute/")
 dt2 = open_dataset("data-processed/dtl_resolved_placeless/")
 dt3 = open_dataset("data-processed/dtl_resolved_smpl/")
 
-all <- list(dt1, dt2, dt3) %>% map_dfr(collect)
+list(dt1, dt2, dt2) %>% map(dim)
+```
+
+
+```{r merge}
+all <- list(dt1, dt2, dt3) %>% 
+  map_dfr(collect) %>% 
+  rename(geo_id = value,
+         geo_id_orig = id_orig)
 
 names(all)
+```
 
+```{r cleanup previoue export}
+try(fs::dir_delete("data-output/dtl-all-arrow"), silent = T)
+```
+
+```{r resave}
 write_dataset(all, path = here::here("data-output", "dtl-all-arrow"), 
               partitioning = c("obec_puvod", "op_id", "chunk", "rozpad_typ"), 
               format = "parquet")
 ```
 
-```{r, eval=T}
-dss <- open_dataset(here::here("data-output", "dtl-all-py"))
+```{r dogfood, eval=T}
+dss <- open_dataset(here::here("data-output", "dtl-all-arrow"))
 ```
 
-```{r, eval=F}
+```{r check chunks, eval=F}
 dss %>% 
   select(chunk, op_id) %>% 
   collect() %>% 
   count(chunk, op_id)
 ```
 
-```{r}
+```{r sample projects}
 prj_smpl <- dss %>% 
   select(prj_id, op_id, rozpad_typ, obec_puvod) %>% 
   collect() %>% 
@@ -44,23 +58,20 @@ prj_smpl <- dss %>%
   sample_n(min(n(), 10))
 ```
 
-```{r}
+```{r sample rows}
 dss_sample <- dss %>% 
   filter(prj_id %in% prj_smpl$prj_id) %>% 
   collect()
 ```
 
-```{r}
-writexl::write_xlsx(dss_sample %>% rename(obec_kod = value, 
-                                          obec_kod_orig = id_orig),
-                    here::here("sample_export.xlsx"))
+```{r write sample general}
+writexl::write_xlsx(dss_sample, here::here("sample_export.xlsx"))
 ```
 
 
-```{r}
+```{r write sample opz}
 writexl::write_xlsx(dss %>% 
-                      filter(op_id == "OP Z" & chunk == "1.0") %>% 
-                      rename(obec_kod = value, obec_kod_orig = id_orig) %>% 
+                      filter(op_id == "OP Z" & chunk == 1) %>% 
                       collect(), here::here("opz-one-chunk.xlsx"))
 ```
 
