@@ -5,22 +5,30 @@ exclude: ["LICENSE.md", "*.csv", "*.rds", "data-input", "data-processed", "renv"
 navbar:
   title: "Místa realizace ESIF: čištění dat"
   left:
-  - text: Validace
+  - text: Návody a dokumentace
+    menu:
+    - text: "Jak postup zopakovat"
+      href: how-to-repeat.html
+    - text: "Pomůcka k řešení nekonzistentních dat"
+      href: widget.html
+    - text: "Dokumentace výstupu"
+      href: codebook.html
+    - text: "Technická dokumentace"
+      href: dev.html
+  - text: Vizuální kontrola postupu
     menu:
     - text: "Kontrola úplnosti a konzistence"
       href: 01_input-checks.html
     - text: "Ověření geodat"
       href: 02_validate.html
-  - text: Analýza
-    menu:
+    - text: "---------"
     - text: "Struktura dat"
       href: 03_explore.html
     - text: "Analýza geograficky složitých projektů"
       href: 04_explore-complicated-projects.html
     - text: "Analýza projektů bez identifikace obce ZÚJ"
       href: 06_explore-obecless-projects.html
-  - text: Úpravy dat
-    menu:
+    - text: "---------"
     - text: "Projekty s určením obce"
       href: 05_resolve-simple.html
     - text: "Projekty bez určení obce/ZÚJ"
@@ -33,12 +41,6 @@ navbar:
       href: 10_compile-export.html
   - text: "Záznam kroků a poznatků"
     href: log.html
-  - text: Dokumentace
-    menu:
-    - text: "Technická dokumentace"
-      href: dev.html
-    - text: "Dokumentace výstupu"
-      href: codebook.html
   right:
   - icon: fab fa-github fa-lg
     href: https://github.com/petrbouchal/mmr-esif-clean
