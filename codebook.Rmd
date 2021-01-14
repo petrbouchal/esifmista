@@ -128,7 +128,8 @@ y <- x %>%
   info_columns("geo_id_orig", 
                vyznam = "původní geolokace - kód území",
                forma = "obce a ZÚJ včetně NUTS prefixu, ORP a okres podle ČSÚ, kraj podle NUTS",
-               číselník = "ČSÚ: obec 43, ZÚJ 51, NUTS kraje 100, ORP 65, okes 109") %>% 
+               pozor = "může obsahovat více hodnot oddělených čárkou",
+               číselník = "ČSÚ: obec (43), ZÚJ (51), NUTS kraje (100), ORP (65), okes (109)") %>% 
   info_columns("prj_id", vyznam = "číslo projektu", číselník = NA,
                zdroj = "původní data, neupraveno") %>% 
   info_columns("radek", vyznam = "pořadové číslo řádku v projektu",
