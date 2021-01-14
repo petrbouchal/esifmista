@@ -156,6 +156,7 @@ rozpadac_na_obce <- ids_short %>%
               select(obec = obec_kod, value = mas_nazev_simple) %>% 
               mutate(rozpad_jak = "mas") %>% 
               distinct())
+write_parquet(rozpadac_na_obce, here::here("data-processed", "rozpadac-na-obce.parquet"))
 ```
 
 ## Mechanický rozpad (včetně detekovaných MAS)
@@ -244,6 +245,7 @@ dtl_rozpadle_detekce <- dtl_geodetected %>%
 ```{r rozpad-detek-orp-okresy-check}
 skimr::skim(dtl_rozpadle_detekce)
 ```
+
 ## Detekované obce
 
 ```{r rozpad-detekovane-obce}

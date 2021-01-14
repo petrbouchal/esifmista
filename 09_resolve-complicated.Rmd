@@ -13,6 +13,7 @@ library(fs)
 ```{r data-load}
 source("load_core_data.R")
 source("read_metadata.R")
+source("shared.R")
 ```
 
 ```{r data}
@@ -29,10 +30,114 @@ plcnh <- places_geostatus %>% filter(prj_id %in% prj_id_nh)
 ```
 
 ```{r}
-plcnh %>% 
-  left_join(dts) %>% 
-  inner_join(dtl %>% spread(typ, value) %>% 
-               select(prj_id, nazev = nazev, level, value = id))
+file_nh_resolved_previously <- here::here("data-processed", "dtl-nehier", "all.parquet")
+if(file.exists(file_nh_resolved_previously)) {
+  dtl_nh_resolved_previously <- read_parquet(file_nh_resolved_previously)
+} else {
+  dtl_nh_resolved_previously <- tibble(prj_id = character())
+}
 ```
 
+```{r}
+dtl_nh_checked <- plcnh %>% 
+  left_join(dts) %>% 
+  inner_join(dtl %>% 
+               filter(prj_id %in% prj_id_nh) %>% 
+               select(prj_id, prj_radek, typ, value, level) %>% 
+               spread(typ, value) %>% 
+               select(prj_id, value = id, nazev, shortid, level)) %>% 
+  rename(geo_id = value, geo_level = level, geo_id_short = shortid, geo_nazev = nazev) %>% 
+  mutate(vybrat = FALSE,
+         resolved = if_else(prj_id %in% dtl_nh_resolved_previously$prj_id,
+                            TRUE, FALSE)) %>% 
+  bind_rows(dtl_nh_resolved_previously) 
+```
+
+```{r}
+writexl::write_xlsx(dtl_nh_checked %>% filter(!resolved), 
+                    here::here("data-output", "prj_nehierarchicke.xlsx"))
+```
+
+```{r}
+dtl_nh_resolved0 <- read_xlsx(here::here("data-input", "prj_nehierarchicke-resolved.xlsx"))
+```
+
+```{r}
+dtl_nh_resolved <- dtl_nh_resolved0 %>% 
+  mutate(level = factor(geo_level, levels = geolevels, ordered = T), 
+         include = as.logical(include)) %>% 
+  select(-geo_level) %>% 
+  group_by(prj_id) %>% 
+  mutate(all_na = all(is.na(include))) %>% 
+  filter(all_na | include)
+
+length(unique(dtl_nh_resolved$prj_id))
+setdiff(unique(dtl_nh_resolved$prj_id), prj_id_nh)
+```
+
+```{r}
+dtl_nh_resolved_obce <- dtl_nh_resolved %>% 
+  filter(level == "obec")
+dtl_nh_resolved_zuj <- dtl_nh_resolved %>% filter(level == "zuj")
+dtl_nh_resolved_ostatni <- dtl_nh_resolved %>% filter(!level %in% c("obec", "zuj"))
+```
+
+```{r}
+rozpadac_na_obce <- read_parquet(here::here("data-processed", "rozpadac-na-obce.parquet"))
+```
+
+```{r}
+dtl_nh_resolved_obce_fin <- dtl_nh_resolved_obce %>% 
+  select(prj_id, geo_id, level_orig = level, op_id) %>% 
+  mutate(rozpad_duvod = "manuálně vybrána obec",
+         obec_puvod = "manuální řešení původně nekonzistentní geolokace",
+         level = "obec",
+         geo_id_orig = geo_id)
+```
+
+```{r}
+dtl_nh_resolved_ostatni_fin <- dtl_nh_resolved_ostatni %>%
+  left_join(rozpadac_na_obce %>% rename(level = rozpad_jak, geo_id = value)) %>% 
+  select(prj_id, geo_id_orig = geo_id, level, geo_id = obec, op_id) %>% 
+  mutate(level = "obec",
+         rozpad_duvod = "mechanický rozpad z manuálně vybraného ORP, okresu nebo kraje",
+         obec_puvod = "")
+  
+```
+
+
+```{r}
+dtl_nh_resolved_zuj_fin <- dtl_nh_resolved_zuj %>% 
+  ungroup() %>% 
+  mutate(level_orig = level,
+         geo_id_orig = geo_id,
+         level = if_else(geo_id %in% ids$obec, 
+                        "obec",
+                        as.character(level_orig)) %>% 
+           factor(geolevels, ordered = T)) %>% 
+  select(prj_id, op_id, geo_id, geo_id_orig, level, level_orig) %>% 
+  mutate(rozpad_duvod = "manuálně vybrána ZÚJ; úroveň převedena na obec kde se obec a ZÚJ kryjí")
+```
+
+```{r bind-and-reorg}
+dtl_nh_resolved_all <- bind_rows(dtl_nh_resolved_obce_fin,
+                                 dtl_nh_resolved_zuj_fin,
+                                 dtl_nh_resolved_ostatni_fin) %>% 
+  mutate(chunk = floor(row_number()/3e6) + 1,
+         chunk = as.integer(chunk),
+         level_orig = as.character(level)) %>% 
+  group_by(prj_id) %>% 
+  mutate(radek = row_number(),
+         rozpad_typ = "více míst nehierarchicky",
+         obec_puvod = "manuální řešení původně nekonzistentní geolokace") %>% 
+  select(prj_id, radek, level, geo_id, level_orig, geo_id_orig, rozpad_duvod,
+         obec_puvod, op_id, chunk, rozpad_typ) %>% 
+  mutate(level_orig = as.character(level),
+         level = factor(level, levels = geolevels, ordered = T))
+```
+
+```{r}
+dir.create(here::here("data-processed", "dtl-nehier"), showWarnings = F)
+write_parquet(dtl_nh_resolved_all, file_nh_resolved_previously)
+```
 
