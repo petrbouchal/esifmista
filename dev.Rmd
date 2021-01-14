@@ -15,14 +15,21 @@ library(details)
 
 ## How to reproduce
 
-- load data and metadata by running numbered R scripts in order. This relies on input XLSX files being in `data-input`
+First, install all the necessary R packages: run `renv::restore()` (this only needs to be done once and only rerun if the `renv.lock` file changes.)
+
+Then:
+
+- load and transform data and metadata by running numbered R scripts in order. This relies on input XLSX files being in `data-input`, in a subdirectory set in the `pth` variable in `01_load-data.Rmd`
 - run `rmarkdown::render_site()` or run numbered RMarkdown scripts in order
 
-or run `build-and-render.R`.
+or run `build-and-render.R` to run both these steps.
 
-To subsequently build the site afresh and deploy to Netlify, run `build-site-and-deploy.sh`.
+To subsequently build the site afresh and deploy to Netlify
 
-Environment reproducibility is maintained using `renv`. This means that upon running R in the project folder, all the necessary packages will be installed in a local library (in fact, installed in a cache from which they can be reused, and linked into the local project library where they take up no space.) Should this fail, you can run `renv::deactivate()` and install the packages manually, though you might end up with different versions.
+- on a Linux/Mac machine, run `build-site-and-deploy.sh`; this requires the [Netlify CLI](https://docs.netlify.com/cli/get-started/)
+- or deploy the `docs` folder to Netlify [using other means](https://docs.netlify.com/site-deploys/create-deploys/).
+
+Environment reproducibility is maintained using `renv`. This means that upon running R in the project folder, all the necessary packages will be installed in a local library by running `renv::restore()` (in fact, installed in a cache from which they can be reused, and linked into the local project library where they take up no space.) Should this fail, you can run `renv::deactivate()` and install the packages manually, though you might end up with different versions.
 
 ## Reproducibility log
 
