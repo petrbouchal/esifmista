@@ -9,9 +9,146 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+library(pointblank)
+library(arrow)
+library(dplyr)
+library(stringr)
 ```
 
-Stáhnout jako [Word](codebook.docx) [PDF](codebook.pdf)
+```{r}
+ds <- open_dataset(here::here("data-output", "dtl-all-arrow"))
+ds_sample <- ds %>% 
+  head() %>% 
+  collect()
+ds_rows <- dim(ds)[[1]]
+ds_format <- ds$format
+ds_numfiles <- length(ds$files)
+```
 
+## Obsah dat
+
+V datové tabulce je záznam o původní geolokaci projektu spolu s informací o nově odvozené geolokaci. Tam, kde je nová geolokace odvozena příliš extenzivně (např. rozpad projektu původně lokalizovaného na kraj do všech jeho obcí), je tedy možné vrátit se k původní geolokaci. (Prakticky by se to provedlo tak, že by se vybraly pro daný projekt (`prj_id`) řádky se všemi kombinacemi hodnot sloupce `geo_id_orig` a `level_orig`).
+
+Kvůli velikosti souborů výstupová tabulka neobsahuje všechna metadata o projektech a příjemcích. Ta lze podle potřeby připojit z jiných zdrojů.
+
+### Jak vznikaly rozpady na obce
+
+#### Projekty, kde geolokace byla vnitřně konzistentní
+
+Toto byla velká většina projektů.
+
+Pro většinu projektů platilo několik jednoduchých pravidel, pokud projekt v datech neměl geolokaci na úrovni obce. Všechna pravidla byla ověřena alespoň na části dat, abychom měli jistotu, že aplikace pravidla nepřinese nesprávné výsledky u většího množství projektů.
+
+- vycházíme z nejjemnější v datech uvedené lokalizace, tj. pokud byl projekt alokován zároveň na kraj a obec, vycházíme z obce, pokud zároveň na kraj a ORP, vycházíme z ORP atd.
+- pokud je žadatel kraj nebo jeho příspěvkovka, je projekt rozpadnut do všech obcí kraje
+- pokud je žadatel městská část Prahy nebo její příspěvkovka, projekt je alokován do této ZÚJ
+- obec je alokována do sídla žadatele u těchto projektů:
+  - výzvy pro školy
+  - výzvy na zateplení
+  - žadatel je obec
+  - výzvy pro VŠ
+  - sídlo žadatele je zmíněno v názvu projektu nebo je součástí názvu žadatele
+  - specifické výzvy pro firmy (firemní vzdělávání)
+  - výzvy pro dětské skupiny, předškolní vzdělávání apod.
+  - výzvy na budování kapacit NNO
+  - výzvy pro sociálně vyloučené lokality
+- všechny verze Prahy (okres, ORP, kraj) jsou převedeny na obec Praha, též u všech projektů ve výzvách pouze pro Prahu
+- projekty technické pomoci jsou převedeny do obce sídla příjemce
+- rozpad na obce MAS, pokud je MAS zmíněna v názvu nebo anotaci projektu
+- sídlo MAS u výzev na podporu kapaci MAS
+- rozpad na obce v okrese/ORP/kraji, pokud:
+ - je okres/ORP zmíněn v názvu projektu
+ - je projekt původně lokalizován pouze na jeden okres, ORP nebo kraj
+- projekty na krajské úrovni ve více než 11 kraji jsou rozpadnuty na celou ČR
+
+#### Projekty bez geolokace v původních datech
+
+Část projektů měla geolokaci zadanou na úrovni chráněné oblasti, což ale nebylo v původním exportu. Z dodatečných dat se podařilo většinu z nich přiřadit k CHKO/NP a pomocí geodat poté rozpadnout na jednotlivé obce překrývající se s těmito územími. Současný postup zahrnuje do projektu všechny obce, do kterých dané chráněné území zasahuje.
+
+#### Projekty s nekonzistentní lokalizací
+
+To jsou projekty, kde je např. jako místo realizace uveden zároveň Karlovarský kraj a město Třebíč.
+
+V datech z léta 2020 jich asi 119.
+
+U těch je potřeba úvaha a ruční zadání. Prakticky to vypadá tak, že skript vygeneruje excelový soubor, kde se do novéhou sloupečku zadá TRUE u řádků s tím geografickým údajem, kterých chceme použít. Pokud u nějakého projektu nezadáme TRUE u žádného řádku, použijou se všechny údaje. 
+
+Výsledný excelový soubor je potřeba uložit do adresáře `data-manual` a znovu spustit skripty `09_resolve-complicated.Rmd` a `10_compile-export.Rmd`. 
+
+Následně skript na základě tohoto zadání všechny projekty rozpadne na obce - tj. pokud jsme u nějakého projektu zadali, že se má použít geolokace na uvedený ORP, skript projekt rozpadne do všech obcí daného ORP.
+
+### Rozložení projektů
+
+```{r}
+ds %>% 
+  select(prj_id, obec_puvod, rozpad_typ, rozpad_duvod) %>% 
+  collect() %>% 
+  distinct_all() %>% 
+  count(obec_puvod, rozpad_typ, rozpad_duvod)
+```
+
+
+## Výstupní soubory a formáty
+
+### Arrow datasety
+
+Zpracovaná data jsou exportována do datasetu Arrow ve formátu Parquet. Arrow je knihovna pro efektivní skladování a načítání dat využitelná v různých prostředích (R, Python, Java, JavaScript, Ruby, Rust, Go, Julia, Matlab aj.) Parquet je konkrétní formát skladování dat v souborech na disku.
+
+Výstupem je adresář souborů zanořených ve struktuře podadresářů - v našem případě adresář `data-output/dtl-all-arrow`. Z této struktury lze strojově odvodit datovou strukturu; členění dat do mnoha souborů umožňuje rychlé načítání části dat, např. pro jednotlivé OP nebo podle tzv. chunks (oddílů, na které jsou data rozdělena pro snadný export do většího množství Excel souborů.)
+
+### Náhledové Excel soubory
+
+- [jeden kus OPZ (cca 500 000 řádků z celkem cca 7 mil.)](opz-one-chunk.xlsx)
+- [vzorek projektů zahrnující různé OP a typy řešených mezer v datech](sample_export.xlsx)
+
+Jejich schéma (názvy sloupců, jejich obsah a datový typ) odpovídají schématu níže.
+
+## Dokumentace výstupního exportu
+
+```{r}
+x <- pointblank::create_informant(ds_sample, 
+                                  read_fn = ~{open_dataset(here::here("data-output",
+                                                                      "dtl-all-arrow"))
+                                    ds_sample <- ds %>% 
+                                      head() %>% 
+                                      collect()}, 
+  tbl_name = "export")
+x$metadata$table$`_rows` <- ds_rows
+x$metadata$table$type <- str_glue("Arrow dataset ({ds_format}, {ds_numfiles} files)")
+y <- x %>% 
+  info_tabular(Co = "Export všech upravených dat v jedné tabulce - pouze kódy území, bez metadat o projektech a příjemcích",
+               Forma = "Arrow dataset, členěný do parquet souborů podle OP, typu rozpadu, původu ID obce a oddílu pro export (chunk).") %>% 
+  info_columns("geo_id", 
+               vyznam = "kód obce nebo ZÚJ (pro MČ) bez prefixu NUTS", 
+               číselník = "ČSÚ číselník obcí (43), ZÚJ (51)",
+               zdroj = "vlastní dovození (viz výše)") %>% 
+  info_columns("geo_id_orig", 
+               vyznam = "původní geolokace - kód území",
+               forma = "obce a ZÚJ včetně NUTS prefixu, ORP a okres podle ČSÚ, kraj podle NUTS",
+               číselník = "ČSÚ: obec 43, ZÚJ 51, NUTS kraje 100, ORP 65, okes 109") %>% 
+  info_columns("prj_id", vyznam = "číslo projektu", číselník = NA,
+               zdroj = "původní data, neupraveno") %>% 
+  info_columns("radek", vyznam = "pořadové číslo řádku v projektu",
+               zdroj = "generováno po rozpadu na obce") %>% 
+  info_columns("op_id", 
+               vyznam = "zkratka OP ve formě OP Z atd. (mezera, ne '_')",
+               zdroj = "převzato z původních dat") %>% 
+  info_columns("level", vyznam = "úroveň dovozené geolokace",
+               zdroj = "dovozeno rozpadem na obce a ZÚJ",
+               hodnoty = "obec, zuj") %>% 
+  info_columns("level_orig", vyznam = "původní úrove", 
+               hodnoty = "kraj, orp, okres, obec, zuj") %>% 
+  info_columns("chunk", 
+               vyznam = "číslo oddílu; oddíly čítají cca 500 000 řádků pro export do jednotlivých excelových souborů") %>% 
+  info_columns("rozpad_typ", 
+               význam = "základní informace o způsobu dovození obce") %>% 
+  info_columns("rozpad_duvod",
+               význam = "podrobná informace o způsobu dovození obce") %>% 
+  info_columns("obec_puvod",
+               vyznam = "zdroj informace o obci")
+pointblank::yaml_write(informant = y, 
+                       filename = here::here("data-output", "dtl-all-codebook.yml"))
+y
+```
 
 
