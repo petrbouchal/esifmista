@@ -15,7 +15,7 @@ library(dplyr)
 library(stringr)
 ```
 
-```{r}
+```{r load data}
 ds <- open_dataset(here::here("data-output", "dtl-all-arrow"))
 ds_sample <- ds %>% 
   head() %>% 
@@ -79,7 +79,7 @@ Následně skript na základě tohoto zadání všechny projekty rozpadne na obc
 
 ### Rozložení projektů
 
-```{r}
+```{r rozlozeni-projektu}
 ds %>% 
   select(prj_id, obec_puvod, rozpad_typ, rozpad_duvod) %>% 
   collect() %>% 
@@ -105,7 +105,7 @@ Jejich schéma (názvy sloupců, jejich obsah a datový typ) odpovídají schém
 
 ## Dokumentace výstupního exportu
 
-```{r}
+```{r codebook}
 x <- pointblank::create_informant(ds_sample, 
                                   read_fn = ~{open_dataset(here::here("data-output",
                                                                       "dtl-all-arrow"))
@@ -126,11 +126,11 @@ y <- x %>%
                vyznam = "kód obce nebo ZÚJ (pro MČ) s prefixem NUTS",
                číselník = "po úpravě: ČSÚ číselník obcí (43), ZÚJ (51), NUTS kraje (100)") %>% 
   info_columns("geo_id_orig", 
-               vyznam = "původní geolokace - kód území",
+               vyznam = "všechny původní geolokace pro daný `level_orig` - kód území",
                forma = "obce a ZÚJ včetně NUTS prefixu, ORP a okres podle ČSÚ, kraj podle NUTS",
                pozor = "může obsahovat více hodnot oddělených čárkou",
                číselník = "ČSÚ: obec (43), ZÚJ (51), NUTS kraje (100), ORP (65), okes (109)") %>% 
-  info_columns("prj_id", vyznam = "číslo projektu", číselník = NA,
+  info_columns("prj_id", vyznam = "číslo projektu",
                zdroj = "původní data, neupraveno") %>% 
   info_columns("radek", vyznam = "pořadové číslo řádku v projektu",
                zdroj = "generováno po rozpadu na obce") %>% 
@@ -143,7 +143,8 @@ y <- x %>%
   info_columns("level_orig", vyznam = "původní úrove", 
                hodnoty = "kraj, orp, okres, obec, zuj") %>% 
   info_columns("chunk", 
-               vyznam = "číslo oddílu; oddíly čítají cca 500 000 řádků pro export do jednotlivých excelových souborů") %>% 
+               vyznam = "číslo oddílu; oddíly čítají cca 500 000 řádků pro export do jednotlivých excelových souborů",
+               pozor = "jeden projekt s více řádky může být rozdělen do různých chunks") %>% 
   info_columns("rozpad_typ", 
                význam = "základní informace o způsobu dovození obce") %>% 
   info_columns("rozpad_duvod",
