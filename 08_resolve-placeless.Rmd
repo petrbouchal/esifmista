@@ -293,6 +293,8 @@ dt_with_chuobce_reshaped <- dt_with_chuobce %>%
          id_orig = NA_character_,
          level_orig = "chkonp") %>% 
   left_join(prj_meta %>% select(prj_id, op_id)) %>% 
+  rename(geo_id = value) %>%
+  add_long_geoid(ids) %>%
   group_by(op_id) %>% 
   mutate(chunk = floor(row_number()/5e5) + 1,
          chunk = as.integer(chunk)) %>% 
@@ -304,7 +306,7 @@ dt_with_chuobce_reshaped <- dt_with_chuobce %>%
 
 ```{r}
 write_parquet(dt_with_chuobce_reshaped %>% 
-                select(prj_id, radek, op_id, level, geo_id = value, level_orig,
+                select(prj_id, radek, op_id, level, geo_id, level_orig,
                        geo_id_orig = id_orig,
                        rozpad_typ, rozpad_duvod, obec_puvod, chunk),
               here::here("data-processed", "dtl_resolved_placeless", "all.parquet"))

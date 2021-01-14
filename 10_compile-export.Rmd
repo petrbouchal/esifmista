@@ -21,7 +21,8 @@ schema <- schema(prj_id = string(),
                  rozpad_duvod = string(),
                  rozpad_typ = string(),
                  obec_puvod = string(),
-                 chunk = int32())
+                 chunk = int32(),
+                 geo_id_long = string())
 
 ds_stubs <- c("dtl_resolved_placeless", "dtl_resolved_smpl",
               "dtl-obecless-rozpadnute")

@@ -393,7 +393,8 @@ write_dataset(vysledek %>%
                 group_by(obec_puvod, op_id, chunk, rozpad_typ) %>%
                 select(prj_id, radek, op_id, level, geo_id = value, level_orig, 
                        geo_id_orig = id_orig, 
-                       rozpad_typ, rozpad_duvod, obec_puvod, chunk), 
+                       rozpad_typ, rozpad_duvod, obec_puvod, chunk) %>% 
+                add_long_geoid(ids), 
               dir_arrow,
               format = "parquet")
 ```

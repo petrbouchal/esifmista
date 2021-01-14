@@ -38,3 +38,25 @@ ggplot2::update_geom_defaults(geom = "point", new = list(colour = "darkblue",
 ggplot2::theme_set(ptrr::theme_ptrr("both"))
 
 mas_pravniformy_regex <- "[,]?\\s?(([zo]\\.\\s?[ús]\\.\\s?)|(([o]\\.\\s?[p]\\.\\s?[s]\\.\\s?)))"
+
+add_long_geoid <- function(data, ids) {
+
+  stopifnot("geo_id" %in% names(data))
+  stopifnot("level" %in% names(data))
+
+  zuj_obce_adder <- bind_rows(
+    ids %>%
+      filter(!zuj %in% ids$obec) %>%
+      select(geo_id_long = zuj) %>%
+      mutate(level = "zuj"),
+    ids %>%
+      distinct(obec) %>%
+      rename(geo_id_long = obec) %>%
+      mutate(level = "obec")
+  ) %>%
+    mutate(geo_id = str_sub(geo_id_long, 6, 11),
+           level = factor(level, levels = geolevels, ordered = T))
+
+  data %>%
+    left_join(zuj_obce_adder)
+}

@@ -122,6 +122,9 @@ y <- x %>%
                vyznam = "kód obce nebo ZÚJ (pro MČ) bez prefixu NUTS", 
                číselník = "ČSÚ číselník obcí (43), ZÚJ (51)",
                zdroj = "vlastní dovození (viz výše)") %>% 
+  info_columns("geo_id_long", 
+               vyznam = "kód obce nebo ZÚJ (pro MČ) s prefixem NUTS",
+               číselník = "po úpravě: ČSÚ číselník obcí (43), ZÚJ (51), NUTS kraje (100)") %>% 
   info_columns("geo_id_orig", 
                vyznam = "původní geolokace - kód území",
                forma = "obce a ZÚJ včetně NUTS prefixu, ORP a okres podle ČSÚ, kraj podle NUTS",

@@ -46,11 +46,12 @@ dtl_nh_checked <- plcnh %>%
                select(prj_id, prj_radek, typ, value, level) %>% 
                spread(typ, value) %>% 
                select(prj_id, value = id, nazev, shortid, level)) %>% 
-  rename(geo_id = value, geo_level = level, geo_id_short = shortid, geo_nazev = nazev) %>% 
+  rename(geo_id = value, geo_id_short = shortid, geo_nazev = nazev) %>% 
   mutate(vybrat = FALSE,
          resolved = if_else(prj_id %in% dtl_nh_resolved_previously$prj_id,
                             TRUE, FALSE)) %>% 
-  bind_rows(dtl_nh_resolved_previously) 
+  bind_rows(dtl_nh_resolved_previously %>% 
+              select(-rozpad_duvod, -obec_puvod, -rozpad_typ, -chunk, -radek)) 
 ```
 
 ```{r}
@@ -133,7 +134,8 @@ dtl_nh_resolved_all <- bind_rows(dtl_nh_resolved_obce_fin,
   select(prj_id, radek, level, geo_id, level_orig, geo_id_orig, rozpad_duvod,
          obec_puvod, op_id, chunk, rozpad_typ) %>% 
   mutate(level_orig = as.character(level),
-         level = factor(level, levels = geolevels, ordered = T))
+         level = factor(level, levels = geolevels, ordered = T)) %>% 
+  add_long_geoid(ids)
 ```
 
 ```{r}
