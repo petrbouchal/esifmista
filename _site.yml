@@ -1,7 +1,7 @@
 name: Rozpočty obcí a měst v krizi
 output_dir: docs
 include: ["codebook.docx", "codebook.pdf", "sample_export.xlsx", "opz-one-chunk.xlsx"]
-exclude: ["LICENSE.md", "*.csv", "*.rds", "data-input", "data-processed", "renv", "renv.lock", "archive", "prep", "*.sh", ".py", "data-output", "data-export"]
+exclude: ["LICENSE.md", "*.csv", "*.rds", "data-input", "data-processed", "renv", "renv.lock", "archive", "prep", "*.sh", ".py", "data-output", "data-export", "data-manual"]
 navbar:
   title: "Místa realizace ESIF: čištění dat"
   left:
