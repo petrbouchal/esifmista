@@ -59,7 +59,7 @@ writexl::write_xlsx(dtl_nh_checked %>% filter(!resolved),
 ```
 
 ```{r}
-dtl_nh_resolved0 <- read_xlsx(here::here("data-input", "prj_nehierarchicke-resolved.xlsx"))
+dtl_nh_resolved0 <- read_xlsx(here::here("data-manual", "prj_nehierarchicke-resolved.xlsx"))
 ```
 
 ```{r}
