@@ -18,7 +18,8 @@ source("shared.R")
 
 ```{r data}
 prjs_geostatus <- read_parquet(here::here("data-processed",
-                                          "projects-geo-check-groups.parquet"))
+                                          "projects-geo-check-groups.parquet"),
+                               col_select = c("prj_id", "geostatus"))
 places_geostatus <- read_parquet(here::here("data-processed",
                                             "places-geo-check.parquet"))
 ```
@@ -45,13 +46,19 @@ dtl_nh_checked <- plcnh %>%
                filter(prj_id %in% prj_id_nh) %>% 
                select(prj_id, prj_radek, typ, value, level) %>% 
                spread(typ, value) %>% 
-               select(prj_id, value = id, nazev, shortid, level)) %>% 
-  rename(geo_id = value, geo_id_short = shortid, geo_nazev = nazev) %>% 
-  mutate(vybrat = FALSE,
+               select(prj_id, value = id, geo_id = shortid, nazev, level)) %>% 
+  rename(geo_id_long = value, geo_nazev = nazev) %>% 
+  mutate(vybrat = NA,
+         geo_id = ifelse(is.na(geo_id), geo_id_long, geo_id),
+         geo_id_long = if_else(level %in% c("obec", "zuj"), geo_id_long, NA_character_),
          resolved = if_else(prj_id %in% dtl_nh_resolved_previously$prj_id,
                             TRUE, FALSE)) %>% 
   bind_rows(dtl_nh_resolved_previously %>% 
-              select(-rozpad_duvod, -obec_puvod, -rozpad_typ, -chunk, -radek)) 
+              select(-any_of(c("rozpad_duvod", "obec_puvod", "rozpad_typ", "chunk", "radek")))) %>% 
+  group_by(prj_id) %>% 
+  mutate(oddelovac = if_else(row_number() == n(), "--------", NA_character_)) %>% 
+  ungroup() %>% 
+  relocate(op_id, prj_nazev, geo_id, geo_nazev, level, vybrat, oddelovac, prj_anotace, resolved)
 ```
 
 ```{r}
@@ -60,27 +67,41 @@ writexl::write_xlsx(dtl_nh_checked %>% filter(!resolved),
 ```
 
 ```{r}
-dtl_nh_resolved0 <- read_xlsx(here::here("data-manual", "prj_nehierarchicke-resolved.xlsx"))
+dtl_nh_resolved_all <- read_xlsx(here::here("data-manual", "prj_nehierarchicke-resolved.xlsx")) %>% 
+  mutate(level = factor(level, levels = geolevels, ordered = T), 
+         vybrat = as.logical(vybrat)) 
 ```
 
 ```{r}
-dtl_nh_resolved <- dtl_nh_resolved0 %>% 
-  mutate(level = factor(geo_level, levels = geolevels, ordered = T), 
-         include = as.logical(include)) %>% 
-  select(-geo_level) %>% 
+prjs_included_by_default <- dtl_nh_resolved_all %>% 
   group_by(prj_id) %>% 
-  mutate(all_na = all(is.na(include))) %>% 
-  filter(all_na | include)
+  filter(all(is.na(vybrat))) %>% distinct(prj_id) %>% pull()
+prjs_with_some_dropped <- dtl_nh_resolved_all %>% 
+  group_by(prj_id) %>% 
+  filter(!all(is.na(vybrat))) %>% distinct(prj_id) %>% pull()
+prjs_with_all_dropped <-  dtl_nh_resolved_all %>% 
+  group_by(prj_id) %>% 
+  filter(all(!vybrat)) %>% distinct(prj_id) %>% pull()
+```
 
-length(unique(dtl_nh_resolved$prj_id))
-setdiff(unique(dtl_nh_resolved$prj_id), prj_id_nh)
+
+```{r}
+dtl_nh_resolved_true <- dtl_nh_resolved_all %>% 
+  group_by(prj_id) %>% 
+  # these are included by default - they were not touched by the user
+  mutate(all_na = all(is.na(vybrat))) %>% 
+  # keep all those untouched and those lines where user said to keep
+  filter(all_na | vybrat)
+
+length(unique(dtl_nh_resolved_true$prj_id))
+setdiff(unique(dtl_nh_resolved_true$prj_id), prj_id_nh)
 ```
 
 ```{r}
-dtl_nh_resolved_obce <- dtl_nh_resolved %>% 
+dtl_nh_resolved_obce <- dtl_nh_resolved_true %>% 
   filter(level == "obec")
-dtl_nh_resolved_zuj <- dtl_nh_resolved %>% filter(level == "zuj")
-dtl_nh_resolved_ostatni <- dtl_nh_resolved %>% filter(!level %in% c("obec", "zuj"))
+dtl_nh_resolved_zuj <- dtl_nh_resolved_true %>% filter(level == "zuj")
+dtl_nh_resolved_ostatni <- dtl_nh_resolved_true %>% filter(!level %in% c("obec", "zuj"))
 ```
 
 ```{r}
@@ -98,7 +119,8 @@ dtl_nh_resolved_obce_fin <- dtl_nh_resolved_obce %>%
 
 ```{r}
 dtl_nh_resolved_ostatni_fin <- dtl_nh_resolved_ostatni %>%
-  left_join(rozpadac_na_obce %>% rename(level = rozpad_jak, geo_id = value)) %>% 
+  left_join(rozpadac_na_obce %>% 
+              rename(level = rozpad_jak, geo_id = value)) %>% 
   select(prj_id, geo_id_orig = geo_id, level, geo_id = obec, op_id) %>% 
   mutate(level = "obec",
          rozpad_duvod = "mechanický rozpad z manuálně vybraného ORP, okresu nebo kraje",
@@ -135,6 +157,8 @@ dtl_nh_resolved_all <- bind_rows(dtl_nh_resolved_obce_fin,
          obec_puvod, op_id, chunk, rozpad_typ) %>% 
   mutate(level_orig = as.character(level),
          level = factor(level, levels = geolevels, ordered = T)) %>% 
+  arrange(prj_id, geo_id, desc(level), level_orig) %>% 
+  distinct(prj_id, op_id, geo_id, level, .keep_all = T) %>% 
   add_long_geoid(ids)
 ```
 
