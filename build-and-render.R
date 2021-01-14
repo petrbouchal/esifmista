@@ -13,3 +13,5 @@ source(here::here("04_load-geodata.R"))
 # rmarkdown::render("09_resolve-complicated.Rmd")
 
 rmarkdown::render_site(quiet = F)
+
+source(here::here("export-excel.R"))
