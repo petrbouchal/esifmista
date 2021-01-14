@@ -14,6 +14,11 @@ library(sf)
 library(arrow)
 ```
 
+```{r}
+source("widget_prep.R")
+```
+
+
 ```{r dt}
 source("load_core_data.R")
 
