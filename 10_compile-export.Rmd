@@ -42,7 +42,7 @@ dim(dt_all)
 ```
 
 ```{r cleanup previous export}
-try(fs::dir_delete(here::here("data-output/dtl-all-arrow")), silent)
+try(fs::dir_delete(here::here("data-output/dtl-all-arrow")), silent = T)
 ```
 
 ```{r resave}

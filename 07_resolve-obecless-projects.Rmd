@@ -384,7 +384,7 @@ vysledek %>%
 
 dir_arrow <- here::here("data-processed", "dtl-obecless-rozpadnute")
 
-fs::dir_delete(dir_arrow)
+try(fs::dir_delete(dir_arrow), silent = T)
 
 write_dataset(vysledek %>% 
                 group_by(op_id) %>% 

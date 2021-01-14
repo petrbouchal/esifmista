@@ -100,7 +100,7 @@ dtl_smpl %>%
 ```
 
 ```{r}
-dir.create(here::here("data-processed", "dtl_resolved_smpl"))
+dir.create(here::here("data-processed", "dtl_resolved_smpl"), recursive = T, showWarnings = F)
 write_parquet(dtl_smpl, here::here("data-processed", "dtl_resolved_smpl/all.parquet"))
 ```
 
