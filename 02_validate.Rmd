@@ -105,7 +105,8 @@ dt_zujfix <- dt %>%
               select(g_zuj_shortid = CHODNOTA2, CZNUTS)) %>% 
   mutate(g_zuj_id_new = if_else(str_length(g_zuj_id) < 11,
                                 paste0(CZNUTS, g_zuj_shortid), g_zuj_id),
-         g_zuj_id = g_zuj_id_new) %>% 
+         g_zuj_id = g_zuj_id_new,
+         g_obec_shortid = str_sub(g_obec_id, -6, -1)) %>% 
   select(-g_zuj_id_new, -CZNUTS)
 
 dt_zujfix %>% 
