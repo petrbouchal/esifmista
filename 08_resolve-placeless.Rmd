@@ -286,7 +286,7 @@ dt_with_chuobce_reshaped <- dt_with_chuobce %>%
          level_orig = "chkonp") %>% 
   rename_with(~str_remove(., "zuj_")) %>% 
   rename(id_orig = chkonp_idtext, value = id) %>% 
-  mutate(obec_puvod = "doplnění obce-ZUJ podle chráněných území",
+  mutate(obec_puvod = "doplnění obce nebo ZÚJ podle chráněných území",
          rozpad_typ = "nic",
          level = factor(level, levels = geolevels, ordered = T),
          rozpad_duvod = NA_character_,

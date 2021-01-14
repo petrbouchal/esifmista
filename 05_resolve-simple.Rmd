@@ -63,7 +63,7 @@ dtl_smpl <- dtl %>%
   filter(!(geostatus == "obec a ZUJ se kryjí" & level == "zuj")) %>% 
   select(prj_id, op_id, value, level, rozpad_typ = geostatus) %>% 
   group_by(op_id) %>% 
-  mutate(obec_puvod = "obec-ZUJ u projektů, kde byly zadány",
+  mutate(obec_puvod = "obec nebo ZUJ u projektů, kde byly ve vstupních datech",
          rozpad_typ = as.character(rozpad_typ),
          rozpad_duvod = NA_character_,
          id_orig = value,

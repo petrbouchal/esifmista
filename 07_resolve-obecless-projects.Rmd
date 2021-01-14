@@ -344,7 +344,7 @@ vysledek <- bind_rows(dtl_rozpadle_detekce,
          level_orig = as.character(level_orig),
          level = factor(level, levels = geolevels, ordered = T)) %>% 
   left_join(dt_rozpady %>% select(prj_id, op_id, rozpad_duvod)) %>% 
-  mutate(obec_puvod = "dovození obce-ZUJ pokud tato úroveň chyběla") %>% 
+  mutate(obec_puvod = "dovození obce nebo ZÚJ, kde tato úroveň chyběla") %>% 
   group_by(prj_id) %>% 
   mutate(radek = row_number()) %>% 
   group_by(obec_puvod, rozpad_typ, op_id)
