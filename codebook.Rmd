@@ -60,6 +60,7 @@ Pro většinu projektů platilo několik jednoduchých pravidel, pokud projekt v
  - je okres/ORP zmíněn v názvu projektu
  - je projekt původně lokalizován pouze na jeden okres, ORP nebo kraj
 - projekty na krajské úrovni ve více než 11 kraji jsou rozpadnuty na celou ČR
+- rozpad z obcí na ZÚJ (tj. městské části) se nedělal, pokud nešlo o upřednění viz výše (žadatel je MČ atd.)
 
 #### Projekty bez geolokace v původních datech
 
@@ -83,7 +84,7 @@ Následně skript na základě tohoto zadání všechny projekty rozpadne na obc
 ds %>% 
   select(prj_id, obec_puvod, rozpad_typ, rozpad_duvod) %>% 
   collect() %>% 
-  distinct_all() %>% 
+  distinct() %>% 
   count(obec_puvod, rozpad_typ, rozpad_duvod)
 ```
 
@@ -128,20 +129,22 @@ y <- x %>%
   info_columns("geo_id_orig", 
                vyznam = "všechny původní geolokace pro daný `level_orig` - kód území",
                forma = "obce a ZÚJ včetně NUTS prefixu, ORP a okres podle ČSÚ, kraj podle NUTS",
-               pozor = "může obsahovat více hodnot oddělených čárkou",
+               pozor = "může obsahovat více hodnot oddělených čárkou; pouze pro úroveň, ze kterých se data rozpadala na obce",
                číselník = "ČSÚ: obec (43), ZÚJ (51), NUTS kraje (100), ORP (65), okes (109)") %>% 
   info_columns("prj_id", vyznam = "číslo projektu",
                zdroj = "původní data, neupraveno") %>% 
   info_columns("radek", vyznam = "pořadové číslo řádku v projektu",
                zdroj = "generováno po rozpadu na obce") %>% 
   info_columns("op_id", 
-               vyznam = "zkratka OP ve formě OP Z atd. (mezera, ne '_')",
+               vyznam = "zkratka OP s mezerou a bez diakritiky: OP Z atd. (mezera, ne '_')",
+               hodnoty = "OP D, OP Z, OP ZP, OP D, IROP, OP PPR, OP VVV",
                zdroj = "převzato z původních dat") %>% 
   info_columns("level", vyznam = "úroveň dovozené geolokace",
                zdroj = "dovozeno rozpadem na obce a ZÚJ",
                hodnoty = "obec, zuj") %>% 
   info_columns("level_orig", vyznam = "původní úrove", 
-               hodnoty = "kraj, orp, okres, obec, zuj") %>% 
+               hodnoty = "kraj, orp, okres, obec, zuj",
+               pozor = "pouze úroveň, ze které se data rozpadala na obce") %>% 
   info_columns("chunk", 
                vyznam = "číslo oddílu; oddíly čítají cca 500 000 řádků pro export do jednotlivých excelových souborů",
                pozor = "jeden projekt s více řádky může být rozdělen do různých chunks") %>% 
