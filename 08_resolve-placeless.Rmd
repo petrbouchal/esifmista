@@ -308,7 +308,7 @@ dt_with_chuobce_reshaped <- dt_with_chuobce %>%
 write_parquet(dt_with_chuobce_reshaped %>% 
                 select(prj_id, radek, op_id, level, geo_id, level_orig,
                        geo_id_orig = id_orig,
-                       rozpad_typ, rozpad_duvod, obec_puvod, chunk),
+                       rozpad_typ, rozpad_duvod, geo_id_long, obec_puvod, chunk),
               here::here("data-processed", "dtl_resolved_placeless", "all.parquet"))
 write_parquet(dt_with_chuobce_reshaped, 
               here::here("data-processed", "dt_noplace_filled-chudetail.parquet"))
