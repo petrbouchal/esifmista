@@ -69,11 +69,13 @@ dtl_smpl <- dtl %>%
          id_orig = value,
          level_orig = as.character(level),
          value = str_sub(value, 6, 11),
-         chunk = floor(row_number()/3e6) + 1) %>% 
+         chunk = floor(row_number()/3e6) + 1,
+         chunk = as.integer(chunk)) %>% 
   group_by(prj_id) %>% 
   mutate(radek = row_number()) %>% 
   group_by(obec_puvod, op_id, chunk, rozpad_typ) %>% 
-  select(prj_id, radek, op_id, level, value, level_orig, id_orig, rozpad_typ, 
+  select(prj_id, radek, op_id, level, geo_id = value, level_orig,
+         geo_id_orig = id_orig, rozpad_typ, 
          rozpad_duvod, obec_puvod, chunk)
 ```
 

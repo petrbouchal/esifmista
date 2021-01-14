@@ -379,13 +379,20 @@ vysledek %>%
 # Export
 
 ```{r slepeno-export}
+
+dir_arrow <- here::here("data-processed", "dtl-obecless-rozpadnute")
+
+fs::dir_delete(dir_arrow)
+
 write_dataset(vysledek %>% 
                 group_by(op_id) %>% 
-                mutate(chunk = floor(row_number()/5e5) + 1) %>% 
+                mutate(chunk = floor(row_number()/5e5) + 1,
+                       chunk = as.integer(chunk)) %>% 
                 group_by(obec_puvod, op_id, chunk, rozpad_typ) %>%
-                select(prj_id, radek, op_id, level, value, level_orig, id_orig, 
+                select(prj_id, radek, op_id, level, geo_id = value, level_orig, 
+                       geo_id_orig = id_orig, 
                        rozpad_typ, rozpad_duvod, obec_puvod, chunk), 
-              here::here("data-processed", "dtl-obecless-rozpadnute"),
+              dir_arrow,
               format = "parquet")
 ```
 
