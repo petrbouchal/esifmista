@@ -28,11 +28,11 @@ gall <- rbind(gorp, gokres, gkraj, geo_zuj, gobce) %>%
   sf::st_simplify(preserveTopology = TRUE, dTolerance = 500) %>%
   sf::st_transform(4326)
 
-
-gall %>%
-  ggplot() +
-  geom_sf(aes(colour = typuj)) +
-  facet_wrap(~typuj)
+#
+# gall %>%
+#   ggplot() +
+#   geom_sf(aes(colour = typuj)) +
+#   facet_wrap(~typuj)
 
 prjs_geostatus <- read_parquet(here::here("data-processed",
                                           "projects-geo-check-groups.parquet"))
@@ -56,41 +56,41 @@ prjgeo <- plcnh %>%
 write_rds(prjgeo, "prjgeo.rds")
 
 
-library(crosstalk)
-library(leaflet)
-library(plotly)
-
-pplot_s <- prjgeo %>%
-  # filter(!sf::st_is_empty(geometry)) %>%
-  ggplot() +
-  geom_sf(aes(colour = typuj)) +
-  facet_wrap(~typuj)
-ggplotly(pplot_s)
-
-ddd <- highlight_key(prjgeo, ~numbr)
-pplot <- ddd %>%
-  # filter(!sf::st_is_empty(geometry)) %>%
-  ggplot() +
-  geom_sf(aes(colour = numbr)) +
-  facet_wrap(~typuj)
-
-ggplotly(pplot)
-
-bscols(
-  filter_slider("xxx", "yyy", ddd, ~numbr),
-  ggplotly(pplot),
-  DT::datatable(ddd)
-)
-
-
-prjs <- SharedData$new(prjgeo)
-factpal <- colorFactor(topo.colors(5), prjs$typuj)
-c(
-  leaflet(prjs, width = "100%") %>%
-    addTiles() %>%
-    addPolygons(data = prjs, color = ~factpal(typuj)),
-  filter_select(id = "sldr", label = "lbl", sharedData = prjs, group = ~typuj)
-)
+# library(crosstalk)
+# library(leaflet)
+# library(plotly)
+#
+# pplot_s <- prjgeo %>%
+#   # filter(!sf::st_is_empty(geometry)) %>%
+#   ggplot() +
+#   geom_sf(aes(colour = typuj)) +
+#   facet_wrap(~typuj)
+# ggplotly(pplot_s)
+#
+# ddd <- highlight_key(prjgeo, ~numbr)
+# pplot <- ddd %>%
+#   # filter(!sf::st_is_empty(geometry)) %>%
+#   ggplot() +
+#   geom_sf(aes(colour = numbr)) +
+#   facet_wrap(~typuj)
+#
+# ggplotly(pplot)
+#
+# bscols(
+#   filter_slider("xxx", "yyy", ddd, ~numbr),
+#   ggplotly(pplot),
+#   DT::datatable(ddd)
+# )
+#
+#
+# prjs <- SharedData$new(prjgeo)
+# factpal <- colorFactor(topo.colors(5), prjs$typuj)
+# c(
+#   leaflet(prjs, width = "100%") %>%
+#     addTiles() %>%
+#     addPolygons(data = prjs, color = ~factpal(typuj)),
+#   filter_select(id = "sldr", label = "lbl", sharedData = prjs, group = ~typuj)
+# )
 
 
 
