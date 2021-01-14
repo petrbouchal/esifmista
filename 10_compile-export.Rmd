@@ -11,29 +11,41 @@ library(arrow)
 ```
 
 ```{r load parts}
-dt1 = open_dataset("data-processed/dtl-obecless-rozpadnute/")
-dt2 = open_dataset("data-processed/dtl_resolved_placeless/")
-dt3 = open_dataset("data-processed/dtl_resolved_smpl/")
+schema <- schema(prj_id = string(),
+                 radek = int32(),
+                 op_id = string(),
+                 level = dictionary(ordered = T),
+                 geo_id = string(),
+                 level_orig = string(),
+                 geo_id_orig = string(),
+                 rozpad_duvod = string(),
+                 rozpad_typ = string(),
+                 obec_puvod = string(),
+                 chunk = int32())
 
-list(dt1, dt2, dt2) %>% map(dim)
+ds_stubs <- c("dtl_resolved_placeless", "dtl_resolved_smpl",
+              "dtl-obecless-rozpadnute")
+
+file_nh_resolved_previously <- here::here("data-processed", "dtl-nehier", "all.parquet")
+if(file.exists(file_nh_resolved_previously)) {
+  ds_stubs <- c(ds_stubs, "dtl-nehier")
+}
+
+dt_list <- purrr::map(ds_stubs, 
+                      ~open_dataset(here::here("data-processed", .x), schema = schema))
 ```
 
-
-```{r merge}
-all <- list(dt1, dt2, dt3) %>% 
-  map_dfr(collect) %>% 
-  rename(geo_id = value,
-         geo_id_orig = id_orig)
-
-names(all)
+```{r load all into one}
+dt_all <- open_dataset(dt_list)
+dim(dt_all)
 ```
 
-```{r cleanup previoue export}
-try(fs::dir_delete("data-output/dtl-all-arrow"), silent = T)
+```{r cleanup previous export}
+try(fs::dir_delete(here::here("data-output/dtl-all-arrow")), silent)
 ```
 
 ```{r resave}
-write_dataset(all, path = here::here("data-output", "dtl-all-arrow"), 
+write_dataset(dt_all, path = here::here("data-output", "dtl-all-arrow"), 
               partitioning = c("obec_puvod", "op_id", "chunk", "rozpad_typ"), 
               format = "parquet")
 ```
@@ -42,12 +54,33 @@ write_dataset(all, path = here::here("data-output", "dtl-all-arrow"),
 dss <- open_dataset(here::here("data-output", "dtl-all-arrow"))
 ```
 
+```{r check-dims}
+dim(dss)
+```
+
+```{r check-schema}
+dss$schema
+```
+
+```{r check head}
+dss %>% head() %>% collect()
+```
+
+
 ```{r check chunks, eval=F}
 dss %>% 
   select(chunk, op_id) %>% 
   collect() %>% 
   count(chunk, op_id)
 ```
+
+```{r check grouping, eval=FALSE}
+dss %>% 
+  select(obec_puvod, rozpad_typ, op_id) %>% 
+  collect() %>% 
+  distinct(obec_puvod, rozpad_typ, op_id)
+```
+
 
 ```{r sample projects}
 prj_smpl <- dss %>% 
@@ -73,5 +106,9 @@ writexl::write_xlsx(dss_sample, here::here("sample_export.xlsx"))
 writexl::write_xlsx(dss %>% 
                       filter(op_id == "OP Z" & chunk == 1) %>% 
                       collect(), here::here("opz-one-chunk.xlsx"))
+```
+
+```{r, eval=F}
+dss_all <- dss %>% collect()
 ```
 
