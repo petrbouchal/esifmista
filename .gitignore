@@ -3,5 +3,7 @@
 .Rproj.user
 docs
 todo.md
-data-output
-data-export
+data-output/*
+!data-output/.here
+data-export/*
+!data-export/.here
