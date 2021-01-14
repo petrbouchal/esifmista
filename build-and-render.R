@@ -7,4 +7,9 @@ source(here::here("02_create-meta-header.R"))
 source(here::here("03_load-metadata.R"))
 source(here::here("04_load-geodata.R"))
 
-rmarkdown::render_site(quiet = T)
+# rmarkdown::render("05_resolve-simple.Rmd")
+# rmarkdown::render("07_resolve-obecless-projects.Rmd")
+# rmarkdown::render("08_resolve-placeless.Rmd")
+# rmarkdown::render("09_resolve-complicated.Rmd")
+
+rmarkdown::render_site(quiet = F)
