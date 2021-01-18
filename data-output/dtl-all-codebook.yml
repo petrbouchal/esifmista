@@ -1,0 +1,71 @@
+read_fn: |-
+  ~{
+      open_dataset(here::here("data-output", "dtl-all-arrow"))
+      ds_sample <- ds %>% head() %>% collect()
+  }
+locale: en
+info_label: '[2021-01-14|17:14:06]'
+table:
+  name: export
+  _columns: 12
+  _rows: 7165157
+  _type: tbl_df
+  type: Arrow dataset (parquet, 111 files)
+  Co: Export všech upravených dat v jedné tabulce - pouze kódy území, bez metadat
+    o projektech a příjemcích
+  Forma: Arrow dataset, členěný do parquet souborů podle OP, typu rozpadu, původu
+    ID obce a oddílu pro export (chunk).
+columns:
+  prj_id:
+    _type: character
+    vyznam: číslo projektu
+    zdroj: původní data, neupraveno
+  radek:
+    _type: integer
+    vyznam: pořadové číslo řádku v projektu
+    zdroj: generováno po rozpadu na obce
+  level:
+    _type: ordered, factor
+    vyznam: úroveň dovozené geolokace
+    zdroj: dovozeno rozpadem na obce a ZÚJ
+    hodnoty: obec, zuj
+  geo_id:
+    _type: character
+    vyznam: kód obce nebo ZÚJ (pro MČ) bez prefixu NUTS
+    číselník: ČSÚ číselník obcí (43), ZÚJ (51)
+    zdroj: vlastní dovození (viz výše)
+  level_orig:
+    _type: character
+    vyznam: původní úrove
+    hodnoty: kraj, orp, okres, obec, zuj
+    pozor: pouze úroveň, ze které se data rozpadala na obce
+  geo_id_orig:
+    _type: character
+    vyznam: všechny původní geolokace pro daný `level_orig` - kód území
+    forma: obce a ZÚJ včetně NUTS prefixu, ORP a okres podle ČSÚ, kraj podle NUTS
+    pozor: může obsahovat více hodnot oddělených čárkou; pouze pro úroveň, ze kterých
+      se data rozpadala na obce
+    číselník: 'ČSÚ: obec (43), ZÚJ (51), NUTS kraje (100), ORP (65), okes (109)'
+  rozpad_duvod:
+    _type: character
+    význam: podrobná informace o způsobu dovození obce
+  geo_id_long:
+    _type: character
+    vyznam: kód obce nebo ZÚJ (pro MČ) s prefixem NUTS
+    číselník: 'po úpravě: ČSÚ číselník obcí (43), ZÚJ (51), NUTS kraje (100)'
+  obec_puvod:
+    _type: character
+    vyznam: zdroj informace o obci
+  op_id:
+    _type: character
+    vyznam: 'zkratka OP s mezerou a bez diakritiky: OP Z atd. (mezera, ne ''_'')'
+    hodnoty: OP D, OP Z, OP ZP, OP D, IROP, OP PPR, OP VVV
+    zdroj: převzato z původních dat
+  chunk:
+    _type: integer
+    vyznam: číslo oddílu; oddíly čítají cca 500 000 řádků pro export do jednotlivých
+      excelových souborů
+    pozor: jeden projekt s více řádky může být rozdělen do různých chunks
+  rozpad_typ:
+    _type: character
+    význam: základní informace o způsobu dovození obce
