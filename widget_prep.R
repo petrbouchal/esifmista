@@ -38,6 +38,8 @@ prjs_geostatus <- read_parquet(here::here("data-processed",
                                           "projects-geo-check-groups.parquet"))
 places_geostatus <- read_parquet(here::here("data-processed",
                                             "places-geo-check.parquet"))
+prjs_unresolved <- read_parquet(here::here("data-processed",
+                                           "dtl-nehier", "all.parquet"))
 
 prj_id_nh <- prjs_geostatus %>% filter(geostatus == "více míst nehierarchicky") %>%
   pull(prj_id)
