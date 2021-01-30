@@ -69,8 +69,9 @@ dtl_smpl <- dtl %>%
          rozpad_duvod = NA_character_,
          id_orig = value,
          level_orig = as.character(level),
-         value = str_sub(value, 6, 11),
-         chunk = floor(row_number()/3e6) + 1,
+         value = str_sub(value, 6, 11)) %>% 
+  group_by(op_id) %>% 
+  mutate(chunk = floor(row_number()/3e6) + 1,
          chunk = as.integer(chunk)) %>% 
   group_by(prj_id) %>% 
   mutate(radek = row_number()) %>% 
