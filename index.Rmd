@@ -20,15 +20,30 @@ Tato sada stránek ukazuje postup a výsledky kontroly a čištění dat o proje
 
 ## Co je kde
 
-Viz horní menu, sleduje postup zleva doprava:
+Viz horní menu, podmenu "Vizuální kontrola postupu" sleduje postup zleva doprava:
 
 - Validace
   - [kontrola úplnosti a konzistence vstupních dat](01_input-checks.html)
   - [Validace geodat oproti číselníkům](02_validate.html)
 - [Analýza struktury geodat](03_explore.html)
-- Úprava dat (TO DO)
+- atd.
+
+Dále:
+
 - [Záznam kroků a poznatků](log.html): obsahuje časově utříděné hlavní poznatky a otázky z jednotlivých kroků
-- [Dokumentace](dev.html): jak je projekt stavěn a jak kód spustit znova
+- [Kompletní návod na zopakování postupu](how-to-repeat.html)
+- [Dokumentace](dev.html): jak je projekt stavěn a jak kód spustit znova (základní, anglicky)
+
+## Celkové informace k projektu:
+
+- repozitář na Githubu (neveřejný): <https://github.com/petrbouchal/mmr-esif-clean>
+
+### kopie README:
+
+```{r, child="README.md"}
+```
+
+
 
 #### `r fa("info-circle", fill = "black")` Zadavatel {.bs-callout .bs-callout-grey}
 
