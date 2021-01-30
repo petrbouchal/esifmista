@@ -33,7 +33,8 @@ if(file.exists(file_nh_resolved_previously)) {
 }
 
 dt_list <- purrr::map(ds_stubs, 
-                      ~open_dataset(here::here("data-processed", .x), schema = schema))
+                      ~open_dataset(here::here("data-processed", .x), 
+                                    schema = schema))
 ```
 
 ```{r load all into one}
