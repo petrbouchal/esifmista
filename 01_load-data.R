@@ -8,13 +8,12 @@ library(janitor)
 
 source(here::here("shared.R"))
 
-
 # Core data ---------------------------------------------------------------
 
-read_xlsx("data-input/misto-ico/OP D.xlsx", skip = 1)
+# read_xlsx("data-input/misto-ico/OP D.xlsx", skip = 1)
 
 # pth <- "data-input/misto/"
-pth <- "data-input/misto-ico"
+pth <- cnf$input_dir
 
 files <- list.files(here::here(pth), full.names = T)
 names(files) <- tools::file_path_sans_ext(files) %>% basename()
@@ -55,7 +54,7 @@ write_parquet(dt, here::here("data-processed","misto_renamed-n.parquet"))
 
 # Projects in NP/CHKO -----------------------------------------------------
 
-prj_chu <- read_excel(here::here("data-input", "CHKONP.xlsx"), skip = 1) %>%
+prj_chu <- read_excel(here::here(cnf$input_chu_xlsx), skip = 1) %>%
   set_names(c("prj_id", "prj_nazev", "chkonp_nazev"))
 
 write_parquet(prj_chu, here::here("data-processed","prj_chkonp.parquet"))

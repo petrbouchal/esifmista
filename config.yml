@@ -1,0 +1,5 @@
+default:
+  input_dir: "data-input/sestavy-20210119"
+  input_chu_xlsx: "data-input/CHKONP.xlsx"
+  input_resolved_xlsx: "data-manual/prj_nonhier-resolved.xlsx"
+  export_excel: true

@@ -68,8 +68,8 @@ Pokud v této fázi nastane neřešitelná chyba, lze správu prostředí vypnou
 ## Vstupní data
 
 1. vytvořte v adresáři `data-input` podadresář, pojmenujte jakkoli a vložte do něj excelové (`.xlsx`) soubory - pro každý OP jeden. Název každého souboru by měl být stejný jako v původní sadě, s mezerami, tj. např. `"OP Z.xlsx"`
-2. vložte celou cestu k těmto souborům (tj. např. `data-input/nova_data`) do proměnné `pth` na začátku skriptu `01_load-data.R`
-3. Vložte novou verzi dat o projektech podle chráněného území, pokud je: přepište soubor `data-input/CHKONP.xlsx` novým, popř. vložte pod novým názvem a upravte název tohoto souboru ve skriptu `01_load-data.R`
+2. vložte celou cestu k těmto souborům (tj. např. `data-input/nova_data`) do parametru `input_dir` v souboru `config.yml`.
+3. Vložte novou verzi dat o projektech podle chráněného území, pokud je: přepište soubor `data-input/CHKONP.xlsx` novým, popř. vložte pod novým názvem a upravte parametr v `input_chu_xlsx`
 
 ## Spuštění skriptů
 
@@ -97,6 +97,7 @@ Jak na to:
 	- **Pokud u nějakého projektu nevyberete ani jeden řádek (tj. nikde neuvedete `TRUE` do sloupce `vybrat`, nebo ve všech řádcích vložíte `FALSE`), projekt se ve výstupních datech vůbec neobjeví**
 1. Pro rozhodování může pomoct mapový nástroj v souboru `docs/widget.html` nebo na <https://esif-data-cleaning.netlify.app/widget.html>.
 1. Výsledný excelový soubor uložte do `data-manual/prj_nehierarchicke-resolved.xlsx`
+1. (Pokud chcete rozřešené projekty brát z jiného souboru, upravte hodnotu `input_resolved_xlsx` v `config.yml`)
 1. Spusťte znovu Rmd skripty s názvy začínajícími 09 a 10 - tím se data těchto projektů ropzadnou na obce vybraných území a nové rozpady se začlení do finálního Arrow exportu.
 1. Pokud potřebujete excelové exporty, spusťte ještě `export-excel.R`.
 

@@ -1,6 +1,7 @@
 library(magrittr)
 library(forcats)
 
+cnf <- config::get()
 
 geolevels <- c("zuj", "obec", "orp", "okres", "kraj")
 geolevels_recoder <- c("zuj", "obec", "orp", "okres", "kraj")

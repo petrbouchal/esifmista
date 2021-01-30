@@ -1,6 +1,9 @@
 #!/usr/bin/env Rscript
 
 library(here)
+library(config)
+
+cnf <- config::get()
 
 source(here::here("01_load-data.R"))
 source(here::here("02_create-meta-header.R"))
@@ -14,4 +17,4 @@ source(here::here("04_load-geodata.R"))
 
 rmarkdown::render_site(quiet = F)
 
-source(here::here("export-excel.R"))
+if(cnf$export_excel) source(here::here("export-excel.R"))

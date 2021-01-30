@@ -5,6 +5,14 @@
       {
         "Name": "CRAN",
         "URL": "https://cran.rstudio.com"
+      },
+      {
+        "Name": "petrbouchal",
+        "URL": "https://petrbouchal.github.io/drat"
+      },
+      {
+        "Name": "scholaempirica",
+        "URL": "https://scholaempirica.github.io/drat"
       }
     ]
   },
@@ -350,12 +358,31 @@
       "Repository": "CRAN",
       "Hash": "0f22be39ec1d141fd03683c06f3a6e67"
     },
+    "config": {
+      "Package": "config",
+      "Version": "0.3.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "31d77b09f63550cee9ecb5a08bf76e8f"
+    },
     "conquer": {
       "Package": "conquer",
       "Version": "1.0.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "5eb7b98beb699405198e2cde15b77b01"
+    },
+    "convo": {
+      "Package": "convo",
+      "Version": "0.0.0.9000",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "convo",
+      "RemoteUsername": "emilyriederer",
+      "RemoteRef": "master",
+      "RemoteSha": "5fc195237186a9fe93400dcb072082fd9d7f182c",
+      "Hash": "5bc667a2a8433d569ab58b04229f2229"
     },
     "corrplot": {
       "Package": "corrplot",

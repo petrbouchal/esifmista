@@ -67,7 +67,7 @@ writexl::write_xlsx(dtl_nh_checked %>% filter(!resolved),
 ```
 
 ```{r}
-dtl_nh_resolved_all <- read_xlsx(here::here("data-manual", "prj_nehierarchicke-resolved.xlsx")) %>% 
+dtl_nh_resolved_all <- read_xlsx(here::here(cnf$input_resolved_xlsx)) %>% 
   mutate(level = factor(level, levels = geolevels, ordered = T), 
          vybrat = as.logical(vybrat)) 
 ```
