@@ -6,11 +6,12 @@ library(stringr)
 library(tidyr)
 library(dplyr)
 
+cnf <- config::get()
 ds <- open_dataset(here::here("data-output", "dtl-all-arrow"))
 
 ops_chunks <- ds %>% select(op, chnk) %>% collect() %>% distinct()
 
-dir <- file.path("data-export", "excel_all_chunked")
+dir <- cnf$excel_output_dir
 dir.create(dir, showWarnings = F, recursive = T)
 
 save_one_excel <- function(ds, op, chnk, dir) {

@@ -43,12 +43,12 @@ dim(dt_all)
 ```
 
 ```{r cleanup previous export}
-try(fs::dir_delete(here::here("data-output/dtl-all-arrow")), silent = T)
+try(fs::dir_delete(here::here(cnf$arrow_output_dir)), silent = T)
 ```
 
 ```{r resave}
-write_dataset(dt_all, path = here::here("data-output", "dtl-all-arrow"), 
-              partitioning = c("obec_puvod", "op_id", "chunk", "rozpad_typ"), 
+write_dataset(dt_all, path = here::here(cnf$arrow_output_dir), 
+              partitioning = cnf$arrow_partitioning, 
               format = "parquet")
 ```
 
