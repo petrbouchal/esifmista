@@ -20,16 +20,16 @@ Sada skriptů na transformaci geografických údajů o projektech EU fondů (ESI
 - konfigurace webového výstupu: `_site.yml`
 - konfigurace Netlify: `.netlify/`
 
-### Build skripty, viz [návod](how-to-repeat.html)
+### Build skripty, viz návod v `how-to-repeat.Rmd` [online](how-to-repeat.html)
 
 - `build-and-render.R`: celkový build v R
 - `build-and-render.sh`: totéž v Bashi
 
 ### R a Rmarkdown skripty
 
-- 0N_*.R: skripty, které načítají vstupní data 
-- NN_*.Rmd
-- ostatní `*.Rmd` další dokumentace a nástroje, které se též
+- `0N_*.R`: skripty, které načítají vstupní data a externí metadata
+- `NN_*.Rmd`: validace, transformace a export dat; též generuje webovou dokumentaci
+- ostatní `*.Rmd` další dokumentace a nástroje, které se též promítnou ve webové dokumentaci
 
 ### Výstup
 
