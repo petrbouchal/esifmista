@@ -20,6 +20,8 @@ Sada skriptů na transformaci geografických údajů o projektech EU fondů (ESI
 - konfigurace webového výstupu: `_site.yml`
 - konfigurace Netlify: `.netlify/`
 
+Sofistikovanější vyyužití `config.yml` viz [dokumentaci](https://rstudio.github.io/config/) a soubor `.Rprofile`.
+
 ### Build skripty, viz návod v `how-to-repeat.Rmd` [online](how-to-repeat.html)
 
 - `build-and-render.R`: celkový build v R
