@@ -3,11 +3,13 @@ title: "Technická dokumentace"
 output:
   html_document:
     toc: no
+    code_folding: show
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(details)
+cnf <- config::get()
 ```
 
 ```{r, child="README.md"}
@@ -46,5 +48,19 @@ git2r::repository()
 
 ```{details, details.summary = "renv status", echo = FALSE}
 print(renv::status())
+```
+
+### config.yml
+
+
+- config used `r Sys.getenv("R_CONFIG_ACTIVE")`
+- file used `r print(Sys.getenv("R_CONFIG_FILE"))`
+
+```{details, details.summary = "config.yml file", echo = FALSE}
+print(readLines("config.yml"))
+```
+
+```{details, details.summary = "config.yml settings", echo = FALSE}
+print(cnf)
 ```
 
