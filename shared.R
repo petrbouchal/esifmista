@@ -69,7 +69,8 @@ add_chunk_number <- function(data, group = op_id) {
     count({{group}}, prj_id) %>%
     group_by({{group}}) %>%
     mutate(runsum = cumsum(n),
-           chunk = floor(runsum/4.5e5) + 1)
+           chunk = floor(runsum/4.5e5) + 1,
+           chunk = as.integer(chunk))
 
   dt <- data %>%
     left_join(row_nums %>%
