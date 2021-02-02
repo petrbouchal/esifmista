@@ -9,7 +9,7 @@ library(dplyr)
 cnf <- config::get()
 ds <- open_dataset(here::here("data-output", "dtl-all-arrow"))
 
-ops_chunks <- ds %>% select(op, chnk) %>% collect() %>% distinct()
+ops_chunks <- ds %>% select(op_id, chunk) %>% collect() %>% distinct()
 
 dir <- cnf$excel_output_dir
 dir.create(dir, showWarnings = F, recursive = T)
