@@ -61,3 +61,22 @@ add_long_geoid <- function(data, ids) {
   data %>%
     left_join(zuj_obce_adder)
 }
+
+add_chunk_number <- function(data, group = op_id) {
+  data <- ungroup(data)
+  groups_orig <- group_vars(data)
+  row_nums <- data %>%
+    count({{group}}, prj_id) %>%
+    group_by({{group}}) %>%
+    mutate(runsum = cumsum(n),
+           chunk = floor(runsum/4.5e5) + 1)
+
+  dt <- data %>%
+    left_join(row_nums %>%
+                select(prj_id, chunk)) %>%
+    group_by(across(all_of(groups_orig)))
+
+  rslt <- dt
+
+  return(rslt)
+}

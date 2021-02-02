@@ -387,9 +387,8 @@ dir_arrow <- here::here("data-processed", "dtl-obecless-rozpadnute")
 try(fs::dir_delete(dir_arrow), silent = T)
 
 write_dataset(vysledek %>% 
+                add_chunk_number() %>% 
                 group_by(op_id) %>% 
-                mutate(chunk = floor(row_number()/5e5) + 1,
-                       chunk = as.integer(chunk)) %>% 
                 group_by(obec_puvod, op_id, chunk, rozpad_typ) %>%
                 select(prj_id, radek, op_id, level, geo_id = value, level_orig, 
                        geo_id_orig = id_orig, 

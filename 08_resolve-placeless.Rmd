@@ -296,10 +296,9 @@ dt_with_chuobce_reshaped <- dt_with_chuobce %>%
   rename(geo_id = value) %>%
   add_long_geoid(ids) %>%
   group_by(op_id) %>% 
-  mutate(chunk = floor(row_number()/5e5) + 1,
-         chunk = as.integer(chunk)) %>% 
   group_by(prj_id) %>% 
   mutate(radek = row_number()) %>% 
+  add_chunk_number() %>% 
   group_by(obec_puvod, op_id, chunk, rozpad_typ)
 ```
 

@@ -146,20 +146,19 @@ dtl_nh_resolved_zuj_fin <- dtl_nh_resolved_zuj %>%
 dtl_nh_resolved_all <- bind_rows(dtl_nh_resolved_obce_fin,
                                  dtl_nh_resolved_zuj_fin,
                                  dtl_nh_resolved_ostatni_fin) %>% 
-  mutate(chunk = floor(row_number()/3e6) + 1,
-         chunk = as.integer(chunk),
-         level_orig = as.character(level)) %>% 
+  mutate(level_orig = as.character(level)) %>% 
   group_by(prj_id) %>% 
   mutate(radek = row_number(),
          rozpad_typ = "více míst nehierarchicky",
          obec_puvod = "manuální řešení původně nekonzistentní geolokace") %>% 
+  add_chunk_number() %>% 
   select(prj_id, radek, level, geo_id, level_orig, geo_id_orig, rozpad_duvod,
          obec_puvod, op_id, chunk, rozpad_typ) %>% 
   mutate(level_orig = as.character(level),
          level = factor(level, levels = geolevels, ordered = T)) %>% 
   arrange(prj_id, geo_id, desc(level), level_orig) %>% 
   distinct(prj_id, op_id, geo_id, level, .keep_all = T) %>% 
-  add_long_geoid(ids)
+  add_long_geoid(ids) 
 ```
 
 ```{r}
