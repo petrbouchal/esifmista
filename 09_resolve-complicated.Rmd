@@ -54,11 +54,13 @@ dtl_nh_checked <- plcnh %>%
          resolved = if_else(prj_id %in% dtl_nh_resolved_previously$prj_id,
                             TRUE, FALSE)) %>% 
   bind_rows(dtl_nh_resolved_previously %>% 
-              select(-any_of(c("rozpad_duvod", "obec_puvod", "rozpad_typ", "chunk", "radek")))) %>% 
+              select(-any_of(c("rozpad_duvod", "obec_puvod", 
+                               "rozpad_typ", "chunk", "radek")))) %>% 
   group_by(prj_id) %>% 
   mutate(oddelovac = if_else(row_number() == n(), "--------", NA_character_)) %>% 
   ungroup() %>% 
-  relocate(op_id, prj_nazev, geo_id, geo_nazev, level, vybrat, oddelovac, prj_anotace, resolved)
+  relocate(op_id, prj_nazev, geo_id, geo_nazev, level, vybrat, 
+           oddelovac, prj_anotace, resolved)
 ```
 
 ```{r}
