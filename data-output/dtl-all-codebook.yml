@@ -4,11 +4,11 @@ read_fn: |-
       ds_sample <- ds %>% head() %>% collect()
   }
 locale: en
-info_label: '[2021-01-14|17:14:06]'
+info_label: '[2021-02-03|00:27:29]'
 table:
   name: export
   _columns: 12
-  _rows: 7165157
+  _rows: 7165207
   _type: tbl_df
   type: Arrow dataset (parquet, 111 files)
   Co: Export všech upravených dat v jedné tabulce - pouze kódy území, bez metadat
@@ -65,7 +65,6 @@ columns:
     _type: integer
     vyznam: číslo oddílu; oddíly čítají cca 500 000 řádků pro export do jednotlivých
       excelových souborů
-    pozor: jeden projekt s více řádky může být rozdělen do různých chunks
   rozpad_typ:
     _type: character
     význam: základní informace o způsobu dovození obce

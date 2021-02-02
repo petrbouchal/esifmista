@@ -146,8 +146,7 @@ y <- x %>%
                hodnoty = "kraj, orp, okres, obec, zuj",
                pozor = "pouze úroveň, ze které se data rozpadala na obce") %>% 
   info_columns("chunk", 
-               vyznam = "číslo oddílu; oddíly čítají cca 500 000 řádků pro export do jednotlivých excelových souborů",
-               pozor = "jeden projekt s více řádky může být rozdělen do různých chunks") %>% 
+               vyznam = "číslo oddílu; oddíly čítají cca 500 000 řádků pro export do jednotlivých excelových souborů") %>% 
   info_columns("rozpad_typ", 
                význam = "základní informace o způsobu dovození obce") %>% 
   info_columns("rozpad_duvod",
