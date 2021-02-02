@@ -8,6 +8,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(arrow)
 
+cnf <- config::get()
 ```
 
 ```{r load parts}
@@ -53,7 +54,7 @@ write_dataset(dt_all, path = here::here(cnf$arrow_output_dir),
 ```
 
 ```{r dogfood, eval=T}
-dss <- open_dataset(here::here("data-output", "dtl-all-arrow"))
+dss <- open_dataset(cnf$arrow_output_dir)
 ```
 
 ```{r check-dims}
