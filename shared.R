@@ -55,8 +55,8 @@ add_long_geoid <- function(data, ids) {
       rename(geo_id_long = obec) %>%
       mutate(level = "obec")
   ) %>%
-    mutate(geo_id = str_sub(geo_id_long, 6, 11),
-           level = factor(level, levels = geolevels, ordered = T))
+    mutate(geo_id = str_sub(geo_id_long, 6, 11)) %>%
+    select(-level)
 
   data %>%
     left_join(zuj_obce_adder)
