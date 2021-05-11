@@ -25,13 +25,16 @@ places_geostatus <- read_parquet(here::here("data-processed",
 ```
 
 ```{r}
-prj_id_nh <- prjs_geostatus %>% filter(geostatus == "více míst nehierarchicky") %>% 
+prj_id_nh <- prjs_geostatus %>% 
+  filter(geostatus == "více míst nehierarchicky") %>% 
   pull(prj_id)
-plcnh <- places_geostatus %>% filter(prj_id %in% prj_id_nh)
+plcnh <- places_geostatus %>% 
+  filter(prj_id %in% prj_id_nh)
 ```
 
 ```{r}
-file_nh_resolved_previously <- here::here("data-processed", "dtl-nehier", "all.parquet")
+file_nh_resolved_previously <- here::here("data-processed", "dtl-nehier", 
+                                          "all.parquet")
 if(file.exists(file_nh_resolved_previously)) {
   dtl_nh_resolved_previously <- read_parquet(file_nh_resolved_previously)
 } else {
@@ -65,7 +68,7 @@ dtl_nh_checked <- plcnh %>%
 
 ```{r}
 writexl::write_xlsx(dtl_nh_checked %>% filter(!resolved), 
-                    here::here("data-output", "prj_nehierarchicke.xlsx"))
+                    here::here("data-output", "prj_nehierarchicke-vse.xlsx"))
 ```
 
 ```{r}
