@@ -1,8 +1,8 @@
 default:
   input_dir: "data-input/sestavy-20210119"
   input_chu_xlsx: "data-input/CHKONP.xlsx"
-  input_resolved_xlsx: "data-manual/prj_nonhier-resolved.xlsx"
-  arrow_output_dir: "data-output/dtl-all-arrow"
+  input_resolved_xlsx: "data-manual/prj_nehierarchicke-vybrano.xlsx"
+  arrow_output_dir: "data-output/dtl-all-arrow2"
   arrow_partitioning: ["obec_puvod", "op_id", "chunk", "rozpad_typ"]
   excel_output_dir: "data-export/excel-all-chunked"
   export_excel: true
