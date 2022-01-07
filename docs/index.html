@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Čištění ESIF dat</title>
+
+<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<meta name="robots" content="noindex,nofollow"/>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+<link rel="stylesheet" href="extra.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Místa realizace ESIF: čištění dat</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Návody a dokumentace
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="how-to-repeat.html">Jak postup zopakovat</a>
+    </li>
+    <li>
+      <a href="widget.html">Pomůcka k řešení nekonzistentních dat</a>
+    </li>
+    <li>
+      <a href="codebook.html">Dokumentace výstupu</a>
+    </li>
+    <li>
+      <a href="dev.html">Technická dokumentace</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Vizuální kontrola postupu
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_input-checks.html">Kontrola úplnosti a konzistence</a>
+    </li>
+    <li>
+      <a href="02_validate.html">Ověření geodat</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="03_explore.html">Struktura dat</a>
+    </li>
+    <li>
+      <a href="04_explore-complicated-projects.html">Analýza geograficky složitých projektů</a>
+    </li>
+    <li>
+      <a href="06_explore-obecless-projects.html">Analýza projektů bez identifikace obce ZÚJ</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="05_resolve-simple.html">Projekty s určením obce</a>
+    </li>
+    <li>
+      <a href="07_resolve-obecless-projects.html">Projekty bez určení obce/ZÚJ</a>
+    </li>
+    <li>
+      <a href="08_resolve-placeless.html">Projekty bez místa realizace</a>
+    </li>
+    <li>
+      <a href="09_resolve-complicated.html">Projekty s nehierarchickým určením místa</a>
+    </li>
+    <li>
+      <a href="10_compile-export.html">Kompilace a export</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="log.html">Záznam kroků a poznatků</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/petrbouchal/mmr-esif-clean">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Čištění ESIF dat</h1>
+
+</div>
+
+
+<div id="interní-dokumentace-nešířit" class="section level4 bs-callout bs-callout-red">
+<h4 class="bs-callout bs-callout-red"><svg style="height:0.8em;top:.04em;position:relative;fill:#d9534f;" viewBox="0 0 576 512"><path d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/></svg> Interní dokumentace: <strong>nešířit</strong></h4>
+<p>Naposledy aktualizováno 30. January 2021, 21:34</p>
+</div>
+<div id="section" class="section level1">
+<h1></h1>
+<p>Tato sada stránek ukazuje postup a výsledky kontroly a čištění dat o projektech ESIF.</p>
+<div id="co-je-kde" class="section level2">
+<h2>Co je kde</h2>
+<p>Viz horní menu, podmenu “Vizuální kontrola postupu” sleduje postup zleva doprava:</p>
+<ul>
+<li>Validace
+<ul>
+<li><a href="01_input-checks.html">kontrola úplnosti a konzistence vstupních dat</a></li>
+<li><a href="02_validate.html">Validace geodat oproti číselníkům</a></li>
+</ul></li>
+<li><a href="03_explore.html">Analýza struktury geodat</a></li>
+<li>atd.</li>
+</ul>
+<p>Dále:</p>
+<ul>
+<li><a href="log.html">Záznam kroků a poznatků</a>: obsahuje časově utříděné hlavní poznatky a otázky z jednotlivých kroků</li>
+<li><a href="how-to-repeat.html">Kompletní návod na zopakování postupu</a></li>
+<li><a href="dev.html">Dokumentace</a>: jak je projekt stavěn a jak kód spustit znova (základní, anglicky)</li>
+</ul>
+</div>
+<div id="celkové-informace-k-projektu" class="section level2">
+<h2>Celkové informace k projektu:</h2>
+<ul>
+<li>repozitář na Githubu (neveřejný): <a href="https://github.com/petrbouchal/mmr-esif-clean" class="uri">https://github.com/petrbouchal/mmr-esif-clean</a></li>
+</ul>
+<div id="kopie-readme" class="section level3">
+<h3>kopie README:</h3>
+</div>
+</div>
+</div>
+<div id="esif-data-cleaning" class="section level1">
+<h1>ESIF data cleaning</h1>
+<!-- badges: start -->
+<!-- badges: end -->
+<div id="co" class="section level2">
+<h2>Co</h2>
+<p>Sada skriptů na transformaci geografických údajů o projektech EU fondů (ESIF) v ČR z obodbí 2014-2020. Cíl je rozpadnout každý projekt na obecní úroveň podle informací patrných buď ze zadaných geografických údajů, nebo z textových polí a informací o projektu a příjemci.</p>
+</div>
+<div id="jak-s-tím-pracovat" class="section level2">
+<h2>Jak s tím pracovat</h2>
+<ul>
+<li><code>dev.Rmd</code> a <a href="esif-data-cleaning.netlify.app/dev.html">online</a>: základní informace k architektuře (anglicky)</li>
+<li><code>how-to-repeat.Rmd</code> a <a href="esif-data-cleaning.netlify.app/how-to-repeat.html">online</a>: kompletní návod na zopakování postupu s novými daty</li>
+</ul>
+</div>
+<div id="co-je-kde-1" class="section level2">
+<h2>Co je kde</h2>
+<div id="konfigurace" class="section level3">
+<h3>Konfigurace</h3>
+<ul>
+<li>celková konfigurace: <code>config.yml</code></li>
+<li>konfigurace webového výstupu: <code>_site.yml</code></li>
+<li>konfigurace Netlify: <code>.netlify/</code></li>
+</ul>
+<p>Sofistikovanější vyyužití <code>config.yml</code> viz <a href="https://rstudio.github.io/config/">dokumentaci</a> a soubor <code>.Rprofile</code>.</p>
+</div>
+<div id="build-skripty-viz-návod-v-how-to-repeat.rmd-online" class="section level3">
+<h3>Build skripty, viz návod v <code>how-to-repeat.Rmd</code> <a href="how-to-repeat.html">online</a></h3>
+<ul>
+<li><code>build-and-render.R</code>: celkový build v R</li>
+<li><code>build-and-render.sh</code>: totéž v Bashi</li>
+</ul>
+</div>
+<div id="r-a-rmarkdown-skripty" class="section level3">
+<h3>R a Rmarkdown skripty</h3>
+<ul>
+<li><code>0N_*.R</code>: skripty, které načítají vstupní data a externí metadata</li>
+<li><code>NN_*.Rmd</code>: validace, transformace a export dat; též generuje webovou dokumentaci</li>
+<li>ostatní <code>*.Rmd</code> další dokumentace a nástroje, které se též promítnou ve webové dokumentaci</li>
+</ul>
+</div>
+<div id="výstup" class="section level3">
+<h3>Výstup</h3>
+<ul>
+<li>Arrow dataset v <code>data-output</code></li>
+<li>Excel (chunked) v <code>data-export</code></li>
+<li>dokumentace exportu v <code>codebook.Rmd</code> a <a href="codebook.html">online</a></li>
+<li>web na <a href="https://esif-data-cleaning.netlify.app" class="uri">https://esif-data-cleaning.netlify.app</a></li>
+</ul>
+<div id="zadavatel" class="section level4 bs-callout bs-callout-grey">
+<h4 class="bs-callout bs-callout-grey"><svg style="height:0.8em;top:.04em;position:relative;fill:black;" viewBox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/></svg> Zadavatel</h4>
+<p>Ministerstvo pro místní rozvoj, financováno z OP Technická pomoc.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+</body>
+</html>

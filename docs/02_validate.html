@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Kontrola proti číselníkům</title>
+
+<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<meta name="robots" content="noindex,nofollow"/>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+<link rel="stylesheet" href="extra.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Místa realizace ESIF: čištění dat</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Návody a dokumentace
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="how-to-repeat.html">Jak postup zopakovat</a>
+    </li>
+    <li>
+      <a href="widget.html">Pomůcka k řešení nekonzistentních dat</a>
+    </li>
+    <li>
+      <a href="codebook.html">Dokumentace výstupu</a>
+    </li>
+    <li>
+      <a href="dev.html">Technická dokumentace</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Vizuální kontrola postupu
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_input-checks.html">Kontrola úplnosti a konzistence</a>
+    </li>
+    <li>
+      <a href="02_validate.html">Ověření geodat</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="03_explore.html">Struktura dat</a>
+    </li>
+    <li>
+      <a href="04_explore-complicated-projects.html">Analýza geograficky složitých projektů</a>
+    </li>
+    <li>
+      <a href="06_explore-obecless-projects.html">Analýza projektů bez identifikace obce ZÚJ</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="05_resolve-simple.html">Projekty s určením obce</a>
+    </li>
+    <li>
+      <a href="07_resolve-obecless-projects.html">Projekty bez určení obce/ZÚJ</a>
+    </li>
+    <li>
+      <a href="08_resolve-placeless.html">Projekty bez místa realizace</a>
+    </li>
+    <li>
+      <a href="09_resolve-complicated.html">Projekty s nehierarchickým určením místa</a>
+    </li>
+    <li>
+      <a href="10_compile-export.html">Kompilace a export</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="log.html">Záznam kroků a poznatků</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/petrbouchal/mmr-esif-clean">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Kontrola proti číselníkům</h1>
+
+</div>
+
+
+<pre class="r"><code>dt &lt;- read_parquet(here::here(&quot;data-processed&quot;, &quot;misto_renamed-n.parquet&quot;))
+dtl &lt;- read_parquet(here::here(&quot;data-processed&quot;, &quot;misto_long-geo.parquet&quot;))</code></pre>
+<pre class="r"><code>setdiff(dt$prj_id, dtl$prj_id)</code></pre>
+<pre><code>##  [1] &quot;CZ.03.2.65/0.0/0.0/16_047/0009355&quot; &quot;CZ.05.4.27/0.0/0.0/17_088/0008643&quot;
+##  [3] &quot;CZ.05.4.27/0.0/0.0/17_088/0010521&quot; &quot;CZ.05.4.27/0.0/0.0/15_009/0001444&quot;
+##  [5] &quot;CZ.05.4.27/0.0/0.0/15_009/0001448&quot; &quot;CZ.05.4.27/0.0/0.0/15_010/0000089&quot;
+##  [7] &quot;CZ.05.4.27/0.0/0.0/17_058/0006131&quot; &quot;CZ.05.4.27/0.0/0.0/17_078/0005408&quot;
+##  [9] &quot;CZ.05.4.27/0.0/0.0/17_078/0008178&quot; &quot;CZ.05.4.27/0.0/0.0/17_078/0008605&quot;
+## [11] &quot;CZ.05.4.27/0.0/0.0/17_078/0009044&quot; &quot;CZ.05.4.27/0.0/0.0/17_078/0009118&quot;
+## [13] &quot;CZ.05.4.27/0.0/0.0/17_110/0010993&quot; &quot;CZ.05.4.27/0.0/0.0/18_091/0008066&quot;
+## [15] &quot;CZ.05.4.27/0.0/0.0/18_106/0008947&quot; &quot;CZ.05.3.29/0.0/0.0/19_118/0010220&quot;
+## [17] &quot;CZ.05.4.27/0.0/0.0/19_120/0010325&quot; &quot;CZ.05.4.27/0.0/0.0/19_120/0010358&quot;
+## [19] &quot;CZ.05.4.27/0.0/0.0/19_120/0011029&quot; &quot;CZ.05.4.27/0.0/0.0/19_120/0011414&quot;
+## [21] &quot;CZ.05.4.27/0.0/0.0/19_129/0010807&quot; &quot;CZ.05.4.27/0.0/0.0/19_131/0010038&quot;
+## [23] &quot;CZ.05.4.27/0.0/0.0/19_131/0010314&quot; &quot;CZ.05.4.27/0.0/0.0/19_131/0010736&quot;
+## [25] &quot;CZ.05.4.27/0.0/0.0/20_140/0012670&quot; &quot;CZ.05.4.27/0.0/0.0/20_140/0012671&quot;
+## [27] &quot;CZ.05.4.27/0.0/0.0/20_140/0012672&quot;</code></pre>
+<pre class="r"><code>obec_id_e &lt;- unique(dt$g_obec_id)
+kraj_id_e &lt;- unique(dt$g_kraj_id)
+orp_id_e &lt;- unique(dt$g_orp_id)
+okres_id_e &lt;- unique(dt$g_okres_id)
+zuj_id_e &lt;- unique(dt$g_zuj_id)</code></pre>
+<div id="jak-vypadají-kódy-v-datech" class="section level3">
+<h3>Jak vypadají kódy v datech?</h3>
+<pre class="r"><code>head(obec_id_e)</code></pre>
+<pre><code>## [1] NA            &quot;CZ020539139&quot; &quot;CZ041555380&quot; &quot;CZ041538116&quot; &quot;CZ052569810&quot; &quot;CZ020539902&quot;</code></pre>
+<pre class="r"><code>head(zuj_id_e)</code></pre>
+<pre><code>## [1] NA            &quot;CZ020564982&quot; &quot;CZ080555088&quot; &quot;CZ080598135&quot; &quot;CZ080599565&quot; &quot;CZ080506753&quot;</code></pre>
+<pre class="r"><code>head(orp_id_e)</code></pre>
+<pre><code>## [1] NA     &quot;2122&quot; &quot;2105&quot; &quot;4103&quot; &quot;2103&quot; &quot;5309&quot;</code></pre>
+<pre class="r"><code>head(okres_id_e)</code></pre>
+<pre><code>## [1] &quot;CZ0209&quot; NA       &quot;CZ020A&quot; &quot;CZ0412&quot; &quot;CZ0532&quot; &quot;CZ0311&quot;</code></pre>
+<pre class="r"><code>head(kraj_id_e)</code></pre>
+<pre><code>## [1] NA      &quot;CZ020&quot; &quot;CZ041&quot; &quot;CZ053&quot; &quot;CZ080&quot; &quot;CZ064&quot;</code></pre>
+</div>
+<div id="podle-toho-načteme-a-upravíme-metadata" class="section level3">
+<h3>Podle toho načteme a upravíme metadata</h3>
+<p>Děje se v <code>03_load-metadata.R</code>, aby se stahování a počítání dělalo jen jednou.</p>
+<pre class="r"><code>source(&quot;read_metadata.R&quot;)</code></pre>
+<pre class="r"><code>obce_n &lt;- obecnuts %&gt;% 
+  mutate(kod_n = paste0(CZNUTS, CHODNOTA2))
+
+zuj_n &lt;- zujnuts %&gt;% 
+  mutate(kod_n = paste0(CZNUTS, CHODNOTA2))
+  
+head(obce_n$kod_n)</code></pre>
+<pre><code>## [1] &quot;CZ010554782&quot; &quot;CZ020503410&quot; &quot;CZ020505781&quot; &quot;CZ020512991&quot; &quot;CZ020513032&quot; &quot;CZ020513041&quot;</code></pre>
+<pre class="r"><code>head(zuj_n$kod_n)</code></pre>
+<pre><code>## [1] &quot;CZ010500054&quot; &quot;CZ010500089&quot; &quot;CZ010500097&quot; &quot;CZ010500119&quot; &quot;CZ010500143&quot; &quot;CZ010500178&quot;</code></pre>
+</div>
+<div id="existují-kódy-uvedené-v-datech-v-oficiálních-číselnících" class="section level2">
+<h2>Existují kódy uvedené v datech v oficiálních číselnících?</h2>
+<pre class="r"><code>dt_validated &lt;- dt %&gt;% 
+  mutate(valid_kraj = g_kraj_id %in% csu_kraj$CZNUTS,
+         valid_obec = g_obec_id %in% obce_n$kod_n,
+         valid_orp = g_orp_id %in% csu_orp$CHODNOTA,
+         valid_okres = g_okres_id %in% csu_okres$CHODNOTA,
+         valid_zuj = g_zuj_id %in% zuj_n$kod_n) %&gt;% 
+  mutate(valid_kraj = if_else(is.na(g_kraj_id), NA, valid_kraj),
+         valid_obec = if_else(is.na(g_obec_id), NA, valid_obec),
+         valid_orp = if_else(is.na(g_orp_id), NA, valid_orp),
+         valid_okres = if_else(is.na(g_okres_id), NA, valid_okres),
+         valid_zuj = if_else(is.na(g_zuj_id), NA, valid_zuj)) %&gt;% 
+  select(matches(c(&quot;valid&quot;, &quot;g_.*_id&quot;)))
+
+skimr::skim(dt_validated)</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">dt_validated</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">149584</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">5</td>
+</tr>
+<tr class="odd">
+<td align="left">logical</td>
+<td align="left">5</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">g_zuj_id</td>
+<td align="right">142550</td>
+<td align="right">0.05</td>
+<td align="right">6</td>
+<td align="right">11</td>
+<td align="right">0</td>
+<td align="right">2071</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">g_obec_id</td>
+<td align="right">90164</td>
+<td align="right">0.40</td>
+<td align="right">11</td>
+<td align="right">11</td>
+<td align="right">0</td>
+<td align="right">5614</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">g_orp_id</td>
+<td align="right">141679</td>
+<td align="right">0.05</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">205</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">g_okres_id</td>
+<td align="right">141539</td>
+<td align="right">0.05</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">77</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">g_kraj_id</td>
+<td align="right">83075</td>
+<td align="right">0.44</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="right">0</td>
+<td align="right">15</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: logical</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="left">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">valid_kraj</td>
+<td align="right">83075</td>
+<td align="right">0.44</td>
+<td align="right">1.00</td>
+<td align="left">TRU: 66508, FAL: 1</td>
+</tr>
+<tr class="even">
+<td align="left">valid_obec</td>
+<td align="right">90164</td>
+<td align="right">0.40</td>
+<td align="right">1.00</td>
+<td align="left">TRU: 59418, FAL: 2</td>
+</tr>
+<tr class="odd">
+<td align="left">valid_orp</td>
+<td align="right">141679</td>
+<td align="right">0.05</td>
+<td align="right">1.00</td>
+<td align="left">TRU: 7905</td>
+</tr>
+<tr class="even">
+<td align="left">valid_okres</td>
+<td align="right">141539</td>
+<td align="right">0.05</td>
+<td align="right">1.00</td>
+<td align="left">TRU: 8045</td>
+</tr>
+<tr class="odd">
+<td align="left">valid_zuj</td>
+<td align="right">142550</td>
+<td align="right">0.05</td>
+<td align="right">0.75</td>
+<td align="left">TRU: 5307, FAL: 1727</td>
+</tr>
+</tbody>
+</table>
+<p>Něco se děje s kódy ZÚJ: část nesedí s číselníkem - a část je taky kratší.</p>
+<pre class="r"><code>dt %&gt;% 
+  mutate(zuj_len = str_length(g_zuj_id)) %&gt;% 
+  count(op_id, zuj_len) %&gt;% 
+  spread(zuj_len, n)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["op_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["6"],"name":[2],"type":["int"],"align":["right"]},{"label":["11"],"name":[3],"type":["int"],"align":["right"]},{"label":["<NA>"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"IROP","2":"15","3":"2400","4":"25287"},{"1":"OP D","2":"38","3":"27","4":"1413"},{"1":"OP PIK","2":"NA","3":"600","4":"27657"},{"1":"OP PPR","2":"1511","3":"NA","4":"2019"},{"1":"OP TP","2":"NA","3":"2","4":"751"},{"1":"OP VVV","2":"64","3":"124","4":"24750"},{"1":"OP Z","2":"NA","3":"NA","4":"33356"},{"1":"OP ZP","2":"99","3":"2154","4":"27317"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>dt %&gt;% 
+  filter(str_length(g_zuj_id) &lt; 11) %&gt;% 
+  distinct(op_id, g_zuj_id) </code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["op_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["g_zuj_id"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"IROP","2":"500089"},{"1":"IROP","2":"500054"},{"1":"IROP","2":"500097"},{"1":"IROP","2":"500178"},{"1":"IROP","2":"500186"},{"1":"OP D","2":"500216"},{"1":"OP D","2":"500178"},{"1":"OP D","2":"500054"},{"1":"OP D","2":"500186"},{"1":"OP D","2":"500224"},{"1":"OP D","2":"547107"},{"1":"OP PPR","2":"500224"},{"1":"OP PPR","2":"539864"},{"1":"OP PPR","2":"547034"},{"1":"OP PPR","2":"500216"},{"1":"OP PPR","2":"500119"},{"1":"OP PPR","2":"500143"},{"1":"OP PPR","2":"500178"},{"1":"OP PPR","2":"547174"},{"1":"OP PPR","2":"500186"},{"1":"OP PPR","2":"547361"},{"1":"OP PPR","2":"539694"},{"1":"OP PPR","2":"500097"},{"1":"OP PPR","2":"500054"},{"1":"OP PPR","2":"500089"},{"1":"OP PPR","2":"500208"},{"1":"OP PPR","2":"547271"},{"1":"OP PPR","2":"539678"},{"1":"OP PPR","2":"547107"},{"1":"OP PPR","2":"538213"},{"1":"OP PPR","2":"547310"},{"1":"OP PPR","2":"538361"},{"1":"OP PPR","2":"538175"},{"1":"OP PPR","2":"547051"},{"1":"OP PPR","2":"547158"},{"1":"OP PPR","2":"547387"},{"1":"OP PPR","2":"538931"},{"1":"OP PPR","2":"547417"},{"1":"OP PPR","2":"547344"},{"1":"OP PPR","2":"538949"},{"1":"OP PPR","2":"539601"},{"1":"OP PPR","2":"547298"},{"1":"OP PPR","2":"539589"},{"1":"OP PPR","2":"538302"},{"1":"OP PPR","2":"538353"},{"1":"OP PPR","2":"547301"},{"1":"OP PPR","2":"539449"},{"1":"OP PPR","2":"538060"},{"1":"OP PPR","2":"538205"},{"1":"OP PPR","2":"547395"},{"1":"OP PPR","2":"539635"},{"1":"OP PPR","2":"538736"},{"1":"OP PPR","2":"547042"},{"1":"OP PPR","2":"539724"},{"1":"OP PPR","2":"547328"},{"1":"OP PPR","2":"539791"},{"1":"OP PPR","2":"547115"},{"1":"OP PPR","2":"539007"},{"1":"OP PPR","2":"539899"},{"1":"OP PPR","2":"538078"},{"1":"OP PPR","2":"538388"},{"1":"OP PPR","2":"538400"},{"1":"OP PPR","2":"539465"},{"1":"OP PPR","2":"547140"},{"1":"OP PPR","2":"538124"},{"1":"OP PPR","2":"538531"},{"1":"OP PPR","2":"547409"},{"1":"OP PPR","2":"547379"},{"1":"OP VVV","2":"500054"},{"1":"OP VVV","2":"500143"},{"1":"OP VVV","2":"500178"},{"1":"OP VVV","2":"547051"},{"1":"OP VVV","2":"547107"},{"1":"OP VVV","2":"539601"},{"1":"OP VVV","2":"547301"},{"1":"OP VVV","2":"547298"},{"1":"OP VVV","2":"538124"},{"1":"OP VVV","2":"500208"},{"1":"OP VVV","2":"547158"},{"1":"OP VVV","2":"547140"},{"1":"OP VVV","2":"539589"},{"1":"OP VVV","2":"547271"},{"1":"OP VVV","2":"547174"},{"1":"OP VVV","2":"539899"},{"1":"OP VVV","2":"500186"},{"1":"OP VVV","2":"500089"},{"1":"OP VVV","2":"500119"},{"1":"OP VVV","2":"547387"},{"1":"OP VVV","2":"547115"},{"1":"OP VVV","2":"500097"},{"1":"OP ZP","2":"500208"},{"1":"OP ZP","2":"500216"},{"1":"OP ZP","2":"547107"},{"1":"OP ZP","2":"500089"},{"1":"OP ZP","2":"538213"},{"1":"OP ZP","2":"500097"},{"1":"OP ZP","2":"539601"},{"1":"OP ZP","2":"500178"},{"1":"OP ZP","2":"547271"},{"1":"OP ZP","2":"547298"},{"1":"OP ZP","2":"547310"},{"1":"OP ZP","2":"538124"},{"1":"OP ZP","2":"547034"},{"1":"OP ZP","2":"500143"},{"1":"OP ZP","2":"547361"},{"1":"OP ZP","2":"547042"},{"1":"OP ZP","2":"538361"},{"1":"OP ZP","2":"538400"},{"1":"OP ZP","2":"547395"},{"1":"OP ZP","2":"539791"},{"1":"OP ZP","2":"539724"},{"1":"OP ZP","2":"538931"},{"1":"OP ZP","2":"500119"},{"1":"OP ZP","2":"547379"},{"1":"OP ZP","2":"539465"},{"1":"OP ZP","2":"539449"},{"1":"OP ZP","2":"539589"},{"1":"OP ZP","2":"539864"},{"1":"OP ZP","2":"538175"},{"1":"OP ZP","2":"547174"},{"1":"OP ZP","2":"500224"},{"1":"OP ZP","2":"547328"},{"1":"OP ZP","2":"539635"},{"1":"OP ZP","2":"538060"},{"1":"OP ZP","2":"500054"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Což jsou podle všeho městské části Prahy (je jich 57).</p>
+<p>Oprava kódů ZÚJ: ke kratším na začátek přilepíme kód kraje</p>
+<pre class="r"><code>dt_zujfix &lt;- dt %&gt;% 
+  mutate(g_zuj_shortid = str_sub(g_zuj_id, -6, -1)) %&gt;% 
+  left_join(zujnuts %&gt;% 
+              select(g_zuj_shortid = CHODNOTA2, CZNUTS)) %&gt;% 
+  mutate(g_zuj_id_new = if_else(str_length(g_zuj_id) &lt; 11,
+                                paste0(CZNUTS, g_zuj_shortid), g_zuj_id),
+         g_zuj_id = g_zuj_id_new) %&gt;% 
+  select(-g_zuj_id_new, -CZNUTS)</code></pre>
+<pre><code>## Joining, by = &quot;g_zuj_shortid&quot;</code></pre>
+<pre class="r"><code>dt_zujfix %&gt;% 
+  mutate(ln = str_length(g_zuj_id)) %&gt;% 
+  count(ln)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["ln"],"name":[1],"type":["int"],"align":["right"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"11","2":"7034"},{"1":"NA","2":"142550"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Kontrola znova:</p>
+<pre class="r"><code>dt_zujfix_validated &lt;- dt_zujfix %&gt;% 
+  mutate(valid_kraj = g_kraj_id %in% csu_kraj$CZNUTS,
+         valid_obec = g_obec_id %in% obce_n$kod_n,
+         valid_orp = g_orp_id %in% csu_orp$CHODNOTA,
+         valid_okres = g_okres_id %in% csu_okres$CHODNOTA,
+         valid_zuj = g_zuj_id %in% zuj_n$kod_n) %&gt;% 
+  mutate(valid_kraj = if_else(is.na(g_kraj_id), NA, valid_kraj),
+         valid_obec = if_else(is.na(g_obec_id), NA, valid_obec),
+         valid_orp = if_else(is.na(g_orp_id), NA, valid_orp),
+         valid_okres = if_else(is.na(g_okres_id), NA, valid_okres),
+         valid_zuj = if_else(is.na(g_zuj_id), NA, valid_zuj)) %&gt;% 
+  select(matches(c(&quot;valid&quot;, &quot;g_.*_id&quot;)))
+
+skimr::skim(dt_zujfix_validated)</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">dt_zujfix_validated</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">149584</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">5</td>
+</tr>
+<tr class="odd">
+<td align="left">logical</td>
+<td align="left">5</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">g_zuj_id</td>
+<td align="right">142550</td>
+<td align="right">0.05</td>
+<td align="right">11</td>
+<td align="right">11</td>
+<td align="right">0</td>
+<td align="right">2071</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">g_obec_id</td>
+<td align="right">90164</td>
+<td align="right">0.40</td>
+<td align="right">11</td>
+<td align="right">11</td>
+<td align="right">0</td>
+<td align="right">5614</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">g_orp_id</td>
+<td align="right">141679</td>
+<td align="right">0.05</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">205</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">g_okres_id</td>
+<td align="right">141539</td>
+<td align="right">0.05</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">77</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">g_kraj_id</td>
+<td align="right">83075</td>
+<td align="right">0.44</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="right">0</td>
+<td align="right">15</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: logical</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="left">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">valid_kraj</td>
+<td align="right">83075</td>
+<td align="right">0.44</td>
+<td align="right">1</td>
+<td align="left">TRU: 66508, FAL: 1</td>
+</tr>
+<tr class="even">
+<td align="left">valid_obec</td>
+<td align="right">90164</td>
+<td align="right">0.40</td>
+<td align="right">1</td>
+<td align="left">TRU: 59418, FAL: 2</td>
+</tr>
+<tr class="odd">
+<td align="left">valid_orp</td>
+<td align="right">141679</td>
+<td align="right">0.05</td>
+<td align="right">1</td>
+<td align="left">TRU: 7905</td>
+</tr>
+<tr class="even">
+<td align="left">valid_okres</td>
+<td align="right">141539</td>
+<td align="right">0.05</td>
+<td align="right">1</td>
+<td align="left">TRU: 8045</td>
+</tr>
+<tr class="odd">
+<td align="left">valid_zuj</td>
+<td align="right">142550</td>
+<td align="right">0.05</td>
+<td align="right">1</td>
+<td align="left">TRU: 7034</td>
+</tr>
+</tbody>
+</table>
+<p>Fajn: teď už to sedí: podíly chybějících jsou stejné v původních proměnních jako ve validačních, plus máme velmi málo chybných kódů - jen 2 kraje nesedí.</p>
+<p>Které?</p>
+<pre class="r"><code>kraj_id_e[!kraj_id_e %in% csu_kraj$CZNUTS]</code></pre>
+<pre><code>## [1] NA      &quot;PL225&quot;</code></pre>
+<p>Polský region Bielski a <code>NA</code>.</p>
+<pre class="r"><code>dt %&gt;% 
+  filter(prj_id == dt %&gt;% 
+           filter(g_kraj_id == &quot;PL225&quot;) %&gt;% 
+           pull(prj_id))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["op_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["prj_id"],"name":[2],"type":["chr"],"align":["left"]},{"label":["prj_nazev"],"name":[3],"type":["chr"],"align":["left"]},{"label":["p_nazev"],"name":[4],"type":["chr"],"align":["left"]},{"label":["p_ico"],"name":[5],"type":["chr"],"align":["left"]},{"label":["p_sidlo_id"],"name":[6],"type":["chr"],"align":["left"]},{"label":["p_sidlo_nazev"],"name":[7],"type":["chr"],"align":["left"]},{"label":["g_zuj_id"],"name":[8],"type":["chr"],"align":["left"]},{"label":["g_zuj_nazev"],"name":[9],"type":["chr"],"align":["left"]},{"label":["g_obec_id"],"name":[10],"type":["chr"],"align":["left"]},{"label":["g_obec_nazev"],"name":[11],"type":["chr"],"align":["left"]},{"label":["g_orp_id"],"name":[12],"type":["chr"],"align":["left"]},{"label":["g_orp_nazev"],"name":[13],"type":["chr"],"align":["left"]},{"label":["g_okres_id"],"name":[14],"type":["chr"],"align":["left"]},{"label":["g_okres_nazev"],"name":[15],"type":["chr"],"align":["left"]},{"label":["g_kraj_id"],"name":[16],"type":["chr"],"align":["left"]},{"label":["g_kraj_nazev"],"name":[17],"type":["chr"],"align":["left"]},{"label":["prj_anotace"],"name":[18],"type":["chr"],"align":["left"]},{"label":["prj_radek"],"name":[19],"type":["int"],"align":["right"]}],"data":[{"1":"OP Z","2":"CZ.03.3.X/0.0/0.0/16_059/0011133","3":"Cesta za prací - podpora a zahraniční praxe pro nezaměstnanou mládež","4":"IVP - Institut pro vzdělání a trh práce, z. s.","5":"03409929","6":"CZ071511382","7":"Přerov","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"PL225","17":"Bielski","18":"Projekt je zaměřen na poskytnutí podpory a kvalitní zahraniční pracovní zkušenosti vč. získání nových jazykových dovedností nezaměstnaným mladým lidem, jež mají problém s nalezením pracovního uplatnění. Projekt se soustřeďuje na mládež z oblastí s vysokou nezaměstnaností - Moravskoslezský a Olomoucký kraj. Předpokládáme nábor a diagnostiku 50 osob, účast 30 účastníků v přípravné fází a 15 účastníků na zahraniční praxi, se kterými budeme nadále připravovat pro trh práce.","19":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Hmm, jeden projekt OP Z, který se odehrával jen v Polsku… Ale je to výzva na mezinárodní mobilitu, takže asi OK - prostě se jen vyřadí.</p>
+<pre class="r"><code>write_parquet(dt_zujfix, here::here(&quot;data-processed&quot;, &quot;misto_fix-01-zuj.parquet&quot;))</code></pre>
+<pre class="r"><code>dt_fixed_long &lt;- make_long_geo(dt_zujfix)
+write_parquet(dt_fixed_long %&gt;% 
+                drop_na(value), 
+              here::here(&quot;data-processed&quot;, &quot;misto_fix-01-zuj_long-geo.parquet&quot;))</code></pre>
+<div id="obce" class="section level3">
+<h3>Obce</h3>
+<pre class="r"><code>obce_nomatch &lt;- obec_id_e[!obec_id_e %in% paste0(obecnuts$CZNUTS, obecnuts$CHODNOTA2)]</code></pre>
+<pre class="r"><code>obecnuts %&gt;% 
+  mutate(id = paste0(CZNUTS, CHODNOTA2)) %&gt;% 
+  filter(id %in% obce_nomatch[2]) %&gt;% 
+  pull(TEXT2)</code></pre>
+<pre><code>## character(0)</code></pre>
+<p>Brdy: <a href="https://www.risy.cz/cs/vyhledavace/obce/539996-brdy" class="uri">https://www.risy.cz/cs/vyhledavace/obce/539996-brdy</a></p>
+</div>
+</div>
+<div id="validita-jmen-proti-registrům" class="section level2">
+<h2>Validita jmen proti registrům</h2>
+<pre class="r"><code>dt_val_ids &lt;- dt_zujfix %&gt;% 
+  # select(prj_id, starts_with(&quot;g_&quot;)) %&gt;% 
+  left_join(zuj_n %&gt;% 
+              select(g_zuj_nazev_csu = TEXT2, 
+                     g_zuj_id = kod_n)) %&gt;% 
+  left_join(obce_n %&gt;% 
+              select(g_obec_nazev_csu = TEXT2, 
+                     g_obec_id = kod_n)) %&gt;% 
+  left_join(csu_okres %&gt;% 
+              select(g_okres_nazev_csu = TEXT, 
+                     g_okres_id = CHODNOTA)) %&gt;% 
+  left_join(csu_orp %&gt;% 
+              select(g_orp_nazev_csu = TEXT, 
+                     g_orp_id = CHODNOTA)) %&gt;% 
+  left_join(csu_kraj %&gt;% 
+              select(g_kraj_nazev_csu = TEXT, 
+                     g_kraj_id = CZNUTS))</code></pre>
+<pre><code>## Joining, by = &quot;g_zuj_id&quot;</code></pre>
+<pre><code>## Joining, by = &quot;g_obec_id&quot;</code></pre>
+<pre><code>## Joining, by = &quot;g_okres_id&quot;</code></pre>
+<pre><code>## Joining, by = &quot;g_orp_id&quot;</code></pre>
+<pre><code>## Joining, by = &quot;g_kraj_id&quot;</code></pre>
+<pre class="r"><code>dt_val_ids_agent &lt;- dt_val_ids %&gt;% 
+  mutate(across(starts_with(&quot;g_&quot;), tolower)) %&gt;% 
+  create_agent() %&gt;% 
+  col_vals_equal(g_zuj_nazev, 
+                 vars(g_zuj_nazev_csu), na_pass = T) %&gt;% 
+  col_vals_equal(g_obec_nazev, 
+                 vars(g_obec_nazev_csu), na_pass = T) %&gt;% 
+  col_vals_equal(g_orp_nazev, 
+                 vars(g_orp_nazev_csu), na_pass = T) %&gt;% 
+  col_vals_equal(g_okres_nazev, 
+                 vars(g_okres_nazev_csu), na_pass = T) %&gt;% 
+  col_vals_equal(g_kraj_nazev, 
+                 vars(g_kraj_nazev_csu), na_pass = T)</code></pre>
+<pre class="r"><code>dt_val_ids_agent %&gt;% interrogate(extract_failed = F)</code></pre>
+<pre><code>## </code></pre>
+<pre><code>## ── Interrogation Started - there are ── 5 ─────────────────────────────────────────────────────────────────</code></pre>
+<pre><code>## ✓ Step 1: OK.</code></pre>
+<pre><code>## ✓ Step 2: OK.</code></pre>
+<pre><code>## ✓ Step 3: OK.</code></pre>
+<pre><code>## ✓ Step 4: OK.</code></pre>
+<pre><code>## ✓ Step 5: OK.</code></pre>
+<pre><code>## </code></pre>
+<pre><code>## ── Interrogation Completed ────────────────────────────────────────────────────────────────────────────────</code></pre>
+<style>@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://unpkg.com/balloon-css/balloon.min.css");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap");
+html {
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#report .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 90%;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#report .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#report .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#report .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#report .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#report .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#report .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#report .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#report .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#report .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#report .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#report .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#report .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#report .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#report .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#report .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#report .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#report .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#report .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#report .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#report .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#report .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#report .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#report .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#report .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#report .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#report .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#report .gt_left {
+  text-align: left;
+}
+
+#report .gt_center {
+  text-align: center;
+}
+
+#report .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#report .gt_font_normal {
+  font-weight: normal;
+}
+
+#report .gt_font_bold {
+  font-weight: bold;
+}
+
+#report .gt_font_italic {
+  font-style: italic;
+}
+
+#report .gt_super {
+  font-size: 65%;
+}
+
+#report .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+
+#pb_information {
+  -webkit-font-smoothing: antialiased;
+}
+
+#report .gt_row {
+  overflow: visible;
+}
+
+#report .gt_sourcenote {
+  height: 35px;
+  padding: 0;
+}
+
+#report code {
+  font-family: 'IBM Plex Mono', monospace, courier;
+  font-size: 11px;
+  background-color: transparent;
+  padding: 0;
+}
+</style>
+<div id="report" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table" style="table-layout: fixed;; width: 0px">
+  <colgroup>
+    <col style="width:6px;"/>
+    <col style="width:35px;"/>
+    <col style="width:190px;"/>
+    <col style="width:120px;"/>
+    <col style="width:120px;"/>
+    <col style="width:50px;"/>
+    <col style="width:50px;"/>
+    <col style="width:50px;"/>
+    <col style="width:50px;"/>
+    <col style="width:50px;"/>
+    <col style="width:30px;"/>
+    <col style="width:30px;"/>
+    <col style="width:30px;"/>
+    <col style="width:65px;"/>
+  </colgroup>
+  <thead class="gt_header">
+    <tr>
+      <th colspan="14" class="gt_heading gt_title gt_font_normal" style="color: #444444; font-size: 28px; text-align: left; font-weight: 500;">Pointblank Validation</th>
+    </tr>
+    <tr>
+      <th colspan="14" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style="font-size: 12px; text-align: left;"><span style="text-decoration-style:solid;text-decoration-color:#ADD8E6;text-decoration-line:underline;text-underline-position:under;color:#333333;font-variant-numeric:tabular-nums;padding-left:4px;margin-right:5px;padding-right:2px;">[2021-01-14|11:57:19]</span></p>
+<div style="height:25px;"><span style="background-color: #F1D35A;color: #222222;padding: 0.5em 0.5em;position: inherit;text-transform: uppercase;margin: 5px 1px 5px 4px;font-weight: bold;border: solid 1px #F1D35A;padding: 2px 10px 2px 10px;font-size: smaller;">tibble</span></div>
+</th>
+    </tr>
+  </thead>
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;"></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;"></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;">STEP</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;">COLUMNS</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;">VALUES</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;">TBL</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;">EVAL</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;">⋅ ⋅ ⋅</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;">PASS</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;">FAIL</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;">W</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;">S</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;">N</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="color: #666666; font-weight: bold;">EXT</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left" style="background-color: rgba(76,166,76,0.5); height:  40px"></td>
+      <td class="gt_row gt_right" style="color: #666666; font-size: 13px; font-weight: bold; height:  40px">1</td>
+      <td class="gt_row gt_left" style="height:  40px"><div class='gt_from_md'><div aria-label="Expect that values in `g_zuj_nazev` should be == `g_zuj_nazev_csu`. " data-balloon-pos="right" style="width:fit-content;">
+  <div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;"><svg width="30px" height="30px" viewBox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">    <defs>        <path d="M10.712234,0 L56.712234,0 C62.2350815,-1.01453063e-15 66.712234,4.4771525 66.712234,10 L66.712234,66 L10.712234,66 C5.18938647,66 0.712233968,61.5228475 0.712233968,56 L0.712233968,10 C0.712233968,4.4771525 5.18938647,1.01453063e-15 10.712234,0 Z" id="path-1"></path>    </defs>    <g id="pointblank" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">        <g id="col_vals_equal" transform="translate(-0.242129, 0.859210)">            <g id="rectangle">                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>                <path stroke="#000000" stroke-width="2" d="M65.712234,65 L65.712234,10 C65.712234,5.02943725 61.6827967,1 56.712234,1 L10.712234,1 C5.74167122,1 1.71223397,5.02943725 1.71223397,10 L1.71223397,56 C1.71223397,60.9705627 5.74167122,65 10.712234,65 L65.712234,65 Z"></path>            </g>            <path d="M52.712234,11 L14.712234,11 C13.05989,11 11.712234,12.347656 11.712234,14 L11.712234,52 C11.712234,53.652344 13.05989,55 14.712234,55 L52.712234,55 C54.364578,55 55.712234,53.652344 55.712234,52 L55.712234,14 C55.712234,12.347656 54.364578,11 52.712234,11 Z M46.712234,38 L20.712234,38 L20.712234,36 L46.712234,36 L46.712234,38 Z M46.712234,30 L20.712234,30 L20.712234,28 L46.712234,28 L46.712234,30 Z" id="equals" fill="#000000" fill-rule="nonzero"></path>        </g>    </g></svg></div>
+  <code style="font-size:11px;">&nbsp;col_vals_equal()</code>
+</div>
+</div></td>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><div class='gt_from_md'><div aria-label="g_zuj_nazev" data-balloon-pos="left">
+  <p style="margin-top:0;margin-bottom:0;font-size:11px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;line-height:2em;">
+    <code><span style="color:purple;">&marker;</span>g_zuj_nazev</code>
+  </p>
+</div>
+</div></td>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><div class='gt_from_md'><div aria-label="g_zuj_nazev_csu" data-balloon-pos="left"><p style="margin-top: 0px; margin-bottom: 0px; font-family: monospace; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"><code><span style="color: purple;">&marker;</span>g_zuj_nazev_csu</code></p></div>
+</div></td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:18px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">→</span></p>
+</div></td>
+      <td class="gt_row gt_center" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></p>
+</div></td>
+      <td class="gt_row gt_right" style="height:  40px"><code>150K</code></td>
+      <td class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><code>150K</code><br><code>0.99</code></td>
+      <td class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><code>1</code><br><code>0.01</code></td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="background-color: rgba(76,166,76,0.5); height:  40px"></td>
+      <td class="gt_row gt_right" style="color: #666666; font-size: 13px; font-weight: bold; height:  40px">2</td>
+      <td class="gt_row gt_left" style="height:  40px"><div class='gt_from_md'><div aria-label="Expect that values in `g_obec_nazev` should be == `g_obec_nazev_csu`. " data-balloon-pos="right" style="width:fit-content;">
+  <div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;"><svg width="30px" height="30px" viewBox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">    <defs>        <path d="M10.712234,0 L56.712234,0 C62.2350815,-1.01453063e-15 66.712234,4.4771525 66.712234,10 L66.712234,66 L10.712234,66 C5.18938647,66 0.712233968,61.5228475 0.712233968,56 L0.712233968,10 C0.712233968,4.4771525 5.18938647,1.01453063e-15 10.712234,0 Z" id="path-1"></path>    </defs>    <g id="pointblank" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">        <g id="col_vals_equal" transform="translate(-0.242129, 0.859210)">            <g id="rectangle">                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>                <path stroke="#000000" stroke-width="2" d="M65.712234,65 L65.712234,10 C65.712234,5.02943725 61.6827967,1 56.712234,1 L10.712234,1 C5.74167122,1 1.71223397,5.02943725 1.71223397,10 L1.71223397,56 C1.71223397,60.9705627 5.74167122,65 10.712234,65 L65.712234,65 Z"></path>            </g>            <path d="M52.712234,11 L14.712234,11 C13.05989,11 11.712234,12.347656 11.712234,14 L11.712234,52 C11.712234,53.652344 13.05989,55 14.712234,55 L52.712234,55 C54.364578,55 55.712234,53.652344 55.712234,52 L55.712234,14 C55.712234,12.347656 54.364578,11 52.712234,11 Z M46.712234,38 L20.712234,38 L20.712234,36 L46.712234,36 L46.712234,38 Z M46.712234,30 L20.712234,30 L20.712234,28 L46.712234,28 L46.712234,30 Z" id="equals" fill="#000000" fill-rule="nonzero"></path>        </g>    </g></svg></div>
+  <code style="font-size:11px;">&nbsp;col_vals_equal()</code>
+</div>
+</div></td>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><div class='gt_from_md'><div aria-label="g_obec_nazev" data-balloon-pos="left">
+  <p style="margin-top:0;margin-bottom:0;font-size:11px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;line-height:2em;">
+    <code><span style="color:purple;">&marker;</span>g_obec_nazev</code>
+  </p>
+</div>
+</div></td>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><div class='gt_from_md'><div aria-label="g_obec_nazev_csu" data-balloon-pos="left"><p style="margin-top: 0px; margin-bottom: 0px; font-family: monospace; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"><code><span style="color: purple;">&marker;</span>g_obec_nazev_csu</code></p></div>
+</div></td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:18px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">→</span></p>
+</div></td>
+      <td class="gt_row gt_center" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></p>
+</div></td>
+      <td class="gt_row gt_right" style="height:  40px"><code>150K</code></td>
+      <td class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><code>150K</code><br><code>0.99</code></td>
+      <td class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><code>20</code><br><code>0.01</code></td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="background-color: #4CA64C; height:  40px"></td>
+      <td class="gt_row gt_right" style="color: #666666; font-size: 13px; font-weight: bold; height:  40px">3</td>
+      <td class="gt_row gt_left" style="height:  40px"><div class='gt_from_md'><div aria-label="Expect that values in `g_orp_nazev` should be == `g_orp_nazev_csu`. " data-balloon-pos="right" style="width:fit-content;">
+  <div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;"><svg width="30px" height="30px" viewBox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">    <defs>        <path d="M10.712234,0 L56.712234,0 C62.2350815,-1.01453063e-15 66.712234,4.4771525 66.712234,10 L66.712234,66 L10.712234,66 C5.18938647,66 0.712233968,61.5228475 0.712233968,56 L0.712233968,10 C0.712233968,4.4771525 5.18938647,1.01453063e-15 10.712234,0 Z" id="path-1"></path>    </defs>    <g id="pointblank" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">        <g id="col_vals_equal" transform="translate(-0.242129, 0.859210)">            <g id="rectangle">                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>                <path stroke="#000000" stroke-width="2" d="M65.712234,65 L65.712234,10 C65.712234,5.02943725 61.6827967,1 56.712234,1 L10.712234,1 C5.74167122,1 1.71223397,5.02943725 1.71223397,10 L1.71223397,56 C1.71223397,60.9705627 5.74167122,65 10.712234,65 L65.712234,65 Z"></path>            </g>            <path d="M52.712234,11 L14.712234,11 C13.05989,11 11.712234,12.347656 11.712234,14 L11.712234,52 C11.712234,53.652344 13.05989,55 14.712234,55 L52.712234,55 C54.364578,55 55.712234,53.652344 55.712234,52 L55.712234,14 C55.712234,12.347656 54.364578,11 52.712234,11 Z M46.712234,38 L20.712234,38 L20.712234,36 L46.712234,36 L46.712234,38 Z M46.712234,30 L20.712234,30 L20.712234,28 L46.712234,28 L46.712234,30 Z" id="equals" fill="#000000" fill-rule="nonzero"></path>        </g>    </g></svg></div>
+  <code style="font-size:11px;">&nbsp;col_vals_equal()</code>
+</div>
+</div></td>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><div class='gt_from_md'><div aria-label="g_orp_nazev" data-balloon-pos="left">
+  <p style="margin-top:0;margin-bottom:0;font-size:11px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;line-height:2em;">
+    <code><span style="color:purple;">&marker;</span>g_orp_nazev</code>
+  </p>
+</div>
+</div></td>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><div class='gt_from_md'><div aria-label="g_orp_nazev_csu" data-balloon-pos="left"><p style="margin-top: 0px; margin-bottom: 0px; font-family: monospace; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"><code><span style="color: purple;">&marker;</span>g_orp_nazev_csu</code></p></div>
+</div></td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:18px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">→</span></p>
+</div></td>
+      <td class="gt_row gt_center" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></p>
+</div></td>
+      <td class="gt_row gt_right" style="height:  40px"><code>150K</code></td>
+      <td class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><code>150K</code><br><code>1.00</code></td>
+      <td class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><code>0</code><br><code>0.00</code></td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="background-color: #4CA64C; height:  40px"></td>
+      <td class="gt_row gt_right" style="color: #666666; font-size: 13px; font-weight: bold; height:  40px">4</td>
+      <td class="gt_row gt_left" style="height:  40px"><div class='gt_from_md'><div aria-label="Expect that values in `g_okres_nazev` should be == `g_okres_nazev_csu`. " data-balloon-pos="right" style="width:fit-content;">
+  <div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;"><svg width="30px" height="30px" viewBox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">    <defs>        <path d="M10.712234,0 L56.712234,0 C62.2350815,-1.01453063e-15 66.712234,4.4771525 66.712234,10 L66.712234,66 L10.712234,66 C5.18938647,66 0.712233968,61.5228475 0.712233968,56 L0.712233968,10 C0.712233968,4.4771525 5.18938647,1.01453063e-15 10.712234,0 Z" id="path-1"></path>    </defs>    <g id="pointblank" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">        <g id="col_vals_equal" transform="translate(-0.242129, 0.859210)">            <g id="rectangle">                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>                <path stroke="#000000" stroke-width="2" d="M65.712234,65 L65.712234,10 C65.712234,5.02943725 61.6827967,1 56.712234,1 L10.712234,1 C5.74167122,1 1.71223397,5.02943725 1.71223397,10 L1.71223397,56 C1.71223397,60.9705627 5.74167122,65 10.712234,65 L65.712234,65 Z"></path>            </g>            <path d="M52.712234,11 L14.712234,11 C13.05989,11 11.712234,12.347656 11.712234,14 L11.712234,52 C11.712234,53.652344 13.05989,55 14.712234,55 L52.712234,55 C54.364578,55 55.712234,53.652344 55.712234,52 L55.712234,14 C55.712234,12.347656 54.364578,11 52.712234,11 Z M46.712234,38 L20.712234,38 L20.712234,36 L46.712234,36 L46.712234,38 Z M46.712234,30 L20.712234,30 L20.712234,28 L46.712234,28 L46.712234,30 Z" id="equals" fill="#000000" fill-rule="nonzero"></path>        </g>    </g></svg></div>
+  <code style="font-size:11px;">&nbsp;col_vals_equal()</code>
+</div>
+</div></td>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><div class='gt_from_md'><div aria-label="g_okres_nazev" data-balloon-pos="left">
+  <p style="margin-top:0;margin-bottom:0;font-size:11px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;line-height:2em;">
+    <code><span style="color:purple;">&marker;</span>g_okres_nazev</code>
+  </p>
+</div>
+</div></td>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><div class='gt_from_md'><div aria-label="g_okres_nazev_csu" data-balloon-pos="left"><p style="margin-top: 0px; margin-bottom: 0px; font-family: monospace; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"><code><span style="color: purple;">&marker;</span>g_okres_nazev_csu</code></p></div>
+</div></td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:18px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">→</span></p>
+</div></td>
+      <td class="gt_row gt_center" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></p>
+</div></td>
+      <td class="gt_row gt_right" style="height:  40px"><code>150K</code></td>
+      <td class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><code>150K</code><br><code>1.00</code></td>
+      <td class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><code>0</code><br><code>0.00</code></td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="background-color: #4CA64C; height:  40px"></td>
+      <td class="gt_row gt_right" style="color: #666666; font-size: 13px; font-weight: bold; height:  40px">5</td>
+      <td class="gt_row gt_left" style="height:  40px"><div class='gt_from_md'><div aria-label="Expect that values in `g_kraj_nazev` should be == `g_kraj_nazev_csu`. " data-balloon-pos="right" style="width:fit-content;">
+  <div style="margin:0;padding:0;display:inline-block;height:30px;vertical-align:middle;"><svg width="30px" height="30px" viewBox="0 0 67 67" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">    <defs>        <path d="M10.712234,0 L56.712234,0 C62.2350815,-1.01453063e-15 66.712234,4.4771525 66.712234,10 L66.712234,66 L10.712234,66 C5.18938647,66 0.712233968,61.5228475 0.712233968,56 L0.712233968,10 C0.712233968,4.4771525 5.18938647,1.01453063e-15 10.712234,0 Z" id="path-1"></path>    </defs>    <g id="pointblank" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">        <g id="col_vals_equal" transform="translate(-0.242129, 0.859210)">            <g id="rectangle">                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>                <path stroke="#000000" stroke-width="2" d="M65.712234,65 L65.712234,10 C65.712234,5.02943725 61.6827967,1 56.712234,1 L10.712234,1 C5.74167122,1 1.71223397,5.02943725 1.71223397,10 L1.71223397,56 C1.71223397,60.9705627 5.74167122,65 10.712234,65 L65.712234,65 Z"></path>            </g>            <path d="M52.712234,11 L14.712234,11 C13.05989,11 11.712234,12.347656 11.712234,14 L11.712234,52 C11.712234,53.652344 13.05989,55 14.712234,55 L52.712234,55 C54.364578,55 55.712234,53.652344 55.712234,52 L55.712234,14 C55.712234,12.347656 54.364578,11 52.712234,11 Z M46.712234,38 L20.712234,38 L20.712234,36 L46.712234,36 L46.712234,38 Z M46.712234,30 L20.712234,30 L20.712234,28 L46.712234,28 L46.712234,30 Z" id="equals" fill="#000000" fill-rule="nonzero"></path>        </g>    </g></svg></div>
+  <code style="font-size:11px;">&nbsp;col_vals_equal()</code>
+</div>
+</div></td>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><div class='gt_from_md'><div aria-label="g_kraj_nazev" data-balloon-pos="left">
+  <p style="margin-top:0;margin-bottom:0;font-size:11px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;line-height:2em;">
+    <code><span style="color:purple;">&marker;</span>g_kraj_nazev</code>
+  </p>
+</div>
+</div></td>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><div class='gt_from_md'><div aria-label="g_kraj_nazev_csu" data-balloon-pos="left"><p style="margin-top: 0px; margin-bottom: 0px; font-family: monospace; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"><code><span style="color: purple;">&marker;</span>g_kraj_nazev_csu</code></p></div>
+</div></td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p><span style="background:transparent;padding:0;color:#333333;vertical-align:middle;font-size:18px;border:none;border-radius:4px;" aria-label="No modifications of the table." data-balloon-pos="left">→</span></p>
+</div></td>
+      <td class="gt_row gt_center" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p><span style="background:transparent;padding:5px;color:#4CA64C;vertical-align:middle;font-size:15px;border:none;" aria-label="No evaluation issues." data-balloon-pos="left">✓</span></p>
+</div></td>
+      <td class="gt_row gt_right" style="height:  40px"><code>150K</code></td>
+      <td class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><code>150K</code><br><code>1.00</code></td>
+      <td class="gt_row gt_right" style="border-left-width: 1px; border-left-style: dashed; border-left-color: #E5E5E5; height:  40px"><code>0</code><br><code>0.00</code></td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; background-color: #FCFCFC; height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+      <td class="gt_row gt_center" style="height:  40px"><div class='gt_from_md'><p>—</p>
+</div></td>
+    </tr>
+  </tbody>
+  <tfoot class="gt_sourcenotes">
+    <tr>
+      <td class="gt_sourcenote" colspan="14"><span style="background-color: #FFF;color: #444;padding: 0.5em 0.5em;position: inherit;text-transform: uppercase;margin-left: 10px;border: solid 1px #999999;font-variant-numeric: tabular-nums;border-radius: 0;padding: 2px 10px 2px 10px;font-size: smaller;">2021-01-14 11:57:49 CET</span><span style="background-color: #FFF;color: #444;padding: 0.5em 0.5em;position: inherit;margin: 5px 1px 5px 0;border: solid 1px #999999;border-left: none;font-variant-numeric: tabular-nums;border-radius: 0;padding: 2px 10px 2px 10px;font-size: smaller;">&lt; 1 s</span><span style="background-color: #FFF;color: #444;padding: 0.5em 0.5em;position: inherit;text-transform: uppercase;margin: 5px 1px 5px -1px;border: solid 1px #999999;border-left: none;border-radius: 0;padding: 2px 10px 2px 10px;font-size: smaller;">2021-01-14 11:57:50 CET</span></td>
+    </tr>
+  </tfoot>
+  
+</table></div>
+<pre class="r"><code>dt_val_ids_agent %&gt;% 
+  interrogate() %&gt;% 
+  get_data_extracts(1) %&gt;% 
+  select(g_zuj_id, g_zuj_nazev, g_zuj_nazev_csu)</code></pre>
+<pre><code>## </code></pre>
+<pre><code>## ── Interrogation Started - there are ── 5 ─────────────────────────────────────────────────────────────────</code></pre>
+<pre><code>## ✓ Step 1: OK.</code></pre>
+<pre><code>## ✓ Step 2: OK.</code></pre>
+<pre><code>## ✓ Step 3: OK.</code></pre>
+<pre><code>## ✓ Step 4: OK.</code></pre>
+<pre><code>## ✓ Step 5: OK.</code></pre>
+<pre><code>## </code></pre>
+<pre><code>## ── Interrogation Completed ────────────────────────────────────────────────────────────────────────────────</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["g_zuj_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["g_zuj_nazev"],"name":[2],"type":["chr"],"align":["left"]},{"label":["g_zuj_nazev_csu"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"cz020539201","2":"dolany","3":"dolany nad vltavou"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>dt_val_ids_agent %&gt;% 
+  interrogate() %&gt;% 
+  get_data_extracts(2) %&gt;% 
+  select(g_obec_id, g_obec_nazev, g_obec_nazev_csu) %&gt;% 
+  distinct()</code></pre>
+<pre><code>## </code></pre>
+<pre><code>## ── Interrogation Started - there are ── 5 ─────────────────────────────────────────────────────────────────</code></pre>
+<pre><code>## ✓ Step 1: OK.</code></pre>
+<pre><code>## ✓ Step 2: OK.</code></pre>
+<pre><code>## ✓ Step 3: OK.</code></pre>
+<pre><code>## ✓ Step 4: OK.</code></pre>
+<pre><code>## ✓ Step 5: OK.</code></pre>
+<pre><code>## </code></pre>
+<pre><code>## ── Interrogation Completed ────────────────────────────────────────────────────────────────────────────────</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["g_obec_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["g_obec_nazev"],"name":[2],"type":["chr"],"align":["left"]},{"label":["g_obec_nazev_csu"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"cz064581429","2":"březina (dříve okres blansko)","3":"březina"},{"1":"cz064581739","2":"knínice u boskovic","3":"knínice"},{"1":"cz020539201","2":"dolany","3":"dolany nad vltavou"},{"1":"cz064582891","2":"březina (dříve okres tišnov)","3":"březina"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>dt_val_ids_csunames &lt;- dt_val_ids %&gt;% 
+  select(-g_zuj_nazev, -g_obec_nazev) %&gt;% 
+  rename(g_zuj_nazev = g_zuj_nazev_csu,
+         g_obec_nazev = g_obec_nazev_csu) %&gt;% 
+  select_at(vars(-ends_with(&quot;_csu&quot;)))
+
+dt_val_ids_csunames_long &lt;- make_long_geo(dt_val_ids_csunames) %&gt;% 
+  drop_na(value)</code></pre>
+<pre class="r"><code>write_parquet(dt_val_ids_csunames, 
+              here::here(&quot;data-processed&quot;, 
+                         &quot;misto_fix-02-gnames.parquet&quot;))
+write_parquet(dt_val_ids_csunames_long, 
+              here::here(&quot;data-processed&quot;,
+                         &quot;misto_fix-02-gnames_long-geo.parquet&quot;))</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+
+</body>
+</html>

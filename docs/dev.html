@@ -1,0 +1,9255 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Technická dokumentace</title>
+
+<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<meta name="robots" content="noindex,nofollow"/>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+<link rel="stylesheet" href="extra.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Místa realizace ESIF: čištění dat</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Návody a dokumentace
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="how-to-repeat.html">Jak postup zopakovat</a>
+    </li>
+    <li>
+      <a href="widget.html">Pomůcka k řešení nekonzistentních dat</a>
+    </li>
+    <li>
+      <a href="codebook.html">Dokumentace výstupu</a>
+    </li>
+    <li>
+      <a href="dev.html">Technická dokumentace</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Vizuální kontrola postupu
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_input-checks.html">Kontrola úplnosti a konzistence</a>
+    </li>
+    <li>
+      <a href="02_validate.html">Ověření geodat</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="03_explore.html">Struktura dat</a>
+    </li>
+    <li>
+      <a href="04_explore-complicated-projects.html">Analýza geograficky složitých projektů</a>
+    </li>
+    <li>
+      <a href="06_explore-obecless-projects.html">Analýza projektů bez identifikace obce ZÚJ</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="05_resolve-simple.html">Projekty s určením obce</a>
+    </li>
+    <li>
+      <a href="07_resolve-obecless-projects.html">Projekty bez určení obce/ZÚJ</a>
+    </li>
+    <li>
+      <a href="08_resolve-placeless.html">Projekty bez místa realizace</a>
+    </li>
+    <li>
+      <a href="09_resolve-complicated.html">Projekty s nehierarchickým určením místa</a>
+    </li>
+    <li>
+      <a href="10_compile-export.html">Kompilace a export</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="log.html">Záznam kroků a poznatků</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/petrbouchal/mmr-esif-clean">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Technická dokumentace</h1>
+
+</div>
+
+
+<div id="esif-data-cleaning" class="section level1">
+<h1>ESIF data cleaning</h1>
+<!-- badges: start -->
+<!-- badges: end -->
+<div id="co" class="section level2">
+<h2>Co</h2>
+<p>Sada skriptů na transformaci geografických údajů o projektech EU fondů (ESIF) v ČR z obodbí 2014-2020. Cíl je rozpadnout každý projekt na obecní úroveň podle informací patrných buď ze zadaných geografických údajů, nebo z textových polí a informací o projektu a příjemci.</p>
+</div>
+<div id="jak-s-tím-pracovat" class="section level2">
+<h2>Jak s tím pracovat</h2>
+<ul>
+<li><code>dev.Rmd</code> a <a href="esif-data-cleaning.netlify.app/dev.html">online</a>: základní informace k architektuře (anglicky)</li>
+<li><code>how-to-repeat.Rmd</code> a <a href="esif-data-cleaning.netlify.app/how-to-repeat.html">online</a>: kompletní návod na zopakování postupu s novými daty</li>
+</ul>
+</div>
+<div id="co-je-kde" class="section level2">
+<h2>Co je kde</h2>
+<div id="konfigurace" class="section level3">
+<h3>Konfigurace</h3>
+<ul>
+<li>celková konfigurace: <code>config.yml</code></li>
+<li>konfigurace webového výstupu: <code>_site.yml</code></li>
+<li>konfigurace Netlify: <code>.netlify/</code></li>
+</ul>
+<p>Sofistikovanější vyyužití <code>config.yml</code> viz <a href="https://rstudio.github.io/config/">dokumentaci</a> a soubor <code>.Rprofile</code>.</p>
+</div>
+<div id="build-skripty-viz-návod-v-how-to-repeat.rmd-online" class="section level3">
+<h3>Build skripty, viz návod v <code>how-to-repeat.Rmd</code> <a href="how-to-repeat.html">online</a></h3>
+<ul>
+<li><code>build-and-render.R</code>: celkový build v R</li>
+<li><code>build-and-render.sh</code>: totéž v Bashi</li>
+</ul>
+</div>
+<div id="r-a-rmarkdown-skripty" class="section level3">
+<h3>R a Rmarkdown skripty</h3>
+<ul>
+<li><code>0N_*.R</code>: skripty, které načítají vstupní data a externí metadata</li>
+<li><code>NN_*.Rmd</code>: validace, transformace a export dat; též generuje webovou dokumentaci</li>
+<li>ostatní <code>*.Rmd</code> další dokumentace a nástroje, které se též promítnou ve webové dokumentaci</li>
+</ul>
+</div>
+<div id="výstup" class="section level3">
+<h3>Výstup</h3>
+<ul>
+<li>Arrow dataset v <code>data-output</code></li>
+<li>Excel (chunked) v <code>data-export</code></li>
+<li>dokumentace exportu v <code>codebook.Rmd</code> a <a href="codebook.html">online</a></li>
+<li>web na <a href="https://esif-data-cleaning.netlify.app" class="uri">https://esif-data-cleaning.netlify.app</a></li>
+</ul>
+</div>
+</div>
+<div id="how-to-reproduce" class="section level2">
+<h2>How to reproduce</h2>
+<p>First, install all the necessary R packages: run <code>renv::restore()</code> (this only needs to be done once and only rerun if the <code>renv.lock</code> file changes.)</p>
+<p>Then:</p>
+<ul>
+<li>load and transform data and metadata by running numbered R scripts in order. This relies on input XLSX files being in <code>data-input</code>, in a subdirectory set in the <code>pth</code> variable in <code>01_load-data.Rmd</code></li>
+<li>run <code>rmarkdown::render_site()</code> or run numbered RMarkdown scripts in order</li>
+</ul>
+<p>or run <code>build-and-render.R</code> to run both these steps.</p>
+<p>To subsequently build the site afresh and deploy to Netlify</p>
+<ul>
+<li>on a Linux/Mac machine, run <code>build-site-and-deploy.sh</code>; this requires the <a href="https://docs.netlify.com/cli/get-started/">Netlify CLI</a></li>
+<li>or deploy the <code>docs</code> folder to Netlify <a href="https://docs.netlify.com/site-deploys/create-deploys/">using other means</a>.</li>
+</ul>
+<p>Environment reproducibility is maintained using <code>renv</code>. This means that upon running R in the project folder, all the necessary packages will be installed in a local library by running <code>renv::restore()</code> (in fact, installed in a cache from which they can be reused, and linked into the local project library where they take up no space.) Should this fail, you can run <code>renv::deactivate()</code> and install the packages manually, though you might end up with different versions.</p>
+</div>
+<div id="reproducibility-log" class="section level2">
+<h2>Reproducibility log</h2>
+<details closed>
+<summary>
+<span title="Click to Open"> Time </span>
+</summary>
+<pre class="r"><code>
+[1] &quot;2021-01-30 21:34:33 CET&quot;
+</code></pre>
+</details>
+<br>
+<details closed>
+<summary>
+<span title="Click to Open"> Session Info </span>
+</summary>
+<pre class="r"><code>
+─ Session info ───────────────────────────────────────────────────────────────
+ setting  value                       
+ version  R version 4.0.2 (2020-06-22)
+ os       macOS Catalina 10.15.7      
+ system   x86_64, darwin17.0          
+ ui       X11                         
+ language (EN)                        
+ collate  en_US.UTF-8                 
+ ctype    en_US.UTF-8                 
+ tz       Europe/Prague               
+ date     2021-01-30                  
+
+─ Packages ───────────────────────────────────────────────────────────────────
+ ! package     * version    date       lib source                            
+ P assertthat    0.2.1      2019-03-21 [?] CRAN (R 4.0.0)                    
+ P cli           2.2.0      2020-11-20 [?] CRAN (R 4.0.2)                    
+ P clipr         0.7.1      2020-10-08 [?] CRAN (R 4.0.2)                    
+ P config        0.3.1      2020-12-17 [?] CRAN (R 4.0.2)                    
+ P crayon        1.3.4      2017-09-16 [?] CRAN (R 4.0.0)                    
+ P desc          1.2.0      2018-05-01 [?] CRAN (R 4.0.0)                    
+ P details     * 0.2.1      2020-01-12 [?] CRAN (R 4.0.0)                    
+ P digest        0.6.27     2020-10-24 [?] CRAN (R 4.0.2)                    
+ P evaluate      0.14       2019-05-28 [?] CRAN (R 4.0.0)                    
+ P fansi         0.4.1      2020-01-08 [?] CRAN (R 4.0.0)                    
+ P glue          1.4.2      2020-08-27 [?] CRAN (R 4.0.2)                    
+ P htmltools     0.5.0.9003 2021-01-09 [?] Github (rstudio/htmltools@d18bd8e)
+ P httr          1.4.2      2020-07-20 [?] CRAN (R 4.0.0)                    
+ P knitr         1.30       2020-09-22 [?] CRAN (R 4.0.2)                    
+ P magrittr      2.0.1      2020-11-17 [?] CRAN (R 4.0.2)                    
+ P png           0.1-7      2013-12-03 [?] CRAN (R 4.0.0)                    
+ P R6            2.5.0      2020-10-28 [?] CRAN (R 4.0.2)                    
+ P renv          0.12.5     2021-01-09 [?] CRAN (R 4.0.2)                    
+ P rlang         0.4.10     2020-12-30 [?] CRAN (R 4.0.2)                    
+ P rmarkdown     2.6        2020-12-14 [?] CRAN (R 4.0.2)                    
+ P rprojroot     2.0.2      2020-11-15 [?] CRAN (R 4.0.2)                    
+ P sessioninfo   1.1.1      2018-11-05 [?] CRAN (R 4.0.0)                    
+ P stringi       1.5.3      2020-09-09 [?] CRAN (R 4.0.2)                    
+ P stringr       1.4.0      2019-02-10 [?] CRAN (R 4.0.0)                    
+ P withr         2.3.0      2020-09-22 [?] CRAN (R 4.0.2)                    
+ P xfun          0.20       2021-01-06 [?] CRAN (R 4.0.2)                    
+ P xml2          1.3.2      2020-04-23 [?] CRAN (R 4.0.0)                    
+ P yaml          2.2.1      2020-02-01 [?] CRAN (R 4.0.0)                    
+
+[1] /Users/petr/cwork/mmr-esif-clean/renv/library/R-4.0/x86_64-apple-darwin17.0
+[2] /private/var/folders/c8/pj33jytj233g8vr0tw4b2h7m0000gn/T/RtmpgBHozX/renv-system-library
+
+ P ── Loaded and on-disk path mismatch.
+</code></pre>
+</details>
+<p><br></p>
+<details closed>
+<summary>
+<span title="Click to Open"> Version control </span>
+</summary>
+<pre class="r"><code>
+Local:    master /Users/petr/cwork/mmr-esif-clean
+Remote:   master @ origin (git@github.com:petrbouchal/mmr-esif-clean.git)
+Head:     [a3e3041] 2021-01-30: record config.yml in reproducibility report
+</code></pre>
+</details>
+<p><br></p>
+<details closed>
+<summary>
+<span title="Click to Open"> renv status </span>
+</summary>
+<pre class="r"><code>
+$library
+$R
+$R$Version
+[1] &quot;4.0.2&quot;
+
+$R$Repositories
+$R$Repositories$CRAN
+[1] &quot;https://cran.rstudio.com&quot;
+
+$R$Repositories$petrbouchal
+[1] &quot;https://petrbouchal.github.io/drat&quot;
+
+$R$Repositories$scholaempirica
+[1] &quot;https://scholaempirica.github.io/drat&quot;
+
+
+
+$Packages
+$Packages$rappdirs
+$Packages$rappdirs$Package
+[1] &quot;rappdirs&quot;
+
+$Packages$rappdirs$Version
+[1] &quot;0.3.1&quot;
+
+$Packages$rappdirs$Source
+[1] &quot;Repository&quot;
+
+$Packages$rappdirs$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rappdirs$Hash
+[1] &quot;8c8298583adbbe76f3c2220eef71bebc&quot;
+
+
+$Packages$SparseM
+$Packages$SparseM$Package
+[1] &quot;SparseM&quot;
+
+$Packages$SparseM$Version
+[1] &quot;1.78&quot;
+
+$Packages$SparseM$Source
+[1] &quot;Repository&quot;
+
+$Packages$SparseM$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$SparseM$Hash
+[1] &quot;fbe4ac267bf42a91e495cc68ad3f8b63&quot;
+
+
+$Packages$visdat
+$Packages$visdat$Package
+[1] &quot;visdat&quot;
+
+$Packages$visdat$Version
+[1] &quot;0.5.3&quot;
+
+$Packages$visdat$Source
+[1] &quot;Repository&quot;
+
+$Packages$visdat$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$visdat$Hash
+[1] &quot;f62b960320b18fdffb2f0f76bb65dbaf&quot;
+
+
+$Packages$tidyr
+$Packages$tidyr$Package
+[1] &quot;tidyr&quot;
+
+$Packages$tidyr$Version
+[1] &quot;1.1.2&quot;
+
+$Packages$tidyr$Source
+[1] &quot;Repository&quot;
+
+$Packages$tidyr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tidyr$Hash
+[1] &quot;c40b2d5824d829190f4b825f4496dfae&quot;
+
+
+$Packages$ggplot2
+$Packages$ggplot2$Package
+[1] &quot;ggplot2&quot;
+
+$Packages$ggplot2$Version
+[1] &quot;3.3.3&quot;
+
+$Packages$ggplot2$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggplot2$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggplot2$Hash
+[1] &quot;3eb6477d01eb5bbdc03f7d5f70f2733e&quot;
+
+
+$Packages$bit64
+$Packages$bit64$Package
+[1] &quot;bit64&quot;
+
+$Packages$bit64$Version
+[1] &quot;0.9-7&quot;
+
+$Packages$bit64$Source
+[1] &quot;Repository&quot;
+
+$Packages$bit64$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$bit64$Hash
+[1] &quot;3338d4a9b1352f5a613e2bdcefe784ea&quot;
+
+
+$Packages$knitr
+$Packages$knitr$Package
+[1] &quot;knitr&quot;
+
+$Packages$knitr$Version
+[1] &quot;1.30&quot;
+
+$Packages$knitr$Source
+[1] &quot;Repository&quot;
+
+$Packages$knitr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$knitr$Hash
+[1] &quot;eed7ee0d02eee88d53881cdc92457c62&quot;
+
+
+$Packages$data.table
+$Packages$data.table$Package
+[1] &quot;data.table&quot;
+
+$Packages$data.table$Version
+[1] &quot;1.13.0&quot;
+
+$Packages$data.table$Source
+[1] &quot;Repository&quot;
+
+$Packages$data.table$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$data.table$Hash
+[1] &quot;06d5863292e2e8ffbb063ce34e77bb2a&quot;
+
+
+$Packages$RCurl
+$Packages$RCurl$Package
+[1] &quot;RCurl&quot;
+
+$Packages$RCurl$Version
+[1] &quot;1.98-1.2&quot;
+
+$Packages$RCurl$Source
+[1] &quot;Repository&quot;
+
+$Packages$RCurl$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$RCurl$Hash
+[1] &quot;cf29e1b71f8736960e0e851123a83e6f&quot;
+
+
+$Packages$generics
+$Packages$generics$Package
+[1] &quot;generics&quot;
+
+$Packages$generics$Version
+[1] &quot;0.1.0&quot;
+
+$Packages$generics$Source
+[1] &quot;Repository&quot;
+
+$Packages$generics$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$generics$Hash
+[1] &quot;4d243a9c10b00589889fe32314ffd902&quot;
+
+
+$Packages$leaflet
+$Packages$leaflet$Package
+[1] &quot;leaflet&quot;
+
+$Packages$leaflet$Version
+[1] &quot;2.0.3.9000&quot;
+
+$Packages$leaflet$Source
+[1] &quot;GitHub&quot;
+
+$Packages$leaflet$RemoteType
+[1] &quot;github&quot;
+
+$Packages$leaflet$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$leaflet$RemoteUsername
+[1] &quot;rstudio&quot;
+
+$Packages$leaflet$RemoteRepo
+[1] &quot;leaflet&quot;
+
+$Packages$leaflet$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$leaflet$RemoteSha
+[1] &quot;35e6e347adf5e64aa188b8a0d6dad4415a443519&quot;
+
+$Packages$leaflet$Hash
+[1] &quot;87c5740417d9c7ed10b3651d553f9186&quot;
+
+
+$Packages$cowplot
+$Packages$cowplot$Package
+[1] &quot;cowplot&quot;
+
+$Packages$cowplot$Version
+[1] &quot;1.0.0&quot;
+
+$Packages$cowplot$Source
+[1] &quot;Repository&quot;
+
+$Packages$cowplot$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$cowplot$Hash
+[1] &quot;82bae0172ae9d4c4f88a440ad01f73bb&quot;
+
+
+$Packages$callr
+$Packages$callr$Package
+[1] &quot;callr&quot;
+
+$Packages$callr$Version
+[1] &quot;3.5.1&quot;
+
+$Packages$callr$Source
+[1] &quot;Repository&quot;
+
+$Packages$callr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$callr$Hash
+[1] &quot;b7d7f1e926dfcd57c74ce93f5c048e80&quot;
+
+
+$Packages$usethis
+$Packages$usethis$Package
+[1] &quot;usethis&quot;
+
+$Packages$usethis$Version
+[1] &quot;2.0.0&quot;
+
+$Packages$usethis$Source
+[1] &quot;Repository&quot;
+
+$Packages$usethis$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$usethis$Hash
+[1] &quot;133099afbac51dc52948b89b387a9734&quot;
+
+
+$Packages$future
+$Packages$future$Package
+[1] &quot;future&quot;
+
+$Packages$future$Version
+[1] &quot;1.18.0&quot;
+
+$Packages$future$Source
+[1] &quot;Repository&quot;
+
+$Packages$future$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$future$Hash
+[1] &quot;7f6e18b431939ccf2b4667d406a1f33e&quot;
+
+
+$Packages$commonmark
+$Packages$commonmark$Package
+[1] &quot;commonmark&quot;
+
+$Packages$commonmark$Version
+[1] &quot;1.7&quot;
+
+$Packages$commonmark$Source
+[1] &quot;Repository&quot;
+
+$Packages$commonmark$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$commonmark$Hash
+[1] &quot;0f22be39ec1d141fd03683c06f3a6e67&quot;
+
+
+$Packages$bit
+$Packages$bit$Package
+[1] &quot;bit&quot;
+
+$Packages$bit$Version
+[1] &quot;1.1-15.2&quot;
+
+$Packages$bit$Source
+[1] &quot;Repository&quot;
+
+$Packages$bit$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$bit$Hash
+[1] &quot;eb6c52d8cc44463085a4cde1c63df163&quot;
+
+
+$Packages$rversions
+$Packages$rversions$Package
+[1] &quot;rversions&quot;
+
+$Packages$rversions$Version
+[1] &quot;2.0.1&quot;
+
+$Packages$rversions$Source
+[1] &quot;Repository&quot;
+
+$Packages$rversions$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rversions$Hash
+[1] &quot;2aa84e83767ba93ee6415b439fa981d2&quot;
+
+
+$Packages$xml2
+$Packages$xml2$Package
+[1] &quot;xml2&quot;
+
+$Packages$xml2$Version
+[1] &quot;1.3.2&quot;
+
+$Packages$xml2$Source
+[1] &quot;Repository&quot;
+
+$Packages$xml2$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$xml2$Hash
+[1] &quot;d4d71a75dd3ea9eb5fa28cc21f9585e2&quot;
+
+
+$Packages$lubridate
+$Packages$lubridate$Package
+[1] &quot;lubridate&quot;
+
+$Packages$lubridate$Version
+[1] &quot;1.7.9.2&quot;
+
+$Packages$lubridate$Source
+[1] &quot;GitHub&quot;
+
+$Packages$lubridate$RemoteType
+[1] &quot;github&quot;
+
+$Packages$lubridate$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$lubridate$RemoteRepo
+[1] &quot;lubridate&quot;
+
+$Packages$lubridate$RemoteUsername
+[1] &quot;tidyverse&quot;
+
+$Packages$lubridate$RemoteRef
+[1] &quot;HEAD&quot;
+
+$Packages$lubridate$RemoteSha
+[1] &quot;aab2e30a07f870f5e0c36ad119b1b2df656e926a&quot;
+
+$Packages$lubridate$Hash
+[1] &quot;8d0e65f04ff73e8e7162da59ee07ed03&quot;
+
+
+$Packages$ggsci
+$Packages$ggsci$Package
+[1] &quot;ggsci&quot;
+
+$Packages$ggsci$Version
+[1] &quot;2.9&quot;
+
+$Packages$ggsci$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggsci$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggsci$Hash
+[1] &quot;81ccb8213ed592598210afd10c3a5936&quot;
+
+
+$Packages$assertthat
+$Packages$assertthat$Package
+[1] &quot;assertthat&quot;
+
+$Packages$assertthat$Version
+[1] &quot;0.2.1&quot;
+
+$Packages$assertthat$Source
+[1] &quot;Repository&quot;
+
+$Packages$assertthat$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$assertthat$Hash
+[1] &quot;50c838a310445e954bc13f26f26a6ecf&quot;
+
+
+$Packages$isoband
+$Packages$isoband$Package
+[1] &quot;isoband&quot;
+
+$Packages$isoband$Version
+[1] &quot;0.2.3&quot;
+
+$Packages$isoband$Source
+[1] &quot;Repository&quot;
+
+$Packages$isoband$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$isoband$Hash
+[1] &quot;53647fb507373700028b2ce6cd30751a&quot;
+
+
+$Packages$tidyverse
+$Packages$tidyverse$Package
+[1] &quot;tidyverse&quot;
+
+$Packages$tidyverse$Version
+[1] &quot;1.3.0&quot;
+
+$Packages$tidyverse$Source
+[1] &quot;Repository&quot;
+
+$Packages$tidyverse$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tidyverse$Hash
+[1] &quot;bd51be662f359fa99021f3d51e911490&quot;
+
+
+$Packages$fontawesome
+$Packages$fontawesome$Package
+[1] &quot;fontawesome&quot;
+
+$Packages$fontawesome$Version
+[1] &quot;0.1.0&quot;
+
+$Packages$fontawesome$Source
+[1] &quot;GitHub&quot;
+
+$Packages$fontawesome$RemoteType
+[1] &quot;github&quot;
+
+$Packages$fontawesome$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$fontawesome$RemoteUsername
+[1] &quot;rstudio&quot;
+
+$Packages$fontawesome$RemoteRepo
+[1] &quot;fontawesome&quot;
+
+$Packages$fontawesome$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$fontawesome$RemoteSha
+[1] &quot;2b64e3148c9c5c70e415cdeb3e33ac3200edadbf&quot;
+
+$Packages$fontawesome$Hash
+[1] &quot;56015195afd4027e594d0d83ff0abdce&quot;
+
+
+$Packages$viridis
+$Packages$viridis$Package
+[1] &quot;viridis&quot;
+
+$Packages$viridis$Version
+[1] &quot;0.5.1&quot;
+
+$Packages$viridis$Source
+[1] &quot;Repository&quot;
+
+$Packages$viridis$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$viridis$Hash
+[1] &quot;6f6b49e5b3b5ee5a6d0c28bf1b4b9eb3&quot;
+
+
+$Packages$naniar
+$Packages$naniar$Package
+[1] &quot;naniar&quot;
+
+$Packages$naniar$Version
+[1] &quot;0.5.1&quot;
+
+$Packages$naniar$Source
+[1] &quot;Repository&quot;
+
+$Packages$naniar$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$naniar$Hash
+[1] &quot;993cf9c07e82b769587b7ee08d3a4bb9&quot;
+
+
+$Packages$xfun
+$Packages$xfun$Package
+[1] &quot;xfun&quot;
+
+$Packages$xfun$Version
+[1] &quot;0.20&quot;
+
+$Packages$xfun$Source
+[1] &quot;Repository&quot;
+
+$Packages$xfun$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$xfun$Hash
+[1] &quot;d7222684dc02327871e3b1da0aba7089&quot;
+
+
+$Packages$hms
+$Packages$hms$Package
+[1] &quot;hms&quot;
+
+$Packages$hms$Version
+[1] &quot;0.5.3&quot;
+
+$Packages$hms$Source
+[1] &quot;Repository&quot;
+
+$Packages$hms$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$hms$Hash
+[1] &quot;726671f634529d470545f9fd1a9d1869&quot;
+
+
+$Packages$evaluate
+$Packages$evaluate$Package
+[1] &quot;evaluate&quot;
+
+$Packages$evaluate$Version
+[1] &quot;0.14&quot;
+
+$Packages$evaluate$Source
+[1] &quot;Repository&quot;
+
+$Packages$evaluate$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$evaluate$Hash
+[1] &quot;ec8ca05cffcc70569eaaad8469d2a3a7&quot;
+
+
+$Packages$promises
+$Packages$promises$Package
+[1] &quot;promises&quot;
+
+$Packages$promises$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$promises$Source
+[1] &quot;Repository&quot;
+
+$Packages$promises$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$promises$Hash
+[1] &quot;efbbe62da4709f7040a380c702bc7103&quot;
+
+
+$Packages$fansi
+$Packages$fansi$Package
+[1] &quot;fansi&quot;
+
+$Packages$fansi$Version
+[1] &quot;0.4.1&quot;
+
+$Packages$fansi$Source
+[1] &quot;Repository&quot;
+
+$Packages$fansi$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$fansi$Hash
+[1] &quot;7fce217eaaf8016e72065e85c73027b5&quot;
+
+
+$Packages$progress
+$Packages$progress$Package
+[1] &quot;progress&quot;
+
+$Packages$progress$Version
+[1] &quot;1.2.2&quot;
+
+$Packages$progress$Source
+[1] &quot;Repository&quot;
+
+$Packages$progress$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$progress$Hash
+[1] &quot;14dc9f7a3c91ebb14ec5bb9208a07061&quot;
+
+
+$Packages$rhub
+$Packages$rhub$Package
+[1] &quot;rhub&quot;
+
+$Packages$rhub$Version
+[1] &quot;1.1.1&quot;
+
+$Packages$rhub$Source
+[1] &quot;Repository&quot;
+
+$Packages$rhub$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rhub$Hash
+[1] &quot;977cce19c029acc6d88a1c861f224819&quot;
+
+
+$Packages$dendextend
+$Packages$dendextend$Package
+[1] &quot;dendextend&quot;
+
+$Packages$dendextend$Version
+[1] &quot;1.13.4&quot;
+
+$Packages$dendextend$Source
+[1] &quot;Repository&quot;
+
+$Packages$dendextend$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$dendextend$Hash
+[1] &quot;842396bdc603ee4a40d8039b5540f2e6&quot;
+
+
+$Packages$dbplyr
+$Packages$dbplyr$Package
+[1] &quot;dbplyr&quot;
+
+$Packages$dbplyr$Version
+[1] &quot;2.0.0&quot;
+
+$Packages$dbplyr$Source
+[1] &quot;Repository&quot;
+
+$Packages$dbplyr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$dbplyr$Hash
+[1] &quot;714005206038b1dda74cb1de85029a20&quot;
+
+
+$Packages$readxl
+$Packages$readxl$Package
+[1] &quot;readxl&quot;
+
+$Packages$readxl$Version
+[1] &quot;1.3.1&quot;
+
+$Packages$readxl$Source
+[1] &quot;Repository&quot;
+
+$Packages$readxl$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$readxl$Hash
+[1] &quot;63537c483c2dbec8d9e3183b3735254a&quot;
+
+
+$Packages$DBI
+$Packages$DBI$Package
+[1] &quot;DBI&quot;
+
+$Packages$DBI$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$DBI$Source
+[1] &quot;Repository&quot;
+
+$Packages$DBI$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$DBI$Hash
+[1] &quot;4744be45519d675af66c28478720fce5&quot;
+
+
+$Packages$htmlwidgets
+$Packages$htmlwidgets$Package
+[1] &quot;htmlwidgets&quot;
+
+$Packages$htmlwidgets$Version
+[1] &quot;1.5.1&quot;
+
+$Packages$htmlwidgets$Source
+[1] &quot;Repository&quot;
+
+$Packages$htmlwidgets$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$htmlwidgets$Hash
+[1] &quot;41bace23583fbc25089edae324de2dc3&quot;
+
+
+$Packages$RcppArmadillo
+$Packages$RcppArmadillo$Package
+[1] &quot;RcppArmadillo&quot;
+
+$Packages$RcppArmadillo$Version
+[1] &quot;0.9.900.2.0&quot;
+
+$Packages$RcppArmadillo$Source
+[1] &quot;Repository&quot;
+
+$Packages$RcppArmadillo$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$RcppArmadillo$Hash
+[1] &quot;8845285b6151967fb0d95678b7eee11a&quot;
+
+
+$Packages$purrr
+$Packages$purrr$Package
+[1] &quot;purrr&quot;
+
+$Packages$purrr$Version
+[1] &quot;0.3.4&quot;
+
+$Packages$purrr$Source
+[1] &quot;Repository&quot;
+
+$Packages$purrr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$purrr$Hash
+[1] &quot;97def703420c8ab10d8f0e6c72101e02&quot;
+
+
+$Packages$ellipsis
+$Packages$ellipsis$Package
+[1] &quot;ellipsis&quot;
+
+$Packages$ellipsis$Version
+[1] &quot;0.3.1&quot;
+
+$Packages$ellipsis$Source
+[1] &quot;Repository&quot;
+
+$Packages$ellipsis$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ellipsis$Hash
+[1] &quot;fd2844b3a43ae2d27e70ece2df1b4e2a&quot;
+
+
+$Packages$corrplot
+$Packages$corrplot$Package
+[1] &quot;corrplot&quot;
+
+$Packages$corrplot$Version
+[1] &quot;0.84&quot;
+
+$Packages$corrplot$Source
+[1] &quot;Repository&quot;
+
+$Packages$corrplot$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$corrplot$Hash
+[1] &quot;b55c32ae818a84109a51f172290c95f2&quot;
+
+
+$Packages$crosstalk
+$Packages$crosstalk$Package
+[1] &quot;crosstalk&quot;
+
+$Packages$crosstalk$Version
+[1] &quot;1.1.0.1&quot;
+
+$Packages$crosstalk$Source
+[1] &quot;Repository&quot;
+
+$Packages$crosstalk$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$crosstalk$Hash
+[1] &quot;ae55f5d7c02f0ab43c58dd050694f2b4&quot;
+
+
+$Packages$selectr
+$Packages$selectr$Package
+[1] &quot;selectr&quot;
+
+$Packages$selectr$Version
+[1] &quot;0.4-2&quot;
+
+$Packages$selectr$Source
+[1] &quot;Repository&quot;
+
+$Packages$selectr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$selectr$Hash
+[1] &quot;3838071b66e0c566d55cc26bd6e27bf4&quot;
+
+
+$Packages$ggpubr
+$Packages$ggpubr$Package
+[1] &quot;ggpubr&quot;
+
+$Packages$ggpubr$Version
+[1] &quot;0.4.0&quot;
+
+$Packages$ggpubr$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggpubr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggpubr$Hash
+[1] &quot;77089557d374c69db7cb77e65f0d6ab0&quot;
+
+
+$Packages$dplyr
+$Packages$dplyr$Package
+[1] &quot;dplyr&quot;
+
+$Packages$dplyr$Version
+[1] &quot;1.0.2&quot;
+
+$Packages$dplyr$Source
+[1] &quot;Repository&quot;
+
+$Packages$dplyr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$dplyr$Hash
+[1] &quot;d0509913b27ea898189ee664b6030dc2&quot;
+
+
+$Packages$backports
+$Packages$backports$Package
+[1] &quot;backports&quot;
+
+$Packages$backports$Version
+[1] &quot;1.2.1&quot;
+
+$Packages$backports$Source
+[1] &quot;Repository&quot;
+
+$Packages$backports$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$backports$Hash
+[1] &quot;644043219fc24e190c2f620c1a380a69&quot;
+
+
+$Packages$statnipokladna
+$Packages$statnipokladna$Package
+[1] &quot;statnipokladna&quot;
+
+$Packages$statnipokladna$Version
+[1] &quot;0.6.0.9000&quot;
+
+$Packages$statnipokladna$Source
+[1] &quot;GitHub&quot;
+
+$Packages$statnipokladna$RemoteType
+[1] &quot;github&quot;
+
+$Packages$statnipokladna$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$statnipokladna$RemoteUsername
+[1] &quot;petrbouchal&quot;
+
+$Packages$statnipokladna$RemoteRepo
+[1] &quot;statnipokladna&quot;
+
+$Packages$statnipokladna$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$statnipokladna$RemoteSha
+[1] &quot;1c43e6db0c660fda05ad41af21c676deab5c9d8b&quot;
+
+$Packages$statnipokladna$Hash
+[1] &quot;1cd7659184111468ea21dd35964b8207&quot;
+
+
+$Packages$FactoMineR
+$Packages$FactoMineR$Package
+[1] &quot;FactoMineR&quot;
+
+$Packages$FactoMineR$Version
+[1] &quot;2.3&quot;
+
+$Packages$FactoMineR$Source
+[1] &quot;Repository&quot;
+
+$Packages$FactoMineR$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$FactoMineR$Hash
+[1] &quot;1f47ca5629ef9dc24d5ea1cd2efe4f87&quot;
+
+
+$Packages$markdown
+$Packages$markdown$Package
+[1] &quot;markdown&quot;
+
+$Packages$markdown$Version
+[1] &quot;1.1&quot;
+
+$Packages$markdown$Source
+[1] &quot;Repository&quot;
+
+$Packages$markdown$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$markdown$Hash
+[1] &quot;61e4a10781dd00d7d81dd06ca9b94e95&quot;
+
+
+$Packages$vctrs
+$Packages$vctrs$Package
+[1] &quot;vctrs&quot;
+
+$Packages$vctrs$Version
+[1] &quot;0.3.6&quot;
+
+$Packages$vctrs$Source
+[1] &quot;Repository&quot;
+
+$Packages$vctrs$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$vctrs$Hash
+[1] &quot;5cf1957f93076c19fdc81d01409d240b&quot;
+
+
+$Packages$quantreg
+$Packages$quantreg$Package
+[1] &quot;quantreg&quot;
+
+$Packages$quantreg$Version
+[1] &quot;5.61&quot;
+
+$Packages$quantreg$Source
+[1] &quot;Repository&quot;
+
+$Packages$quantreg$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$quantreg$Hash
+[1] &quot;0d5ecb71ac9a614f260c668564118a93&quot;
+
+
+$Packages$remotes
+$Packages$remotes$Package
+[1] &quot;remotes&quot;
+
+$Packages$remotes$Version
+[1] &quot;2.1.1&quot;
+
+$Packages$remotes$Source
+[1] &quot;Repository&quot;
+
+$Packages$remotes$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$remotes$Hash
+[1] &quot;57c3009534f805f0f6476ffee68483cc&quot;
+
+
+$Packages$here
+$Packages$here$Package
+[1] &quot;here&quot;
+
+$Packages$here$Version
+[1] &quot;1.0.1&quot;
+
+$Packages$here$Source
+[1] &quot;Repository&quot;
+
+$Packages$here$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$here$Hash
+[1] &quot;24b224366f9c2e7534d2344d10d59211&quot;
+
+
+$Packages$abind
+$Packages$abind$Package
+[1] &quot;abind&quot;
+
+$Packages$abind$Version
+[1] &quot;1.4-5&quot;
+
+$Packages$abind$Source
+[1] &quot;Repository&quot;
+
+$Packages$abind$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$abind$Hash
+[1] &quot;4f57884290cc75ab22f4af9e9d4ca862&quot;
+
+
+$Packages$log4r
+$Packages$log4r$Package
+[1] &quot;log4r&quot;
+
+$Packages$log4r$Version
+[1] &quot;0.3.2&quot;
+
+$Packages$log4r$Source
+[1] &quot;Repository&quot;
+
+$Packages$log4r$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$log4r$Hash
+[1] &quot;5ce4d2c11689134403962d6229395314&quot;
+
+
+$Packages$RcppEigen
+$Packages$RcppEigen$Package
+[1] &quot;RcppEigen&quot;
+
+$Packages$RcppEigen$Version
+[1] &quot;0.3.3.9.1&quot;
+
+$Packages$RcppEigen$Source
+[1] &quot;Repository&quot;
+
+$Packages$RcppEigen$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$RcppEigen$Hash
+[1] &quot;ddfa72a87fdf4c80466a20818be91d00&quot;
+
+
+$Packages$withr
+$Packages$withr$Package
+[1] &quot;withr&quot;
+
+$Packages$withr$Version
+[1] &quot;2.3.0&quot;
+
+$Packages$withr$Source
+[1] &quot;Repository&quot;
+
+$Packages$withr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$withr$Hash
+[1] &quot;7307d79f58d1885b38c4f4f1a8cb19dd&quot;
+
+
+$Packages$details
+$Packages$details$Package
+[1] &quot;details&quot;
+
+$Packages$details$Version
+[1] &quot;0.2.1&quot;
+
+$Packages$details$Source
+[1] &quot;Repository&quot;
+
+$Packages$details$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$details$Hash
+[1] &quot;7a18f9d2e53a960aafbe25c043ec3f52&quot;
+
+
+$Packages$ggforce
+$Packages$ggforce$Package
+[1] &quot;ggforce&quot;
+
+$Packages$ggforce$Version
+[1] &quot;0.3.2&quot;
+
+$Packages$ggforce$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggforce$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggforce$Hash
+[1] &quot;4adaf6b01b41f243ba0c62801de3331e&quot;
+
+
+$Packages$metathis
+$Packages$metathis$Package
+[1] &quot;metathis&quot;
+
+$Packages$metathis$Version
+[1] &quot;1.0.2&quot;
+
+$Packages$metathis$Source
+[1] &quot;Repository&quot;
+
+$Packages$metathis$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$metathis$Hash
+[1] &quot;1cdadc4571387eb52ca71765b0f984c3&quot;
+
+
+$Packages$sys
+$Packages$sys$Package
+[1] &quot;sys&quot;
+
+$Packages$sys$Version
+[1] &quot;3.4&quot;
+
+$Packages$sys$Source
+[1] &quot;Repository&quot;
+
+$Packages$sys$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$sys$Hash
+[1] &quot;b227d13e29222b4574486cfcbde077fa&quot;
+
+
+$Packages$ptrr
+$Packages$ptrr$Package
+[1] &quot;ptrr&quot;
+
+$Packages$ptrr$Version
+[1] &quot;0.2.0.9000&quot;
+
+$Packages$ptrr$Source
+[1] &quot;GitHub&quot;
+
+$Packages$ptrr$RemoteType
+[1] &quot;github&quot;
+
+$Packages$ptrr$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$ptrr$RemoteUsername
+[1] &quot;petrbouchal&quot;
+
+$Packages$ptrr$RemoteRepo
+[1] &quot;ptrr&quot;
+
+$Packages$ptrr$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$ptrr$RemoteSha
+[1] &quot;b593d0f6ede0d3690e9ad6f1997693d810662a1e&quot;
+
+$Packages$ptrr$Hash
+[1] &quot;8bb318494deec49676f302175fb0bcd7&quot;
+
+
+$Packages$progressr
+$Packages$progressr$Package
+[1] &quot;progressr&quot;
+
+$Packages$progressr$Version
+[1] &quot;0.6.0&quot;
+
+$Packages$progressr$Source
+[1] &quot;Repository&quot;
+
+$Packages$progressr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$progressr$Hash
+[1] &quot;307c0643c2166795cbd93b436e558d18&quot;
+
+
+$Packages$checkmate
+$Packages$checkmate$Package
+[1] &quot;checkmate&quot;
+
+$Packages$checkmate$Version
+[1] &quot;2.0.0&quot;
+
+$Packages$checkmate$Source
+[1] &quot;Repository&quot;
+
+$Packages$checkmate$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$checkmate$Hash
+[1] &quot;a667800d5f0350371bedeb8b8b950289&quot;
+
+
+$Packages$prettyunits
+$Packages$prettyunits$Package
+[1] &quot;prettyunits&quot;
+
+$Packages$prettyunits$Version
+[1] &quot;1.1.1&quot;
+
+$Packages$prettyunits$Source
+[1] &quot;Repository&quot;
+
+$Packages$prettyunits$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$prettyunits$Hash
+[1] &quot;95ef9167b75dde9d2ccc3c7528393e7e&quot;
+
+
+$Packages$cluster
+$Packages$cluster$Package
+[1] &quot;cluster&quot;
+
+$Packages$cluster$Version
+[1] &quot;2.1.0&quot;
+
+$Packages$cluster$Source
+[1] &quot;Repository&quot;
+
+$Packages$cluster$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$cluster$Hash
+[1] &quot;db63a44aab5aadcb6bf2f129751d129a&quot;
+
+
+$Packages$lazyeval
+$Packages$lazyeval$Package
+[1] &quot;lazyeval&quot;
+
+$Packages$lazyeval$Version
+[1] &quot;0.2.2&quot;
+
+$Packages$lazyeval$Source
+[1] &quot;Repository&quot;
+
+$Packages$lazyeval$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$lazyeval$Hash
+[1] &quot;d908914ae53b04d4c0c0fd72ecc35370&quot;
+
+
+$Packages$crayon
+$Packages$crayon$Package
+[1] &quot;crayon&quot;
+
+$Packages$crayon$Version
+[1] &quot;1.3.4&quot;
+
+$Packages$crayon$Source
+[1] &quot;Repository&quot;
+
+$Packages$crayon$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$crayon$Hash
+[1] &quot;0d57bc8e27b7ba9e45dba825ebc0de6b&quot;
+
+
+$Packages$leaflet.providers
+$Packages$leaflet.providers$Package
+[1] &quot;leaflet.providers&quot;
+
+$Packages$leaflet.providers$Version
+[1] &quot;1.9.0&quot;
+
+$Packages$leaflet.providers$Source
+[1] &quot;Repository&quot;
+
+$Packages$leaflet.providers$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$leaflet.providers$Hash
+[1] &quot;d3082a7beac4a1aeb96100ff06265d7e&quot;
+
+
+$Packages$ellipse
+$Packages$ellipse$Package
+[1] &quot;ellipse&quot;
+
+$Packages$ellipse$Version
+[1] &quot;0.4.2&quot;
+
+$Packages$ellipse$Source
+[1] &quot;Repository&quot;
+
+$Packages$ellipse$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ellipse$Hash
+[1] &quot;bfa61f1a00c0d30b86bf13d35748e24c&quot;
+
+
+$Packages$arrow
+$Packages$arrow$Package
+[1] &quot;arrow&quot;
+
+$Packages$arrow$Version
+[1] &quot;2.0.0&quot;
+
+$Packages$arrow$Source
+[1] &quot;Repository&quot;
+
+$Packages$arrow$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$arrow$Hash
+[1] &quot;04a9e87326777f5205bacdf3ec4ffa02&quot;
+
+
+$Packages$pkgconfig
+$Packages$pkgconfig$Package
+[1] &quot;pkgconfig&quot;
+
+$Packages$pkgconfig$Version
+[1] &quot;2.0.3&quot;
+
+$Packages$pkgconfig$Source
+[1] &quot;Repository&quot;
+
+$Packages$pkgconfig$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$pkgconfig$Hash
+[1] &quot;01f28d4278f15c76cddbea05899c5d6f&quot;
+
+
+$Packages$labeling
+$Packages$labeling$Package
+[1] &quot;labeling&quot;
+
+$Packages$labeling$Version
+[1] &quot;0.4.2&quot;
+
+$Packages$labeling$Source
+[1] &quot;Repository&quot;
+
+$Packages$labeling$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$labeling$Hash
+[1] &quot;3d5108641f47470611a32d0bdf357a72&quot;
+
+
+$Packages$units
+$Packages$units$Package
+[1] &quot;units&quot;
+
+$Packages$units$Version
+[1] &quot;0.6-6&quot;
+
+$Packages$units$Source
+[1] &quot;Repository&quot;
+
+$Packages$units$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$units$Hash
+[1] &quot;687aa5dfc4ec01ad4da86862a7e6a05b&quot;
+
+
+$Packages$tweenr
+$Packages$tweenr$Package
+[1] &quot;tweenr&quot;
+
+$Packages$tweenr$Version
+[1] &quot;1.0.1&quot;
+
+$Packages$tweenr$Source
+[1] &quot;Repository&quot;
+
+$Packages$tweenr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tweenr$Hash
+[1] &quot;fc77eb5297507cccfa3349a606061030&quot;
+
+
+$Packages$nlme
+$Packages$nlme$Package
+[1] &quot;nlme&quot;
+
+$Packages$nlme$Version
+[1] &quot;3.1-147&quot;
+
+$Packages$nlme$Source
+[1] &quot;Repository&quot;
+
+$Packages$nlme$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$nlme$Hash
+[1] &quot;dd4a1423f1472a2a8e05dd2c8945c3af&quot;
+
+
+$Packages$pkgload
+$Packages$pkgload$Package
+[1] &quot;pkgload&quot;
+
+$Packages$pkgload$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$pkgload$Source
+[1] &quot;Repository&quot;
+
+$Packages$pkgload$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$pkgload$Hash
+[1] &quot;b6b150cd4709e0c0c9b5d51ac4376282&quot;
+
+
+$Packages$drat
+$Packages$drat$Package
+[1] &quot;drat&quot;
+
+$Packages$drat$Version
+[1] &quot;0.1.6&quot;
+
+$Packages$drat$Source
+[1] &quot;Repository&quot;
+
+$Packages$drat$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$drat$Hash
+[1] &quot;727f06914160f132ce56756e9fb5e030&quot;
+
+
+$Packages$rematch
+$Packages$rematch$Package
+[1] &quot;rematch&quot;
+
+$Packages$rematch$Version
+[1] &quot;1.0.1&quot;
+
+$Packages$rematch$Source
+[1] &quot;Repository&quot;
+
+$Packages$rematch$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rematch$Hash
+[1] &quot;c66b930d20bb6d858cd18e1cebcfae5c&quot;
+
+
+$Packages$nnet
+$Packages$nnet$Package
+[1] &quot;nnet&quot;
+
+$Packages$nnet$Version
+[1] &quot;7.3-14&quot;
+
+$Packages$nnet$Source
+[1] &quot;Repository&quot;
+
+$Packages$nnet$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$nnet$Hash
+[1] &quot;0d87e50e11394a7151a28873637d799a&quot;
+
+
+$Packages$gitcreds
+$Packages$gitcreds$Package
+[1] &quot;gitcreds&quot;
+
+$Packages$gitcreds$Version
+[1] &quot;0.1.1&quot;
+
+$Packages$gitcreds$Source
+[1] &quot;Repository&quot;
+
+$Packages$gitcreds$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gitcreds$Hash
+[1] &quot;f3aefccc1cc50de6338146b62f115de8&quot;
+
+
+$Packages$devtools
+$Packages$devtools$Package
+[1] &quot;devtools&quot;
+
+$Packages$devtools$Version
+[1] &quot;2.3.0&quot;
+
+$Packages$devtools$Source
+[1] &quot;Repository&quot;
+
+$Packages$devtools$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$devtools$Hash
+[1] &quot;d55dae3aa077e25128115a81e974f318&quot;
+
+
+$Packages$globals
+$Packages$globals$Package
+[1] &quot;globals&quot;
+
+$Packages$globals$Version
+[1] &quot;0.12.5&quot;
+
+$Packages$globals$Source
+[1] &quot;Repository&quot;
+
+$Packages$globals$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$globals$Hash
+[1] &quot;e9e529fb7a579ad4b4ff65e052e76ed8&quot;
+
+
+$Packages$rlang
+$Packages$rlang$Package
+[1] &quot;rlang&quot;
+
+$Packages$rlang$Version
+[1] &quot;0.4.10&quot;
+
+$Packages$rlang$Source
+[1] &quot;Repository&quot;
+
+$Packages$rlang$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rlang$Hash
+[1] &quot;599df23c40a4fce9c7b4764f28c37857&quot;
+
+
+$Packages$lifecycle
+$Packages$lifecycle$Package
+[1] &quot;lifecycle&quot;
+
+$Packages$lifecycle$Version
+[1] &quot;0.2.0&quot;
+
+$Packages$lifecycle$Source
+[1] &quot;Repository&quot;
+
+$Packages$lifecycle$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$lifecycle$Hash
+[1] &quot;361811f31f71f8a617a9a68bf63f1f42&quot;
+
+
+$Packages$skimr
+$Packages$skimr$Package
+[1] &quot;skimr&quot;
+
+$Packages$skimr$Version
+[1] &quot;2.1.1&quot;
+
+$Packages$skimr$Source
+[1] &quot;Repository&quot;
+
+$Packages$skimr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$skimr$Hash
+[1] &quot;fa365cc94b8d11fd241dcc6bb5e03500&quot;
+
+
+$Packages$MatrixModels
+$Packages$MatrixModels$Package
+[1] &quot;MatrixModels&quot;
+
+$Packages$MatrixModels$Version
+[1] &quot;0.4-1&quot;
+
+$Packages$MatrixModels$Source
+[1] &quot;Repository&quot;
+
+$Packages$MatrixModels$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$MatrixModels$Hash
+[1] &quot;d57ac35220b39c591388ab3a080f9cbe&quot;
+
+
+$Packages$sysfonts
+$Packages$sysfonts$Package
+[1] &quot;sysfonts&quot;
+
+$Packages$sysfonts$Version
+[1] &quot;0.8.1&quot;
+
+$Packages$sysfonts$Source
+[1] &quot;Repository&quot;
+
+$Packages$sysfonts$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$sysfonts$Hash
+[1] &quot;49ed30f4a8938fb04551dced5b6d444e&quot;
+
+
+$Packages$extrafontdb
+$Packages$extrafontdb$Package
+[1] &quot;extrafontdb&quot;
+
+$Packages$extrafontdb$Version
+[1] &quot;1.0&quot;
+
+$Packages$extrafontdb$Source
+[1] &quot;Repository&quot;
+
+$Packages$extrafontdb$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$extrafontdb$Hash
+[1] &quot;a861555ddec7451c653b40e713166c6f&quot;
+
+
+$Packages$rex
+$Packages$rex$Package
+[1] &quot;rex&quot;
+
+$Packages$rex$Version
+[1] &quot;1.2.0&quot;
+
+$Packages$rex$Source
+[1] &quot;Repository&quot;
+
+$Packages$rex$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rex$Hash
+[1] &quot;093584b944440c5cd07a696b3c8e0e4c&quot;
+
+
+$Packages$modelr
+$Packages$modelr$Package
+[1] &quot;modelr&quot;
+
+$Packages$modelr$Version
+[1] &quot;0.1.7&quot;
+
+$Packages$modelr$Source
+[1] &quot;Repository&quot;
+
+$Packages$modelr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$modelr$Hash
+[1] &quot;5a10316936c16bb3b341f687c9ac0fff&quot;
+
+
+$Packages$beepr
+$Packages$beepr$Package
+[1] &quot;beepr&quot;
+
+$Packages$beepr$Version
+[1] &quot;1.3&quot;
+
+$Packages$beepr$Source
+[1] &quot;Repository&quot;
+
+$Packages$beepr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$beepr$Hash
+[1] &quot;b3158a579ecef0e8f7626f4dadc369d0&quot;
+
+
+$Packages$cellranger
+$Packages$cellranger$Package
+[1] &quot;cellranger&quot;
+
+$Packages$cellranger$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$cellranger$Source
+[1] &quot;Repository&quot;
+
+$Packages$cellranger$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$cellranger$Hash
+[1] &quot;f61dbaec772ccd2e17705c1e872e9e7c&quot;
+
+
+$Packages$rprojroot
+$Packages$rprojroot$Package
+[1] &quot;rprojroot&quot;
+
+$Packages$rprojroot$Version
+[1] &quot;2.0.2&quot;
+
+$Packages$rprojroot$Source
+[1] &quot;Repository&quot;
+
+$Packages$rprojroot$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rprojroot$Hash
+[1] &quot;249d8cd1e74a8f6a26194a91b47f21d1&quot;
+
+
+$Packages$polyclip
+$Packages$polyclip$Package
+[1] &quot;polyclip&quot;
+
+$Packages$polyclip$Version
+[1] &quot;1.10-0&quot;
+
+$Packages$polyclip$Source
+[1] &quot;Repository&quot;
+
+$Packages$polyclip$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$polyclip$Hash
+[1] &quot;cb167f328b3ada4ec5cf67a7df4c900a&quot;
+
+
+$Packages$matrixStats
+$Packages$matrixStats$Package
+[1] &quot;matrixStats&quot;
+
+$Packages$matrixStats$Version
+[1] &quot;0.56.0&quot;
+
+$Packages$matrixStats$Source
+[1] &quot;Repository&quot;
+
+$Packages$matrixStats$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$matrixStats$Hash
+[1] &quot;d16f18aeb023d7a80c090d9458fc75a6&quot;
+
+
+$Packages$reactR
+$Packages$reactR$Package
+[1] &quot;reactR&quot;
+
+$Packages$reactR$Version
+[1] &quot;0.4.3&quot;
+
+$Packages$reactR$Source
+[1] &quot;Repository&quot;
+
+$Packages$reactR$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$reactR$Hash
+[1] &quot;85d50afbf95bf92bda97e9417575e8ff&quot;
+
+
+$Packages$showtextdb
+$Packages$showtextdb$Package
+[1] &quot;showtextdb&quot;
+
+$Packages$showtextdb$Version
+[1] &quot;2.0&quot;
+
+$Packages$showtextdb$Source
+[1] &quot;Repository&quot;
+
+$Packages$showtextdb$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$showtextdb$Hash
+[1] &quot;8e0df803ddce30dddcec4c4c09af8676&quot;
+
+
+$Packages$Matrix
+$Packages$Matrix$Package
+[1] &quot;Matrix&quot;
+
+$Packages$Matrix$Version
+[1] &quot;1.2-18&quot;
+
+$Packages$Matrix$Source
+[1] &quot;Repository&quot;
+
+$Packages$Matrix$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$Matrix$Hash
+[1] &quot;08588806cba69f04797dab50627428ed&quot;
+
+
+$Packages$raster
+$Packages$raster$Package
+[1] &quot;raster&quot;
+
+$Packages$raster$Version
+[1] &quot;3.1-5&quot;
+
+$Packages$raster$Source
+[1] &quot;Repository&quot;
+
+$Packages$raster$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$raster$Hash
+[1] &quot;5aef4b2e36fe729608b55abb04944827&quot;
+
+
+$Packages$carData
+$Packages$carData$Package
+[1] &quot;carData&quot;
+
+$Packages$carData$Version
+[1] &quot;3.0-4&quot;
+
+$Packages$carData$Source
+[1] &quot;Repository&quot;
+
+$Packages$carData$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$carData$Hash
+[1] &quot;7ff5c94cec207b3fd9774cfaa5157738&quot;
+
+
+$Packages$boot
+$Packages$boot$Package
+[1] &quot;boot&quot;
+
+$Packages$boot$Version
+[1] &quot;1.3-25&quot;
+
+$Packages$boot$Source
+[1] &quot;Repository&quot;
+
+$Packages$boot$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$boot$Hash
+[1] &quot;bd51734a754b6c2baf28b2d1ebc11e91&quot;
+
+
+$Packages$reprex
+$Packages$reprex$Package
+[1] &quot;reprex&quot;
+
+$Packages$reprex$Version
+[1] &quot;0.3.0&quot;
+
+$Packages$reprex$Source
+[1] &quot;Repository&quot;
+
+$Packages$reprex$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$reprex$Hash
+[1] &quot;b06bfb3504cc8a4579fd5567646f745b&quot;
+
+
+$Packages$base64enc
+$Packages$base64enc$Package
+[1] &quot;base64enc&quot;
+
+$Packages$base64enc$Version
+[1] &quot;0.1-3&quot;
+
+$Packages$base64enc$Source
+[1] &quot;Repository&quot;
+
+$Packages$base64enc$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$base64enc$Hash
+[1] &quot;543776ae6848fde2f48ff3816d0628bc&quot;
+
+
+$Packages$whisker
+$Packages$whisker$Package
+[1] &quot;whisker&quot;
+
+$Packages$whisker$Version
+[1] &quot;0.4&quot;
+
+$Packages$whisker$Source
+[1] &quot;Repository&quot;
+
+$Packages$whisker$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$whisker$Hash
+[1] &quot;ca970b96d894e90397ed20637a0c1bbe&quot;
+
+
+$Packages$ggridges
+$Packages$ggridges$Package
+[1] &quot;ggridges&quot;
+
+$Packages$ggridges$Version
+[1] &quot;0.5.2&quot;
+
+$Packages$ggridges$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggridges$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggridges$Hash
+[1] &quot;b5c4e55a3856dff3c05595630a40edfc&quot;
+
+
+$Packages$processx
+$Packages$processx$Package
+[1] &quot;processx&quot;
+
+$Packages$processx$Version
+[1] &quot;3.4.5&quot;
+
+$Packages$processx$Source
+[1] &quot;Repository&quot;
+
+$Packages$processx$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$processx$Hash
+[1] &quot;22aab6098cb14edd0a5973a8438b569b&quot;
+
+
+$Packages$png
+$Packages$png$Package
+[1] &quot;png&quot;
+
+$Packages$png$Version
+[1] &quot;0.1-7&quot;
+
+$Packages$png$Source
+[1] &quot;Repository&quot;
+
+$Packages$png$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$png$Hash
+[1] &quot;03b7076c234cb3331288919983326c55&quot;
+
+
+$Packages$viridisLite
+$Packages$viridisLite$Package
+[1] &quot;viridisLite&quot;
+
+$Packages$viridisLite$Version
+[1] &quot;0.3.0&quot;
+
+$Packages$viridisLite$Source
+[1] &quot;Repository&quot;
+
+$Packages$viridisLite$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$viridisLite$Hash
+[1] &quot;ce4f6271baa94776db692f1cb2055bee&quot;
+
+
+$Packages$pointblank
+$Packages$pointblank$Package
+[1] &quot;pointblank&quot;
+
+$Packages$pointblank$Version
+[1] &quot;0.6.0&quot;
+
+$Packages$pointblank$Source
+[1] &quot;Repository&quot;
+
+$Packages$pointblank$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$pointblank$Hash
+[1] &quot;51055d2aa1b19ad633162a8066c34e09&quot;
+
+
+$Packages$ini
+$Packages$ini$Package
+[1] &quot;ini&quot;
+
+$Packages$ini$Version
+[1] &quot;0.3.1&quot;
+
+$Packages$ini$Source
+[1] &quot;Repository&quot;
+
+$Packages$ini$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ini$Hash
+[1] &quot;6154ec2223172bce8162d4153cda21f7&quot;
+
+
+$Packages$bitops
+$Packages$bitops$Package
+[1] &quot;bitops&quot;
+
+$Packages$bitops$Version
+[1] &quot;1.0-6&quot;
+
+$Packages$bitops$Source
+[1] &quot;Repository&quot;
+
+$Packages$bitops$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$bitops$Hash
+[1] &quot;0b118d5900596bae6c4d4865374536a6&quot;
+
+
+$Packages$getPass
+$Packages$getPass$Package
+[1] &quot;getPass&quot;
+
+$Packages$getPass$Version
+[1] &quot;0.2-2&quot;
+
+$Packages$getPass$Source
+[1] &quot;Repository&quot;
+
+$Packages$getPass$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$getPass$Hash
+[1] &quot;07a91f99e56951818ab911366db77700&quot;
+
+
+$Packages$czso
+$Packages$czso$Package
+[1] &quot;czso&quot;
+
+$Packages$czso$Version
+[1] &quot;0.2.3.9000&quot;
+
+$Packages$czso$Source
+[1] &quot;GitHub&quot;
+
+$Packages$czso$RemoteType
+[1] &quot;github&quot;
+
+$Packages$czso$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$czso$RemoteUsername
+[1] &quot;petrbouchal&quot;
+
+$Packages$czso$RemoteRepo
+[1] &quot;czso&quot;
+
+$Packages$czso$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$czso$RemoteSha
+[1] &quot;2bf6e361db93413b6e5b2c6838fd85b26ef3985b&quot;
+
+$Packages$czso$Hash
+[1] &quot;f739169db72cc8dbe782e76e0419b2c7&quot;
+
+
+$Packages$rcmdcheck
+$Packages$rcmdcheck$Package
+[1] &quot;rcmdcheck&quot;
+
+$Packages$rcmdcheck$Version
+[1] &quot;1.3.3&quot;
+
+$Packages$rcmdcheck$Source
+[1] &quot;Repository&quot;
+
+$Packages$rcmdcheck$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rcmdcheck$Hash
+[1] &quot;ed95895886dab6d2a584da45503555da&quot;
+
+
+$Packages$KernSmooth
+$Packages$KernSmooth$Package
+[1] &quot;KernSmooth&quot;
+
+$Packages$KernSmooth$Version
+[1] &quot;2.23-16&quot;
+
+$Packages$KernSmooth$Source
+[1] &quot;Repository&quot;
+
+$Packages$KernSmooth$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$KernSmooth$Hash
+[1] &quot;997471f25a7ed6c782f0090ce52cc63a&quot;
+
+
+$Packages$blob
+$Packages$blob$Package
+[1] &quot;blob&quot;
+
+$Packages$blob$Version
+[1] &quot;1.2.1&quot;
+
+$Packages$blob$Source
+[1] &quot;Repository&quot;
+
+$Packages$blob$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$blob$Hash
+[1] &quot;9addc7e2c5954eca5719928131fed98c&quot;
+
+
+$Packages$classInt
+$Packages$classInt$Package
+[1] &quot;classInt&quot;
+
+$Packages$classInt$Version
+[1] &quot;0.4-3&quot;
+
+$Packages$classInt$Source
+[1] &quot;Repository&quot;
+
+$Packages$classInt$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$classInt$Hash
+[1] &quot;17bdfa3c51df4a6c82484d13b11fb380&quot;
+
+
+$Packages$stringr
+$Packages$stringr$Package
+[1] &quot;stringr&quot;
+
+$Packages$stringr$Version
+[1] &quot;1.4.0&quot;
+
+$Packages$stringr$Source
+[1] &quot;Repository&quot;
+
+$Packages$stringr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$stringr$Hash
+[1] &quot;0759e6b6c0957edb1311028a49a35e76&quot;
+
+
+$Packages$maptools
+$Packages$maptools$Package
+[1] &quot;maptools&quot;
+
+$Packages$maptools$Version
+[1] &quot;1.0-1&quot;
+
+$Packages$maptools$Source
+[1] &quot;Repository&quot;
+
+$Packages$maptools$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$maptools$Hash
+[1] &quot;5117ca3798362fadc2d985899b3e891e&quot;
+
+
+$Packages$brew
+$Packages$brew$Package
+[1] &quot;brew&quot;
+
+$Packages$brew$Version
+[1] &quot;1.0-6&quot;
+
+$Packages$brew$Source
+[1] &quot;Repository&quot;
+
+$Packages$brew$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$brew$Hash
+[1] &quot;92a5f887f9ae3035ac7afde22ba73ee9&quot;
+
+
+$Packages$rstatix
+$Packages$rstatix$Package
+[1] &quot;rstatix&quot;
+
+$Packages$rstatix$Version
+[1] &quot;0.6.0&quot;
+
+$Packages$rstatix$Source
+[1] &quot;Repository&quot;
+
+$Packages$rstatix$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rstatix$Hash
+[1] &quot;7eb4d25cb9f8183f0c9e19704a3cf681&quot;
+
+
+$Packages$readr
+$Packages$readr$Package
+[1] &quot;readr&quot;
+
+$Packages$readr$Version
+[1] &quot;1.4.0&quot;
+
+$Packages$readr$Source
+[1] &quot;Repository&quot;
+
+$Packages$readr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$readr$Hash
+[1] &quot;2639976851f71f330264a9c9c3d43a61&quot;
+
+
+$Packages$jpeg
+$Packages$jpeg$Package
+[1] &quot;jpeg&quot;
+
+$Packages$jpeg$Version
+[1] &quot;0.1-8.1&quot;
+
+$Packages$jpeg$Source
+[1] &quot;Repository&quot;
+
+$Packages$jpeg$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$jpeg$Hash
+[1] &quot;bc316c003aba520fc73d70ad53b5fc36&quot;
+
+
+$Packages$ggsignif
+$Packages$ggsignif$Package
+[1] &quot;ggsignif&quot;
+
+$Packages$ggsignif$Version
+[1] &quot;0.6.0&quot;
+
+$Packages$ggsignif$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggsignif$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggsignif$Hash
+[1] &quot;3e9b8a51dfdc95395632b25ce3ce8ebc&quot;
+
+
+$Packages$leaps
+$Packages$leaps$Package
+[1] &quot;leaps&quot;
+
+$Packages$leaps$Version
+[1] &quot;3.1&quot;
+
+$Packages$leaps$Source
+[1] &quot;Repository&quot;
+
+$Packages$leaps$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$leaps$Hash
+[1] &quot;e7023edcf59fd695d92eb01a7f37f991&quot;
+
+
+$Packages$scales
+$Packages$scales$Package
+[1] &quot;scales&quot;
+
+$Packages$scales$Version
+[1] &quot;1.1.1&quot;
+
+$Packages$scales$Source
+[1] &quot;Repository&quot;
+
+$Packages$scales$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$scales$Hash
+[1] &quot;6f76f71042411426ec8df6c54f34e6dd&quot;
+
+
+$Packages$hexbin
+$Packages$hexbin$Package
+[1] &quot;hexbin&quot;
+
+$Packages$hexbin$Version
+[1] &quot;1.28.1&quot;
+
+$Packages$hexbin$Source
+[1] &quot;Repository&quot;
+
+$Packages$hexbin$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$hexbin$Hash
+[1] &quot;3d59212f2814d65dff517e6899813c58&quot;
+
+
+$Packages$memoise
+$Packages$memoise$Package
+[1] &quot;memoise&quot;
+
+$Packages$memoise$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$memoise$Source
+[1] &quot;Repository&quot;
+
+$Packages$memoise$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$memoise$Hash
+[1] &quot;58baa74e4603fcfb9a94401c58c8f9b1&quot;
+
+
+$Packages$magrittr
+$Packages$magrittr$Package
+[1] &quot;magrittr&quot;
+
+$Packages$magrittr$Version
+[1] &quot;2.0.1&quot;
+
+$Packages$magrittr$Source
+[1] &quot;Repository&quot;
+
+$Packages$magrittr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$magrittr$Hash
+[1] &quot;41287f1ac7d28a92f0a286ed507928d3&quot;
+
+
+$Packages$plyr
+$Packages$plyr$Package
+[1] &quot;plyr&quot;
+
+$Packages$plyr$Version
+[1] &quot;1.8.6&quot;
+
+$Packages$plyr$Source
+[1] &quot;Repository&quot;
+
+$Packages$plyr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$plyr$Hash
+[1] &quot;ec0e5ab4e5f851f6ef32cd1d1984957f&quot;
+
+
+$Packages$audio
+$Packages$audio$Package
+[1] &quot;audio&quot;
+
+$Packages$audio$Version
+[1] &quot;0.1-7&quot;
+
+$Packages$audio$Source
+[1] &quot;Repository&quot;
+
+$Packages$audio$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$audio$Hash
+[1] &quot;31dcf8bcc4b1d343d75fee98ee44550b&quot;
+
+
+$Packages$tinytex
+$Packages$tinytex$Package
+[1] &quot;tinytex&quot;
+
+$Packages$tinytex$Version
+[1] &quot;0.28&quot;
+
+$Packages$tinytex$Source
+[1] &quot;Repository&quot;
+
+$Packages$tinytex$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tinytex$Hash
+[1] &quot;ff73961a77fba606fbf944dc3468e5b9&quot;
+
+
+$Packages$factoextra
+$Packages$factoextra$Package
+[1] &quot;factoextra&quot;
+
+$Packages$factoextra$Version
+[1] &quot;1.0.7&quot;
+
+$Packages$factoextra$Source
+[1] &quot;Repository&quot;
+
+$Packages$factoextra$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$factoextra$Hash
+[1] &quot;e95f1aed34b3f0a15a0c308175ee4c80&quot;
+
+
+$Packages$RColorBrewer
+$Packages$RColorBrewer$Package
+[1] &quot;RColorBrewer&quot;
+
+$Packages$RColorBrewer$Version
+[1] &quot;1.1-2&quot;
+
+$Packages$RColorBrewer$Source
+[1] &quot;Repository&quot;
+
+$Packages$RColorBrewer$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$RColorBrewer$Hash
+[1] &quot;e031418365a7f7a766181ab5a41a5716&quot;
+
+
+$Packages$lme4
+$Packages$lme4$Package
+[1] &quot;lme4&quot;
+
+$Packages$lme4$Version
+[1] &quot;1.1-23&quot;
+
+$Packages$lme4$Source
+[1] &quot;Repository&quot;
+
+$Packages$lme4$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$lme4$Hash
+[1] &quot;ad24d1fd9ed431543f4633bb083e194a&quot;
+
+
+$Packages$covr
+$Packages$covr$Package
+[1] &quot;covr&quot;
+
+$Packages$covr$Version
+[1] &quot;3.5.0&quot;
+
+$Packages$covr$Source
+[1] &quot;Repository&quot;
+
+$Packages$covr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$covr$Hash
+[1] &quot;cbc6df1ef6ee576f844f973c1fc04ab4&quot;
+
+
+$Packages$snakecase
+$Packages$snakecase$Package
+[1] &quot;snakecase&quot;
+
+$Packages$snakecase$Version
+[1] &quot;0.11.0&quot;
+
+$Packages$snakecase$Source
+[1] &quot;Repository&quot;
+
+$Packages$snakecase$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$snakecase$Hash
+[1] &quot;4079070fc210c7901c0832a3aeab894f&quot;
+
+
+$Packages$cli
+$Packages$cli$Package
+[1] &quot;cli&quot;
+
+$Packages$cli$Version
+[1] &quot;2.2.0&quot;
+
+$Packages$cli$Source
+[1] &quot;Repository&quot;
+
+$Packages$cli$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$cli$Hash
+[1] &quot;3ef298932294b775fa0a3eeaa3a645b0&quot;
+
+
+$Packages$listenv
+$Packages$listenv$Package
+[1] &quot;listenv&quot;
+
+$Packages$listenv$Version
+[1] &quot;0.8.0&quot;
+
+$Packages$listenv$Source
+[1] &quot;Repository&quot;
+
+$Packages$listenv$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$listenv$Hash
+[1] &quot;0bde42ee282efb18c7c4e63822f5b4f7&quot;
+
+
+$Packages$ps
+$Packages$ps$Package
+[1] &quot;ps&quot;
+
+$Packages$ps$Version
+[1] &quot;1.5.0&quot;
+
+$Packages$ps$Source
+[1] &quot;Repository&quot;
+
+$Packages$ps$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ps$Hash
+[1] &quot;ebaed51a03411fd5cfc1e12d9079b353&quot;
+
+
+$Packages$CzechData
+$Packages$CzechData$Package
+[1] &quot;CzechData&quot;
+
+$Packages$CzechData$Version
+[1] &quot;0.5.5&quot;
+
+$Packages$CzechData$Source
+[1] &quot;GitHub&quot;
+
+$Packages$CzechData$RemoteType
+[1] &quot;github&quot;
+
+$Packages$CzechData$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$CzechData$RemoteRepo
+[1] &quot;CzechData&quot;
+
+$Packages$CzechData$RemoteUsername
+[1] &quot;JanCaha&quot;
+
+$Packages$CzechData$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$CzechData$RemoteSha
+[1] &quot;41a9ea9ba407548ffa2601255cdb855977fc6134&quot;
+
+$Packages$CzechData$Hash
+[1] &quot;1d10b61b0193b98f0203fe76ccf03145&quot;
+
+
+$Packages$convo
+$Packages$convo$Package
+[1] &quot;convo&quot;
+
+$Packages$convo$Version
+[1] &quot;0.0.0.9000&quot;
+
+$Packages$convo$Source
+[1] &quot;GitHub&quot;
+
+$Packages$convo$RemoteType
+[1] &quot;github&quot;
+
+$Packages$convo$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$convo$RemoteRepo
+[1] &quot;convo&quot;
+
+$Packages$convo$RemoteUsername
+[1] &quot;emilyriederer&quot;
+
+$Packages$convo$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$convo$RemoteSha
+[1] &quot;5fc195237186a9fe93400dcb072082fd9d7f182c&quot;
+
+$Packages$convo$Hash
+[1] &quot;5bc667a2a8433d569ab58b04229f2229&quot;
+
+
+$Packages$MASS
+$Packages$MASS$Package
+[1] &quot;MASS&quot;
+
+$Packages$MASS$Version
+[1] &quot;7.3-51.5&quot;
+
+$Packages$MASS$Source
+[1] &quot;Repository&quot;
+
+$Packages$MASS$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$MASS$Hash
+[1] &quot;9efe80472b21189ebab1b74169808c26&quot;
+
+
+$Packages$mgcv
+$Packages$mgcv$Package
+[1] &quot;mgcv&quot;
+
+$Packages$mgcv$Version
+[1] &quot;1.8-31&quot;
+
+$Packages$mgcv$Source
+[1] &quot;Repository&quot;
+
+$Packages$mgcv$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$mgcv$Hash
+[1] &quot;4bb7e0c4f3557583e1e8d3c9ffb8ba5c&quot;
+
+
+$Packages$tidyselect
+$Packages$tidyselect$Package
+[1] &quot;tidyselect&quot;
+
+$Packages$tidyselect$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$tidyselect$Source
+[1] &quot;Repository&quot;
+
+$Packages$tidyselect$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tidyselect$Hash
+[1] &quot;6ea435c354e8448819627cf686f66e0a&quot;
+
+
+$Packages$stringi
+$Packages$stringi$Package
+[1] &quot;stringi&quot;
+
+$Packages$stringi$Version
+[1] &quot;1.5.3&quot;
+
+$Packages$stringi$Source
+[1] &quot;Repository&quot;
+
+$Packages$stringi$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$stringi$Hash
+[1] &quot;a063ebea753c92910a4cca7b18bc1f05&quot;
+
+
+$Packages$forcats
+$Packages$forcats$Package
+[1] &quot;forcats&quot;
+
+$Packages$forcats$Version
+[1] &quot;0.5.0&quot;
+
+$Packages$forcats$Source
+[1] &quot;Repository&quot;
+
+$Packages$forcats$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$forcats$Hash
+[1] &quot;1cb4279e697650f0bd78cd3601ee7576&quot;
+
+
+$Packages$ggupset
+$Packages$ggupset$Package
+[1] &quot;ggupset&quot;
+
+$Packages$ggupset$Version
+[1] &quot;0.3.0&quot;
+
+$Packages$ggupset$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggupset$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggupset$Hash
+[1] &quot;8e9eb92bf465601c07d17c5e8b75dce1&quot;
+
+
+$Packages$highr
+$Packages$highr$Package
+[1] &quot;highr&quot;
+
+$Packages$highr$Version
+[1] &quot;0.8&quot;
+
+$Packages$highr$Source
+[1] &quot;Repository&quot;
+
+$Packages$highr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$highr$Hash
+[1] &quot;4dc5bb88961e347a0f4d8aad597cbfac&quot;
+
+
+$Packages$blastula
+$Packages$blastula$Package
+[1] &quot;blastula&quot;
+
+$Packages$blastula$Version
+[1] &quot;0.3.2&quot;
+
+$Packages$blastula$Source
+[1] &quot;Repository&quot;
+
+$Packages$blastula$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$blastula$Hash
+[1] &quot;1f45952e8aadddb043afb988b988dd52&quot;
+
+
+$Packages$yaml
+$Packages$yaml$Package
+[1] &quot;yaml&quot;
+
+$Packages$yaml$Version
+[1] &quot;2.2.1&quot;
+
+$Packages$yaml$Source
+[1] &quot;Repository&quot;
+
+$Packages$yaml$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$yaml$Hash
+[1] &quot;2826c5d9efb0a88f657c7a679c7106db&quot;
+
+
+$Packages$askpass
+$Packages$askpass$Package
+[1] &quot;askpass&quot;
+
+$Packages$askpass$Version
+[1] &quot;1.1&quot;
+
+$Packages$askpass$Source
+[1] &quot;Repository&quot;
+
+$Packages$askpass$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$askpass$Hash
+[1] &quot;e8a22846fff485f0be3770c2da758713&quot;
+
+
+$Packages$ggrepel
+$Packages$ggrepel$Package
+[1] &quot;ggrepel&quot;
+
+$Packages$ggrepel$Version
+[1] &quot;0.8.2&quot;
+
+$Packages$ggrepel$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggrepel$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggrepel$Hash
+[1] &quot;c013a50b19695daf04853679e1bc105a&quot;
+
+
+$Packages$credentials
+$Packages$credentials$Package
+[1] &quot;credentials&quot;
+
+$Packages$credentials$Version
+[1] &quot;1.3.0&quot;
+
+$Packages$credentials$Source
+[1] &quot;Repository&quot;
+
+$Packages$credentials$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$credentials$Hash
+[1] &quot;a96728288c75a814c900af9da84387be&quot;
+
+
+$Packages$sass
+$Packages$sass$Package
+[1] &quot;sass&quot;
+
+$Packages$sass$Version
+[1] &quot;0.2.0&quot;
+
+$Packages$sass$Source
+[1] &quot;Repository&quot;
+
+$Packages$sass$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$sass$Hash
+[1] &quot;441417bbd40d5bbd07561cc40fb182ed&quot;
+
+
+$Packages$polynom
+$Packages$polynom$Package
+[1] &quot;polynom&quot;
+
+$Packages$polynom$Version
+[1] &quot;1.4-0&quot;
+
+$Packages$polynom$Source
+[1] &quot;Repository&quot;
+
+$Packages$polynom$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$polynom$Hash
+[1] &quot;c396592ecfe9e75cee1013533efafe34&quot;
+
+
+$Packages$rio
+$Packages$rio$Package
+[1] &quot;rio&quot;
+
+$Packages$rio$Version
+[1] &quot;0.5.16&quot;
+
+$Packages$rio$Source
+[1] &quot;Repository&quot;
+
+$Packages$rio$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rio$Hash
+[1] &quot;4a9aecbe83639be364de13ffe0671bcf&quot;
+
+
+$Packages$xopen
+$Packages$xopen$Package
+[1] &quot;xopen&quot;
+
+$Packages$xopen$Version
+[1] &quot;1.0.0&quot;
+
+$Packages$xopen$Source
+[1] &quot;Repository&quot;
+
+$Packages$xopen$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$xopen$Hash
+[1] &quot;6c85f015dee9cc7710ddd20f86881f58&quot;
+
+
+$Packages$whoami
+$Packages$whoami$Package
+[1] &quot;whoami&quot;
+
+$Packages$whoami$Version
+[1] &quot;1.3.0&quot;
+
+$Packages$whoami$Source
+[1] &quot;Repository&quot;
+
+$Packages$whoami$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$whoami$Hash
+[1] &quot;ef0f4d9b8f2cc2ebeccae1d725b8a023&quot;
+
+
+$Packages$rstudioapi
+$Packages$rstudioapi$Package
+[1] &quot;rstudioapi&quot;
+
+$Packages$rstudioapi$Version
+[1] &quot;0.13&quot;
+
+$Packages$rstudioapi$Source
+[1] &quot;Repository&quot;
+
+$Packages$rstudioapi$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rstudioapi$Hash
+[1] &quot;06c85365a03fdaf699966cc1d3cf53ea&quot;
+
+
+$Packages$uuid
+$Packages$uuid$Package
+[1] &quot;uuid&quot;
+
+$Packages$uuid$Version
+[1] &quot;0.1-4&quot;
+
+$Packages$uuid$Source
+[1] &quot;Repository&quot;
+
+$Packages$uuid$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$uuid$Hash
+[1] &quot;e4169eb989a5d03ccb6b628cad1b1b50&quot;
+
+
+$Packages$foreign
+$Packages$foreign$Package
+[1] &quot;foreign&quot;
+
+$Packages$foreign$Version
+[1] &quot;0.8-80&quot;
+
+$Packages$foreign$Source
+[1] &quot;Repository&quot;
+
+$Packages$foreign$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$foreign$Hash
+[1] &quot;ae1b1e15cc6ccb2bc61c0ac33e86d35f&quot;
+
+
+$Packages$BH
+$Packages$BH$Package
+[1] &quot;BH&quot;
+
+$Packages$BH$Version
+[1] &quot;1.72.0-3&quot;
+
+$Packages$BH$Source
+[1] &quot;Repository&quot;
+
+$Packages$BH$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$BH$Hash
+[1] &quot;8f9ce74c6417d61f0782cbae5fd2b7b0&quot;
+
+
+$Packages$git2r
+$Packages$git2r$Package
+[1] &quot;git2r&quot;
+
+$Packages$git2r$Version
+[1] &quot;0.27.1&quot;
+
+$Packages$git2r$Source
+[1] &quot;Repository&quot;
+
+$Packages$git2r$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$git2r$Hash
+[1] &quot;531a82d1beed1f545beb25f4f5945bf7&quot;
+
+
+$Packages$diffobj
+$Packages$diffobj$Package
+[1] &quot;diffobj&quot;
+
+$Packages$diffobj$Version
+[1] &quot;0.3.3&quot;
+
+$Packages$diffobj$Source
+[1] &quot;Repository&quot;
+
+$Packages$diffobj$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$diffobj$Hash
+[1] &quot;55fae7ec1418d2a47bd552571673d1af&quot;
+
+
+$Packages$janitor
+$Packages$janitor$Package
+[1] &quot;janitor&quot;
+
+$Packages$janitor$Version
+[1] &quot;2.0.1&quot;
+
+$Packages$janitor$Source
+[1] &quot;Repository&quot;
+
+$Packages$janitor$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$janitor$Hash
+[1] &quot;7eb42c3bb09e2019b97de69d2ea9dfff&quot;
+
+
+$Packages$gridExtra
+$Packages$gridExtra$Package
+[1] &quot;gridExtra&quot;
+
+$Packages$gridExtra$Version
+[1] &quot;2.3&quot;
+
+$Packages$gridExtra$Source
+[1] &quot;Repository&quot;
+
+$Packages$gridExtra$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gridExtra$Hash
+[1] &quot;7d7f283939f563670a697165b2cf5560&quot;
+
+
+$Packages$showtext
+$Packages$showtext$Package
+[1] &quot;showtext&quot;
+
+$Packages$showtext$Version
+[1] &quot;0.8-1&quot;
+
+$Packages$showtext$Source
+[1] &quot;Repository&quot;
+
+$Packages$showtext$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$showtext$Hash
+[1] &quot;2f20d21891f0fd601992ed82e7622203&quot;
+
+
+$Packages$scatterplot3d
+$Packages$scatterplot3d$Package
+[1] &quot;scatterplot3d&quot;
+
+$Packages$scatterplot3d$Version
+[1] &quot;0.3-41&quot;
+
+$Packages$scatterplot3d$Source
+[1] &quot;Repository&quot;
+
+$Packages$scatterplot3d$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$scatterplot3d$Hash
+[1] &quot;0d3e8c286b735517c2df4ed48848e732&quot;
+
+
+$Packages$farver
+$Packages$farver$Package
+[1] &quot;farver&quot;
+
+$Packages$farver$Version
+[1] &quot;2.0.3&quot;
+
+$Packages$farver$Source
+[1] &quot;Repository&quot;
+
+$Packages$farver$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$farver$Hash
+[1] &quot;dad6793a5a1f73c8e91f1a1e3e834b05&quot;
+
+
+$Packages$digest
+$Packages$digest$Package
+[1] &quot;digest&quot;
+
+$Packages$digest$Version
+[1] &quot;0.6.27&quot;
+
+$Packages$digest$Source
+[1] &quot;Repository&quot;
+
+$Packages$digest$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$digest$Hash
+[1] &quot;a0cbe758a531d054b537d16dff4d58a1&quot;
+
+
+$Packages$ggtext
+$Packages$ggtext$Package
+[1] &quot;ggtext&quot;
+
+$Packages$ggtext$Version
+[1] &quot;0.1.1&quot;
+
+$Packages$ggtext$Source
+[1] &quot;GitHub&quot;
+
+$Packages$ggtext$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggtext$RemoteType
+[1] &quot;github&quot;
+
+$Packages$ggtext$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$ggtext$RemoteUsername
+[1] &quot;clauswilke&quot;
+
+$Packages$ggtext$RemoteRepo
+[1] &quot;ggtext&quot;
+
+$Packages$ggtext$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$ggtext$RemoteSha
+[1] &quot;50fdaba101b2c591c08e9d67782a5b86621a4fa9&quot;
+
+$Packages$ggtext$Hash
+[1] &quot;0d0f123ebecc4677ead8e556117c7206&quot;
+
+
+$Packages$gert
+$Packages$gert$Package
+[1] &quot;gert&quot;
+
+$Packages$gert$Version
+[1] &quot;1.0.2&quot;
+
+$Packages$gert$Source
+[1] &quot;Repository&quot;
+
+$Packages$gert$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gert$Hash
+[1] &quot;0ebdadbb2b742cd230cb3ec7fdf5898a&quot;
+
+
+$Packages$Rcpp
+$Packages$Rcpp$Package
+[1] &quot;Rcpp&quot;
+
+$Packages$Rcpp$Version
+[1] &quot;1.0.5&quot;
+
+$Packages$Rcpp$Source
+[1] &quot;Repository&quot;
+
+$Packages$Rcpp$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$Rcpp$Hash
+[1] &quot;125dc7a0ed375eb68c0ce533b48d291f&quot;
+
+
+$Packages$gridtext
+$Packages$gridtext$Package
+[1] &quot;gridtext&quot;
+
+$Packages$gridtext$Version
+[1] &quot;0.1.1&quot;
+
+$Packages$gridtext$Source
+[1] &quot;Repository&quot;
+
+$Packages$gridtext$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gridtext$Hash
+[1] &quot;3ad82bf883067612096bda752dbd513e&quot;
+
+
+$Packages$car
+$Packages$car$Package
+[1] &quot;car&quot;
+
+$Packages$car$Version
+[1] &quot;3.0-9&quot;
+
+$Packages$car$Source
+[1] &quot;Repository&quot;
+
+$Packages$car$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$car$Hash
+[1] &quot;5b4045bd11466d0d3e55c71f81cc1b5f&quot;
+
+
+$Packages$broom
+$Packages$broom$Package
+[1] &quot;broom&quot;
+
+$Packages$broom$Version
+[1] &quot;0.5.6&quot;
+
+$Packages$broom$Source
+[1] &quot;Repository&quot;
+
+$Packages$broom$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$broom$Hash
+[1] &quot;754fdb4d17d4ae871343ff2909728ca3&quot;
+
+
+$Packages$writexl
+$Packages$writexl$Package
+[1] &quot;writexl&quot;
+
+$Packages$writexl$Version
+[1] &quot;1.3.1&quot;
+
+$Packages$writexl$Source
+[1] &quot;Repository&quot;
+
+$Packages$writexl$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$writexl$Hash
+[1] &quot;230396d86a3710b0ec8f50bd3c81483e&quot;
+
+
+$Packages$later
+$Packages$later$Package
+[1] &quot;later&quot;
+
+$Packages$later$Version
+[1] &quot;1.0.0&quot;
+
+$Packages$later$Source
+[1] &quot;Repository&quot;
+
+$Packages$later$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$later$Hash
+[1] &quot;6d927978fc658d24175ce37db635f9e5&quot;
+
+
+$Packages$httr
+$Packages$httr$Package
+[1] &quot;httr&quot;
+
+$Packages$httr$Version
+[1] &quot;1.4.2&quot;
+
+$Packages$httr$Source
+[1] &quot;Repository&quot;
+
+$Packages$httr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$httr$Hash
+[1] &quot;a525aba14184fec243f9eaec62fbed43&quot;
+
+
+$Packages$gdtools
+$Packages$gdtools$Package
+[1] &quot;gdtools&quot;
+
+$Packages$gdtools$Version
+[1] &quot;0.2.2&quot;
+
+$Packages$gdtools$Source
+[1] &quot;Repository&quot;
+
+$Packages$gdtools$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gdtools$Hash
+[1] &quot;38f4026c0d09edb3a4474685cef68342&quot;
+
+
+$Packages$sf
+$Packages$sf$Package
+[1] &quot;sf&quot;
+
+$Packages$sf$Version
+[1] &quot;0.9-7&quot;
+
+$Packages$sf$Source
+[1] &quot;Repository&quot;
+
+$Packages$sf$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$sf$Hash
+[1] &quot;9d6831c4c002137d99be6b946ac9da07&quot;
+
+
+$Packages$colorspace
+$Packages$colorspace$Package
+[1] &quot;colorspace&quot;
+
+$Packages$colorspace$Version
+[1] &quot;2.0-0&quot;
+
+$Packages$colorspace$Source
+[1] &quot;Repository&quot;
+
+$Packages$colorspace$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$colorspace$Hash
+[1] &quot;abea3384649ef37f60ef51ce002f3547&quot;
+
+
+$Packages$rvest
+$Packages$rvest$Package
+[1] &quot;rvest&quot;
+
+$Packages$rvest$Version
+[1] &quot;0.3.5&quot;
+
+$Packages$rvest$Source
+[1] &quot;Repository&quot;
+
+$Packages$rvest$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rvest$Hash
+[1] &quot;6a20c2cdf133ebc7ac45888c9ccc052b&quot;
+
+
+$Packages$brio
+$Packages$brio$Package
+[1] &quot;brio&quot;
+
+$Packages$brio$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$brio$Source
+[1] &quot;Repository&quot;
+
+$Packages$brio$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$brio$Hash
+[1] &quot;570a24963009b9cce0869a0463c83580&quot;
+
+
+$Packages$fs
+$Packages$fs$Package
+[1] &quot;fs&quot;
+
+$Packages$fs$Version
+[1] &quot;1.5.0&quot;
+
+$Packages$fs$Source
+[1] &quot;Repository&quot;
+
+$Packages$fs$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$fs$Hash
+[1] &quot;44594a07a42e5f91fac9f93fda6d0109&quot;
+
+
+$Packages$statmod
+$Packages$statmod$Package
+[1] &quot;statmod&quot;
+
+$Packages$statmod$Version
+[1] &quot;1.4.34&quot;
+
+$Packages$statmod$Source
+[1] &quot;Repository&quot;
+
+$Packages$statmod$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$statmod$Hash
+[1] &quot;5b229273695937933bc21ef235e84962&quot;
+
+
+$Packages$conquer
+$Packages$conquer$Package
+[1] &quot;conquer&quot;
+
+$Packages$conquer$Version
+[1] &quot;1.0.1&quot;
+
+$Packages$conquer$Source
+[1] &quot;Repository&quot;
+
+$Packages$conquer$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$conquer$Hash
+[1] &quot;5eb7b98beb699405198e2cde15b77b01&quot;
+
+
+$Packages$rematch2
+$Packages$rematch2$Package
+[1] &quot;rematch2&quot;
+
+$Packages$rematch2$Version
+[1] &quot;2.1.2&quot;
+
+$Packages$rematch2$Source
+[1] &quot;Repository&quot;
+
+$Packages$rematch2$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rematch2$Hash
+[1] &quot;76c9e04c712a05848ae7a23d2f170a40&quot;
+
+
+$Packages$gh
+$Packages$gh$Package
+[1] &quot;gh&quot;
+
+$Packages$gh$Version
+[1] &quot;1.2.0&quot;
+
+$Packages$gh$Source
+[1] &quot;Repository&quot;
+
+$Packages$gh$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gh$Hash
+[1] &quot;05129b4387282404780d2f8593636388&quot;
+
+
+$Packages$sp
+$Packages$sp$Package
+[1] &quot;sp&quot;
+
+$Packages$sp$Version
+[1] &quot;1.4-1&quot;
+
+$Packages$sp$Source
+[1] &quot;Repository&quot;
+
+$Packages$sp$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$sp$Hash
+[1] &quot;a44a3cebab900c0f77e16804f361468e&quot;
+
+
+$Packages$renv
+$Packages$renv$Package
+[1] &quot;renv&quot;
+
+$Packages$renv$Version
+[1] &quot;0.12.5&quot;
+
+$Packages$renv$Source
+[1] &quot;Repository&quot;
+
+$Packages$renv$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$renv$Hash
+[1] &quot;5c0cdb37f063c58cdab3c7e9fbb8bd2c&quot;
+
+
+$Packages$plotly
+$Packages$plotly$Package
+[1] &quot;plotly&quot;
+
+$Packages$plotly$Version
+[1] &quot;4.9.2.1&quot;
+
+$Packages$plotly$Source
+[1] &quot;Repository&quot;
+
+$Packages$plotly$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$plotly$Hash
+[1] &quot;b08edf378e0e38959a6983e3d5902795&quot;
+
+
+$Packages$sessioninfo
+$Packages$sessioninfo$Package
+[1] &quot;sessioninfo&quot;
+
+$Packages$sessioninfo$Version
+[1] &quot;1.1.1&quot;
+
+$Packages$sessioninfo$Source
+[1] &quot;Repository&quot;
+
+$Packages$sessioninfo$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$sessioninfo$Hash
+[1] &quot;308013098befe37484df72c39cf90d6e&quot;
+
+
+$Packages$systemfonts
+$Packages$systemfonts$Package
+[1] &quot;systemfonts&quot;
+
+$Packages$systemfonts$Version
+[1] &quot;0.3.2&quot;
+
+$Packages$systemfonts$Source
+[1] &quot;Repository&quot;
+
+$Packages$systemfonts$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$systemfonts$Hash
+[1] &quot;046e821d454edb3722192f588f4d7884&quot;
+
+
+$Packages$jsonlite
+$Packages$jsonlite$Package
+[1] &quot;jsonlite&quot;
+
+$Packages$jsonlite$Version
+[1] &quot;1.7.2&quot;
+
+$Packages$jsonlite$Source
+[1] &quot;Repository&quot;
+
+$Packages$jsonlite$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$jsonlite$Hash
+[1] &quot;98138e0994d41508c7a6b84a0600cfcb&quot;
+
+
+$Packages$nloptr
+$Packages$nloptr$Package
+[1] &quot;nloptr&quot;
+
+$Packages$nloptr$Version
+[1] &quot;1.2.2.2&quot;
+
+$Packages$nloptr$Source
+[1] &quot;Repository&quot;
+
+$Packages$nloptr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$nloptr$Hash
+[1] &quot;2737faeee353704efec5afa1e943dd64&quot;
+
+
+$Packages$flashClust
+$Packages$flashClust$Package
+[1] &quot;flashClust&quot;
+
+$Packages$flashClust$Version
+[1] &quot;1.01-2&quot;
+
+$Packages$flashClust$Source
+[1] &quot;Repository&quot;
+
+$Packages$flashClust$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$flashClust$Hash
+[1] &quot;09fb526c49460c4933bc077db6eba924&quot;
+
+
+$Packages$UpSetR
+$Packages$UpSetR$Package
+[1] &quot;UpSetR&quot;
+
+$Packages$UpSetR$Version
+[1] &quot;1.4.0&quot;
+
+$Packages$UpSetR$Source
+[1] &quot;Repository&quot;
+
+$Packages$UpSetR$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$UpSetR$Hash
+[1] &quot;f6ef89503aaff474873f8bc1823894e1&quot;
+
+
+$Packages$testthat
+$Packages$testthat$Package
+[1] &quot;testthat&quot;
+
+$Packages$testthat$Version
+[1] &quot;3.0.1&quot;
+
+$Packages$testthat$Source
+[1] &quot;Repository&quot;
+
+$Packages$testthat$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$testthat$Hash
+[1] &quot;17826764cb92d8b5aae6619896e5a161&quot;
+
+
+$Packages$gt
+$Packages$gt$Package
+[1] &quot;gt&quot;
+
+$Packages$gt$Version
+[1] &quot;0.2.2&quot;
+
+$Packages$gt$Source
+[1] &quot;Repository&quot;
+
+$Packages$gt$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gt$Hash
+[1] &quot;4eb28493ed31ff8f5f240d0fb5929ecb&quot;
+
+
+$Packages$R6
+$Packages$R6$Package
+[1] &quot;R6&quot;
+
+$Packages$R6$Version
+[1] &quot;2.5.0&quot;
+
+$Packages$R6$Source
+[1] &quot;Repository&quot;
+
+$Packages$R6$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$R6$Hash
+[1] &quot;b203113193e70978a696b2809525649d&quot;
+
+
+$Packages$pillar
+$Packages$pillar$Package
+[1] &quot;pillar&quot;
+
+$Packages$pillar$Version
+[1] &quot;1.4.7&quot;
+
+$Packages$pillar$Source
+[1] &quot;Repository&quot;
+
+$Packages$pillar$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$pillar$Hash
+[1] &quot;3b3dd89b2ee115a8b54e93a34cd546b4&quot;
+
+
+$Packages$htmltools
+$Packages$htmltools$Package
+[1] &quot;htmltools&quot;
+
+$Packages$htmltools$Version
+[1] &quot;0.5.0.9003&quot;
+
+$Packages$htmltools$Source
+[1] &quot;GitHub&quot;
+
+$Packages$htmltools$RemoteType
+[1] &quot;github&quot;
+
+$Packages$htmltools$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$htmltools$RemoteRepo
+[1] &quot;htmltools&quot;
+
+$Packages$htmltools$RemoteUsername
+[1] &quot;rstudio&quot;
+
+$Packages$htmltools$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$htmltools$RemoteSha
+[1] &quot;d18bd8e404fb3e7d25dd448b1f8300f16a44add8&quot;
+
+$Packages$htmltools$Hash
+[1] &quot;2c4efca72b50b4dde3699acf9d055f22&quot;
+
+
+$Packages$mime
+$Packages$mime$Package
+[1] &quot;mime&quot;
+
+$Packages$mime$Version
+[1] &quot;0.9&quot;
+
+$Packages$mime$Source
+[1] &quot;Repository&quot;
+
+$Packages$mime$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$mime$Hash
+[1] &quot;e87a35ec73b157552814869f45a63aa3&quot;
+
+
+$Packages$tictoc
+$Packages$tictoc$Package
+[1] &quot;tictoc&quot;
+
+$Packages$tictoc$Version
+[1] &quot;1.0&quot;
+
+$Packages$tictoc$Source
+[1] &quot;Repository&quot;
+
+$Packages$tictoc$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tictoc$Hash
+[1] &quot;f8cc5adf4671b013434bbe127f35b28c&quot;
+
+
+$Packages$reactable
+$Packages$reactable$Package
+[1] &quot;reactable&quot;
+
+$Packages$reactable$Version
+[1] &quot;0.2.2&quot;
+
+$Packages$reactable$Source
+[1] &quot;Repository&quot;
+
+$Packages$reactable$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$reactable$Hash
+[1] &quot;31b911f5231ea795b79fdde51644035e&quot;
+
+
+$Packages$glue
+$Packages$glue$Package
+[1] &quot;glue&quot;
+
+$Packages$glue$Version
+[1] &quot;1.4.2&quot;
+
+$Packages$glue$Source
+[1] &quot;Repository&quot;
+
+$Packages$glue$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$glue$Hash
+[1] &quot;6efd734b14c6471cfe443345f3e35e29&quot;
+
+
+$Packages$minqa
+$Packages$minqa$Package
+[1] &quot;minqa&quot;
+
+$Packages$minqa$Version
+[1] &quot;1.2.4&quot;
+
+$Packages$minqa$Source
+[1] &quot;Repository&quot;
+
+$Packages$minqa$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$minqa$Hash
+[1] &quot;eaee7d2a6f3ed4491df868611cb064cc&quot;
+
+
+$Packages$DT
+$Packages$DT$Package
+[1] &quot;DT&quot;
+
+$Packages$DT$Version
+[1] &quot;0.15&quot;
+
+$Packages$DT$Source
+[1] &quot;Repository&quot;
+
+$Packages$DT$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$DT$Hash
+[1] &quot;85738c69035e67ec4b484a5e02640ef6&quot;
+
+
+$Packages$cpp11
+$Packages$cpp11$Package
+[1] &quot;cpp11&quot;
+
+$Packages$cpp11$Version
+[1] &quot;0.2.4&quot;
+
+$Packages$cpp11$Source
+[1] &quot;Repository&quot;
+
+$Packages$cpp11$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$cpp11$Hash
+[1] &quot;ba66e5a750d39067d888aa7af797fed2&quot;
+
+
+$Packages$codetools
+$Packages$codetools$Package
+[1] &quot;codetools&quot;
+
+$Packages$codetools$Version
+[1] &quot;0.2-16&quot;
+
+$Packages$codetools$Source
+[1] &quot;Repository&quot;
+
+$Packages$codetools$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$codetools$Hash
+[1] &quot;89cf4b8207269ccf82fbeb6473fd662b&quot;
+
+
+$Packages$class
+$Packages$class$Package
+[1] &quot;class&quot;
+
+$Packages$class$Version
+[1] &quot;7.3-16&quot;
+
+$Packages$class$Source
+[1] &quot;Repository&quot;
+
+$Packages$class$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$class$Hash
+[1] &quot;ebc639c4432a2e9c17f195d004848100&quot;
+
+
+$Packages$furrr
+$Packages$furrr$Package
+[1] &quot;furrr&quot;
+
+$Packages$furrr$Version
+[1] &quot;0.1.0&quot;
+
+$Packages$furrr$Source
+[1] &quot;Repository&quot;
+
+$Packages$furrr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$furrr$Hash
+[1] &quot;c1f60eafdbcbea57078aa6f501974d2a&quot;
+
+
+$Packages$pkgbuild
+$Packages$pkgbuild$Package
+[1] &quot;pkgbuild&quot;
+
+$Packages$pkgbuild$Version
+[1] &quot;1.2.0&quot;
+
+$Packages$pkgbuild$Source
+[1] &quot;Repository&quot;
+
+$Packages$pkgbuild$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$pkgbuild$Hash
+[1] &quot;725fcc30222d4d11ec68efb8ff11a9af&quot;
+
+
+$Packages$utf8
+$Packages$utf8$Package
+[1] &quot;utf8&quot;
+
+$Packages$utf8$Version
+[1] &quot;1.1.4&quot;
+
+$Packages$utf8$Source
+[1] &quot;Repository&quot;
+
+$Packages$utf8$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$utf8$Hash
+[1] &quot;4a5081acfb7b81a572e4384a7aaf2af1&quot;
+
+
+$Packages$lattice
+$Packages$lattice$Package
+[1] &quot;lattice&quot;
+
+$Packages$lattice$Version
+[1] &quot;0.20-41&quot;
+
+$Packages$lattice$Source
+[1] &quot;Repository&quot;
+
+$Packages$lattice$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$lattice$Hash
+[1] &quot;fbd9285028b0263d76d18c95ae51a53d&quot;
+
+
+$Packages$tibble
+$Packages$tibble$Package
+[1] &quot;tibble&quot;
+
+$Packages$tibble$Version
+[1] &quot;3.0.4&quot;
+
+$Packages$tibble$Source
+[1] &quot;Repository&quot;
+
+$Packages$tibble$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tibble$Hash
+[1] &quot;71dffd8544691c520dd8e41ed2d7e070&quot;
+
+
+$Packages$pbkrtest
+$Packages$pbkrtest$Package
+[1] &quot;pbkrtest&quot;
+
+$Packages$pbkrtest$Version
+[1] &quot;0.4-8.6&quot;
+
+$Packages$pbkrtest$Source
+[1] &quot;Repository&quot;
+
+$Packages$pbkrtest$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$pbkrtest$Hash
+[1] &quot;d547eab65958fc4f5d68ad0adfacfcf4&quot;
+
+
+$Packages$hrbrthemes
+$Packages$hrbrthemes$Package
+[1] &quot;hrbrthemes&quot;
+
+$Packages$hrbrthemes$Version
+[1] &quot;0.8.0&quot;
+
+$Packages$hrbrthemes$Source
+[1] &quot;Repository&quot;
+
+$Packages$hrbrthemes$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$hrbrthemes$Hash
+[1] &quot;0d1257948f016840ad90320ed19c8c7d&quot;
+
+
+$Packages$curl
+$Packages$curl$Package
+[1] &quot;curl&quot;
+
+$Packages$curl$Version
+[1] &quot;4.3&quot;
+
+$Packages$curl$Source
+[1] &quot;Repository&quot;
+
+$Packages$curl$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$curl$Hash
+[1] &quot;2b7d10581cc730804e9ed178c8374bd6&quot;
+
+
+$Packages$praise
+$Packages$praise$Package
+[1] &quot;praise&quot;
+
+$Packages$praise$Version
+[1] &quot;1.0.0&quot;
+
+$Packages$praise$Source
+[1] &quot;Repository&quot;
+
+$Packages$praise$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$praise$Hash
+[1] &quot;a555924add98c99d2f411e37e7d25e9f&quot;
+
+
+$Packages$config
+$Packages$config$Package
+[1] &quot;config&quot;
+
+$Packages$config$Version
+[1] &quot;0.3.1&quot;
+
+$Packages$config$Source
+[1] &quot;Repository&quot;
+
+$Packages$config$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$config$Hash
+[1] &quot;31d77b09f63550cee9ecb5a08bf76e8f&quot;
+
+
+$Packages$waldo
+$Packages$waldo$Package
+[1] &quot;waldo&quot;
+
+$Packages$waldo$Version
+[1] &quot;0.2.3&quot;
+
+$Packages$waldo$Source
+[1] &quot;Repository&quot;
+
+$Packages$waldo$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$waldo$Hash
+[1] &quot;181d1a31b1ba2009ef20926f2ee0570c&quot;
+
+
+$Packages$clipr
+$Packages$clipr$Package
+[1] &quot;clipr&quot;
+
+$Packages$clipr$Version
+[1] &quot;0.7.1&quot;
+
+$Packages$clipr$Source
+[1] &quot;Repository&quot;
+
+$Packages$clipr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$clipr$Hash
+[1] &quot;ebaa97ac99cc2daf04e77eecc7b781d7&quot;
+
+
+$Packages$openxlsx
+$Packages$openxlsx$Package
+[1] &quot;openxlsx&quot;
+
+$Packages$openxlsx$Version
+[1] &quot;4.1.5&quot;
+
+$Packages$openxlsx$Source
+[1] &quot;Repository&quot;
+
+$Packages$openxlsx$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$openxlsx$Hash
+[1] &quot;9b9b5322c83ee21db73c8ba3787897ca&quot;
+
+
+$Packages$zip
+$Packages$zip$Package
+[1] &quot;zip&quot;
+
+$Packages$zip$Version
+[1] &quot;2.1.1&quot;
+
+$Packages$zip$Source
+[1] &quot;Repository&quot;
+
+$Packages$zip$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$zip$Hash
+[1] &quot;3bc8405c637d988801ec5ea88372d0c2&quot;
+
+
+$Packages$openssl
+$Packages$openssl$Package
+[1] &quot;openssl&quot;
+
+$Packages$openssl$Version
+[1] &quot;1.4.3&quot;
+
+$Packages$openssl$Source
+[1] &quot;Repository&quot;
+
+$Packages$openssl$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$openssl$Hash
+[1] &quot;a399e4773075fc2375b71f45fca186c4&quot;
+
+
+$Packages$Rttf2pt1
+$Packages$Rttf2pt1$Package
+[1] &quot;Rttf2pt1&quot;
+
+$Packages$Rttf2pt1$Version
+[1] &quot;1.3.8&quot;
+
+$Packages$Rttf2pt1$Source
+[1] &quot;Repository&quot;
+
+$Packages$Rttf2pt1$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$Rttf2pt1$Hash
+[1] &quot;8c4137a9ab70de4787d57758f8190617&quot;
+
+
+$Packages$roxygen2
+$Packages$roxygen2$Package
+[1] &quot;roxygen2&quot;
+
+$Packages$roxygen2$Version
+[1] &quot;7.1.0&quot;
+
+$Packages$roxygen2$Source
+[1] &quot;Repository&quot;
+
+$Packages$roxygen2$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$roxygen2$Hash
+[1] &quot;f173062c04dc8e91d7376d914df6efee&quot;
+
+
+$Packages$rmarkdown
+$Packages$rmarkdown$Package
+[1] &quot;rmarkdown&quot;
+
+$Packages$rmarkdown$Version
+[1] &quot;2.6&quot;
+
+$Packages$rmarkdown$Source
+[1] &quot;Repository&quot;
+
+$Packages$rmarkdown$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rmarkdown$Hash
+[1] &quot;bc4bac38960b446c183957bfd563e763&quot;
+
+
+$Packages$repr
+$Packages$repr$Package
+[1] &quot;repr&quot;
+
+$Packages$repr$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$repr$Source
+[1] &quot;Repository&quot;
+
+$Packages$repr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$repr$Hash
+[1] &quot;466aee1b69232becb73769daa894c171&quot;
+
+
+$Packages$parsedate
+$Packages$parsedate$Package
+[1] &quot;parsedate&quot;
+
+$Packages$parsedate$Version
+[1] &quot;1.2.0&quot;
+
+$Packages$parsedate$Source
+[1] &quot;Repository&quot;
+
+$Packages$parsedate$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$parsedate$Hash
+[1] &quot;9ab1426429ad716b42088a0fd8e909ee&quot;
+
+
+$Packages$desc
+$Packages$desc$Package
+[1] &quot;desc&quot;
+
+$Packages$desc$Version
+[1] &quot;1.2.0&quot;
+
+$Packages$desc$Source
+[1] &quot;Repository&quot;
+
+$Packages$desc$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$desc$Hash
+[1] &quot;6c8fe8fa26a23b79949375d372c7b395&quot;
+
+
+$Packages$munsell
+$Packages$munsell$Package
+[1] &quot;munsell&quot;
+
+$Packages$munsell$Version
+[1] &quot;0.5.0&quot;
+
+$Packages$munsell$Source
+[1] &quot;Repository&quot;
+
+$Packages$munsell$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$munsell$Hash
+[1] &quot;6dfe8bf774944bd5595785e3229d8771&quot;
+
+
+$Packages$e1071
+$Packages$e1071$Package
+[1] &quot;e1071&quot;
+
+$Packages$e1071$Version
+[1] &quot;1.7-3&quot;
+
+$Packages$e1071$Source
+[1] &quot;Repository&quot;
+
+$Packages$e1071$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$e1071$Hash
+[1] &quot;728e85416ffc90743054c1ac04486d69&quot;
+
+
+$Packages$haven
+$Packages$haven$Package
+[1] &quot;haven&quot;
+
+$Packages$haven$Version
+[1] &quot;2.2.0&quot;
+
+$Packages$haven$Source
+[1] &quot;Repository&quot;
+
+$Packages$haven$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$haven$Hash
+[1] &quot;e3f662e125e9fdffd1ee4e94baea3451&quot;
+
+
+$Packages$reshape2
+$Packages$reshape2$Package
+[1] &quot;reshape2&quot;
+
+$Packages$reshape2$Version
+[1] &quot;1.4.4&quot;
+
+$Packages$reshape2$Source
+[1] &quot;Repository&quot;
+
+$Packages$reshape2$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$reshape2$Hash
+[1] &quot;bb5996d0bd962d214a11140d77589917&quot;
+
+
+$Packages$gtable
+$Packages$gtable$Package
+[1] &quot;gtable&quot;
+
+$Packages$gtable$Version
+[1] &quot;0.3.0&quot;
+
+$Packages$gtable$Source
+[1] &quot;Repository&quot;
+
+$Packages$gtable$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gtable$Hash
+[1] &quot;ac5c6baf7822ce8732b343f14c072c4d&quot;
+
+
+$Packages$extrafont
+$Packages$extrafont$Package
+[1] &quot;extrafont&quot;
+
+$Packages$extrafont$Version
+[1] &quot;0.17&quot;
+
+$Packages$extrafont$Source
+[1] &quot;Repository&quot;
+
+$Packages$extrafont$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$extrafont$Hash
+[1] &quot;7f2f50e8f998a4bea4b04650fc4f2ca8&quot;
+
+
+
+attr(,&quot;class&quot;)
+[1] &quot;renv_lockfile&quot;
+
+$lockfile
+$R
+$R$Version
+[1] &quot;4.0.2&quot;
+
+$R$Repositories
+$R$Repositories$CRAN
+[1] &quot;https://cran.rstudio.com&quot;
+
+$R$Repositories$petrbouchal
+[1] &quot;https://petrbouchal.github.io/drat&quot;
+
+$R$Repositories$scholaempirica
+[1] &quot;https://scholaempirica.github.io/drat&quot;
+
+
+
+$Packages
+$Packages$BH
+$Packages$BH$Package
+[1] &quot;BH&quot;
+
+$Packages$BH$Version
+[1] &quot;1.72.0-3&quot;
+
+$Packages$BH$Source
+[1] &quot;Repository&quot;
+
+$Packages$BH$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$BH$Hash
+[1] &quot;8f9ce74c6417d61f0782cbae5fd2b7b0&quot;
+
+
+$Packages$CzechData
+$Packages$CzechData$Package
+[1] &quot;CzechData&quot;
+
+$Packages$CzechData$Version
+[1] &quot;0.5.5&quot;
+
+$Packages$CzechData$Source
+[1] &quot;GitHub&quot;
+
+$Packages$CzechData$RemoteType
+[1] &quot;github&quot;
+
+$Packages$CzechData$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$CzechData$RemoteRepo
+[1] &quot;CzechData&quot;
+
+$Packages$CzechData$RemoteUsername
+[1] &quot;JanCaha&quot;
+
+$Packages$CzechData$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$CzechData$RemoteSha
+[1] &quot;41a9ea9ba407548ffa2601255cdb855977fc6134&quot;
+
+$Packages$CzechData$Hash
+[1] &quot;1d10b61b0193b98f0203fe76ccf03145&quot;
+
+
+$Packages$DBI
+$Packages$DBI$Package
+[1] &quot;DBI&quot;
+
+$Packages$DBI$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$DBI$Source
+[1] &quot;Repository&quot;
+
+$Packages$DBI$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$DBI$Hash
+[1] &quot;4744be45519d675af66c28478720fce5&quot;
+
+
+$Packages$DT
+$Packages$DT$Package
+[1] &quot;DT&quot;
+
+$Packages$DT$Version
+[1] &quot;0.15&quot;
+
+$Packages$DT$Source
+[1] &quot;Repository&quot;
+
+$Packages$DT$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$DT$Hash
+[1] &quot;85738c69035e67ec4b484a5e02640ef6&quot;
+
+
+$Packages$FactoMineR
+$Packages$FactoMineR$Package
+[1] &quot;FactoMineR&quot;
+
+$Packages$FactoMineR$Version
+[1] &quot;2.3&quot;
+
+$Packages$FactoMineR$Source
+[1] &quot;Repository&quot;
+
+$Packages$FactoMineR$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$FactoMineR$Hash
+[1] &quot;1f47ca5629ef9dc24d5ea1cd2efe4f87&quot;
+
+
+$Packages$KernSmooth
+$Packages$KernSmooth$Package
+[1] &quot;KernSmooth&quot;
+
+$Packages$KernSmooth$Version
+[1] &quot;2.23-16&quot;
+
+$Packages$KernSmooth$Source
+[1] &quot;Repository&quot;
+
+$Packages$KernSmooth$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$KernSmooth$Hash
+[1] &quot;997471f25a7ed6c782f0090ce52cc63a&quot;
+
+
+$Packages$MASS
+$Packages$MASS$Package
+[1] &quot;MASS&quot;
+
+$Packages$MASS$Version
+[1] &quot;7.3-51.5&quot;
+
+$Packages$MASS$Source
+[1] &quot;Repository&quot;
+
+$Packages$MASS$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$MASS$Hash
+[1] &quot;9efe80472b21189ebab1b74169808c26&quot;
+
+
+$Packages$Matrix
+$Packages$Matrix$Package
+[1] &quot;Matrix&quot;
+
+$Packages$Matrix$Version
+[1] &quot;1.2-18&quot;
+
+$Packages$Matrix$Source
+[1] &quot;Repository&quot;
+
+$Packages$Matrix$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$Matrix$Hash
+[1] &quot;08588806cba69f04797dab50627428ed&quot;
+
+
+$Packages$MatrixModels
+$Packages$MatrixModels$Package
+[1] &quot;MatrixModels&quot;
+
+$Packages$MatrixModels$Version
+[1] &quot;0.4-1&quot;
+
+$Packages$MatrixModels$Source
+[1] &quot;Repository&quot;
+
+$Packages$MatrixModels$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$MatrixModels$Hash
+[1] &quot;d57ac35220b39c591388ab3a080f9cbe&quot;
+
+
+$Packages$R6
+$Packages$R6$Package
+[1] &quot;R6&quot;
+
+$Packages$R6$Version
+[1] &quot;2.5.0&quot;
+
+$Packages$R6$Source
+[1] &quot;Repository&quot;
+
+$Packages$R6$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$R6$Hash
+[1] &quot;b203113193e70978a696b2809525649d&quot;
+
+
+$Packages$RColorBrewer
+$Packages$RColorBrewer$Package
+[1] &quot;RColorBrewer&quot;
+
+$Packages$RColorBrewer$Version
+[1] &quot;1.1-2&quot;
+
+$Packages$RColorBrewer$Source
+[1] &quot;Repository&quot;
+
+$Packages$RColorBrewer$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$RColorBrewer$Hash
+[1] &quot;e031418365a7f7a766181ab5a41a5716&quot;
+
+
+$Packages$RCurl
+$Packages$RCurl$Package
+[1] &quot;RCurl&quot;
+
+$Packages$RCurl$Version
+[1] &quot;1.98-1.2&quot;
+
+$Packages$RCurl$Source
+[1] &quot;Repository&quot;
+
+$Packages$RCurl$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$RCurl$Hash
+[1] &quot;cf29e1b71f8736960e0e851123a83e6f&quot;
+
+
+$Packages$Rcpp
+$Packages$Rcpp$Package
+[1] &quot;Rcpp&quot;
+
+$Packages$Rcpp$Version
+[1] &quot;1.0.5&quot;
+
+$Packages$Rcpp$Source
+[1] &quot;Repository&quot;
+
+$Packages$Rcpp$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$Rcpp$Hash
+[1] &quot;125dc7a0ed375eb68c0ce533b48d291f&quot;
+
+
+$Packages$RcppArmadillo
+$Packages$RcppArmadillo$Package
+[1] &quot;RcppArmadillo&quot;
+
+$Packages$RcppArmadillo$Version
+[1] &quot;0.9.900.2.0&quot;
+
+$Packages$RcppArmadillo$Source
+[1] &quot;Repository&quot;
+
+$Packages$RcppArmadillo$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$RcppArmadillo$Hash
+[1] &quot;8845285b6151967fb0d95678b7eee11a&quot;
+
+
+$Packages$RcppEigen
+$Packages$RcppEigen$Package
+[1] &quot;RcppEigen&quot;
+
+$Packages$RcppEigen$Version
+[1] &quot;0.3.3.9.1&quot;
+
+$Packages$RcppEigen$Source
+[1] &quot;Repository&quot;
+
+$Packages$RcppEigen$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$RcppEigen$Hash
+[1] &quot;ddfa72a87fdf4c80466a20818be91d00&quot;
+
+
+$Packages$Rttf2pt1
+$Packages$Rttf2pt1$Package
+[1] &quot;Rttf2pt1&quot;
+
+$Packages$Rttf2pt1$Version
+[1] &quot;1.3.8&quot;
+
+$Packages$Rttf2pt1$Source
+[1] &quot;Repository&quot;
+
+$Packages$Rttf2pt1$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$Rttf2pt1$Hash
+[1] &quot;8c4137a9ab70de4787d57758f8190617&quot;
+
+
+$Packages$SparseM
+$Packages$SparseM$Package
+[1] &quot;SparseM&quot;
+
+$Packages$SparseM$Version
+[1] &quot;1.78&quot;
+
+$Packages$SparseM$Source
+[1] &quot;Repository&quot;
+
+$Packages$SparseM$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$SparseM$Hash
+[1] &quot;fbe4ac267bf42a91e495cc68ad3f8b63&quot;
+
+
+$Packages$UpSetR
+$Packages$UpSetR$Package
+[1] &quot;UpSetR&quot;
+
+$Packages$UpSetR$Version
+[1] &quot;1.4.0&quot;
+
+$Packages$UpSetR$Source
+[1] &quot;Repository&quot;
+
+$Packages$UpSetR$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$UpSetR$Hash
+[1] &quot;f6ef89503aaff474873f8bc1823894e1&quot;
+
+
+$Packages$abind
+$Packages$abind$Package
+[1] &quot;abind&quot;
+
+$Packages$abind$Version
+[1] &quot;1.4-5&quot;
+
+$Packages$abind$Source
+[1] &quot;Repository&quot;
+
+$Packages$abind$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$abind$Hash
+[1] &quot;4f57884290cc75ab22f4af9e9d4ca862&quot;
+
+
+$Packages$arrow
+$Packages$arrow$Package
+[1] &quot;arrow&quot;
+
+$Packages$arrow$Version
+[1] &quot;2.0.0&quot;
+
+$Packages$arrow$Source
+[1] &quot;Repository&quot;
+
+$Packages$arrow$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$arrow$Hash
+[1] &quot;04a9e87326777f5205bacdf3ec4ffa02&quot;
+
+
+$Packages$askpass
+$Packages$askpass$Package
+[1] &quot;askpass&quot;
+
+$Packages$askpass$Version
+[1] &quot;1.1&quot;
+
+$Packages$askpass$Source
+[1] &quot;Repository&quot;
+
+$Packages$askpass$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$askpass$Hash
+[1] &quot;e8a22846fff485f0be3770c2da758713&quot;
+
+
+$Packages$assertthat
+$Packages$assertthat$Package
+[1] &quot;assertthat&quot;
+
+$Packages$assertthat$Version
+[1] &quot;0.2.1&quot;
+
+$Packages$assertthat$Source
+[1] &quot;Repository&quot;
+
+$Packages$assertthat$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$assertthat$Hash
+[1] &quot;50c838a310445e954bc13f26f26a6ecf&quot;
+
+
+$Packages$audio
+$Packages$audio$Package
+[1] &quot;audio&quot;
+
+$Packages$audio$Version
+[1] &quot;0.1-7&quot;
+
+$Packages$audio$Source
+[1] &quot;Repository&quot;
+
+$Packages$audio$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$audio$Hash
+[1] &quot;31dcf8bcc4b1d343d75fee98ee44550b&quot;
+
+
+$Packages$backports
+$Packages$backports$Package
+[1] &quot;backports&quot;
+
+$Packages$backports$Version
+[1] &quot;1.2.1&quot;
+
+$Packages$backports$Source
+[1] &quot;Repository&quot;
+
+$Packages$backports$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$backports$Hash
+[1] &quot;644043219fc24e190c2f620c1a380a69&quot;
+
+
+$Packages$base64enc
+$Packages$base64enc$Package
+[1] &quot;base64enc&quot;
+
+$Packages$base64enc$Version
+[1] &quot;0.1-3&quot;
+
+$Packages$base64enc$Source
+[1] &quot;Repository&quot;
+
+$Packages$base64enc$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$base64enc$Hash
+[1] &quot;543776ae6848fde2f48ff3816d0628bc&quot;
+
+
+$Packages$beepr
+$Packages$beepr$Package
+[1] &quot;beepr&quot;
+
+$Packages$beepr$Version
+[1] &quot;1.3&quot;
+
+$Packages$beepr$Source
+[1] &quot;Repository&quot;
+
+$Packages$beepr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$beepr$Hash
+[1] &quot;b3158a579ecef0e8f7626f4dadc369d0&quot;
+
+
+$Packages$bit
+$Packages$bit$Package
+[1] &quot;bit&quot;
+
+$Packages$bit$Version
+[1] &quot;1.1-15.2&quot;
+
+$Packages$bit$Source
+[1] &quot;Repository&quot;
+
+$Packages$bit$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$bit$Hash
+[1] &quot;eb6c52d8cc44463085a4cde1c63df163&quot;
+
+
+$Packages$bit64
+$Packages$bit64$Package
+[1] &quot;bit64&quot;
+
+$Packages$bit64$Version
+[1] &quot;0.9-7&quot;
+
+$Packages$bit64$Source
+[1] &quot;Repository&quot;
+
+$Packages$bit64$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$bit64$Hash
+[1] &quot;3338d4a9b1352f5a613e2bdcefe784ea&quot;
+
+
+$Packages$bitops
+$Packages$bitops$Package
+[1] &quot;bitops&quot;
+
+$Packages$bitops$Version
+[1] &quot;1.0-6&quot;
+
+$Packages$bitops$Source
+[1] &quot;Repository&quot;
+
+$Packages$bitops$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$bitops$Hash
+[1] &quot;0b118d5900596bae6c4d4865374536a6&quot;
+
+
+$Packages$blastula
+$Packages$blastula$Package
+[1] &quot;blastula&quot;
+
+$Packages$blastula$Version
+[1] &quot;0.3.2&quot;
+
+$Packages$blastula$Source
+[1] &quot;Repository&quot;
+
+$Packages$blastula$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$blastula$Hash
+[1] &quot;1f45952e8aadddb043afb988b988dd52&quot;
+
+
+$Packages$blob
+$Packages$blob$Package
+[1] &quot;blob&quot;
+
+$Packages$blob$Version
+[1] &quot;1.2.1&quot;
+
+$Packages$blob$Source
+[1] &quot;Repository&quot;
+
+$Packages$blob$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$blob$Hash
+[1] &quot;9addc7e2c5954eca5719928131fed98c&quot;
+
+
+$Packages$boot
+$Packages$boot$Package
+[1] &quot;boot&quot;
+
+$Packages$boot$Version
+[1] &quot;1.3-25&quot;
+
+$Packages$boot$Source
+[1] &quot;Repository&quot;
+
+$Packages$boot$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$boot$Hash
+[1] &quot;bd51734a754b6c2baf28b2d1ebc11e91&quot;
+
+
+$Packages$brew
+$Packages$brew$Package
+[1] &quot;brew&quot;
+
+$Packages$brew$Version
+[1] &quot;1.0-6&quot;
+
+$Packages$brew$Source
+[1] &quot;Repository&quot;
+
+$Packages$brew$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$brew$Hash
+[1] &quot;92a5f887f9ae3035ac7afde22ba73ee9&quot;
+
+
+$Packages$brio
+$Packages$brio$Package
+[1] &quot;brio&quot;
+
+$Packages$brio$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$brio$Source
+[1] &quot;Repository&quot;
+
+$Packages$brio$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$brio$Hash
+[1] &quot;570a24963009b9cce0869a0463c83580&quot;
+
+
+$Packages$broom
+$Packages$broom$Package
+[1] &quot;broom&quot;
+
+$Packages$broom$Version
+[1] &quot;0.5.6&quot;
+
+$Packages$broom$Source
+[1] &quot;Repository&quot;
+
+$Packages$broom$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$broom$Hash
+[1] &quot;754fdb4d17d4ae871343ff2909728ca3&quot;
+
+
+$Packages$callr
+$Packages$callr$Package
+[1] &quot;callr&quot;
+
+$Packages$callr$Version
+[1] &quot;3.5.1&quot;
+
+$Packages$callr$Source
+[1] &quot;Repository&quot;
+
+$Packages$callr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$callr$Hash
+[1] &quot;b7d7f1e926dfcd57c74ce93f5c048e80&quot;
+
+
+$Packages$car
+$Packages$car$Package
+[1] &quot;car&quot;
+
+$Packages$car$Version
+[1] &quot;3.0-9&quot;
+
+$Packages$car$Source
+[1] &quot;Repository&quot;
+
+$Packages$car$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$car$Hash
+[1] &quot;5b4045bd11466d0d3e55c71f81cc1b5f&quot;
+
+
+$Packages$carData
+$Packages$carData$Package
+[1] &quot;carData&quot;
+
+$Packages$carData$Version
+[1] &quot;3.0-4&quot;
+
+$Packages$carData$Source
+[1] &quot;Repository&quot;
+
+$Packages$carData$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$carData$Hash
+[1] &quot;7ff5c94cec207b3fd9774cfaa5157738&quot;
+
+
+$Packages$cellranger
+$Packages$cellranger$Package
+[1] &quot;cellranger&quot;
+
+$Packages$cellranger$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$cellranger$Source
+[1] &quot;Repository&quot;
+
+$Packages$cellranger$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$cellranger$Hash
+[1] &quot;f61dbaec772ccd2e17705c1e872e9e7c&quot;
+
+
+$Packages$checkmate
+$Packages$checkmate$Package
+[1] &quot;checkmate&quot;
+
+$Packages$checkmate$Version
+[1] &quot;2.0.0&quot;
+
+$Packages$checkmate$Source
+[1] &quot;Repository&quot;
+
+$Packages$checkmate$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$checkmate$Hash
+[1] &quot;a667800d5f0350371bedeb8b8b950289&quot;
+
+
+$Packages$class
+$Packages$class$Package
+[1] &quot;class&quot;
+
+$Packages$class$Version
+[1] &quot;7.3-16&quot;
+
+$Packages$class$Source
+[1] &quot;Repository&quot;
+
+$Packages$class$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$class$Hash
+[1] &quot;ebc639c4432a2e9c17f195d004848100&quot;
+
+
+$Packages$classInt
+$Packages$classInt$Package
+[1] &quot;classInt&quot;
+
+$Packages$classInt$Version
+[1] &quot;0.4-3&quot;
+
+$Packages$classInt$Source
+[1] &quot;Repository&quot;
+
+$Packages$classInt$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$classInt$Hash
+[1] &quot;17bdfa3c51df4a6c82484d13b11fb380&quot;
+
+
+$Packages$cli
+$Packages$cli$Package
+[1] &quot;cli&quot;
+
+$Packages$cli$Version
+[1] &quot;2.2.0&quot;
+
+$Packages$cli$Source
+[1] &quot;Repository&quot;
+
+$Packages$cli$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$cli$Hash
+[1] &quot;3ef298932294b775fa0a3eeaa3a645b0&quot;
+
+
+$Packages$clipr
+$Packages$clipr$Package
+[1] &quot;clipr&quot;
+
+$Packages$clipr$Version
+[1] &quot;0.7.1&quot;
+
+$Packages$clipr$Source
+[1] &quot;Repository&quot;
+
+$Packages$clipr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$clipr$Hash
+[1] &quot;ebaa97ac99cc2daf04e77eecc7b781d7&quot;
+
+
+$Packages$cluster
+$Packages$cluster$Package
+[1] &quot;cluster&quot;
+
+$Packages$cluster$Version
+[1] &quot;2.1.0&quot;
+
+$Packages$cluster$Source
+[1] &quot;Repository&quot;
+
+$Packages$cluster$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$cluster$Hash
+[1] &quot;db63a44aab5aadcb6bf2f129751d129a&quot;
+
+
+$Packages$codetools
+$Packages$codetools$Package
+[1] &quot;codetools&quot;
+
+$Packages$codetools$Version
+[1] &quot;0.2-16&quot;
+
+$Packages$codetools$Source
+[1] &quot;Repository&quot;
+
+$Packages$codetools$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$codetools$Hash
+[1] &quot;89cf4b8207269ccf82fbeb6473fd662b&quot;
+
+
+$Packages$colorspace
+$Packages$colorspace$Package
+[1] &quot;colorspace&quot;
+
+$Packages$colorspace$Version
+[1] &quot;2.0-0&quot;
+
+$Packages$colorspace$Source
+[1] &quot;Repository&quot;
+
+$Packages$colorspace$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$colorspace$Hash
+[1] &quot;abea3384649ef37f60ef51ce002f3547&quot;
+
+
+$Packages$commonmark
+$Packages$commonmark$Package
+[1] &quot;commonmark&quot;
+
+$Packages$commonmark$Version
+[1] &quot;1.7&quot;
+
+$Packages$commonmark$Source
+[1] &quot;Repository&quot;
+
+$Packages$commonmark$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$commonmark$Hash
+[1] &quot;0f22be39ec1d141fd03683c06f3a6e67&quot;
+
+
+$Packages$config
+$Packages$config$Package
+[1] &quot;config&quot;
+
+$Packages$config$Version
+[1] &quot;0.3.1&quot;
+
+$Packages$config$Source
+[1] &quot;Repository&quot;
+
+$Packages$config$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$config$Hash
+[1] &quot;31d77b09f63550cee9ecb5a08bf76e8f&quot;
+
+
+$Packages$conquer
+$Packages$conquer$Package
+[1] &quot;conquer&quot;
+
+$Packages$conquer$Version
+[1] &quot;1.0.1&quot;
+
+$Packages$conquer$Source
+[1] &quot;Repository&quot;
+
+$Packages$conquer$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$conquer$Hash
+[1] &quot;5eb7b98beb699405198e2cde15b77b01&quot;
+
+
+$Packages$convo
+$Packages$convo$Package
+[1] &quot;convo&quot;
+
+$Packages$convo$Version
+[1] &quot;0.0.0.9000&quot;
+
+$Packages$convo$Source
+[1] &quot;GitHub&quot;
+
+$Packages$convo$RemoteType
+[1] &quot;github&quot;
+
+$Packages$convo$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$convo$RemoteRepo
+[1] &quot;convo&quot;
+
+$Packages$convo$RemoteUsername
+[1] &quot;emilyriederer&quot;
+
+$Packages$convo$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$convo$RemoteSha
+[1] &quot;5fc195237186a9fe93400dcb072082fd9d7f182c&quot;
+
+$Packages$convo$Hash
+[1] &quot;5bc667a2a8433d569ab58b04229f2229&quot;
+
+
+$Packages$corrplot
+$Packages$corrplot$Package
+[1] &quot;corrplot&quot;
+
+$Packages$corrplot$Version
+[1] &quot;0.84&quot;
+
+$Packages$corrplot$Source
+[1] &quot;Repository&quot;
+
+$Packages$corrplot$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$corrplot$Hash
+[1] &quot;b55c32ae818a84109a51f172290c95f2&quot;
+
+
+$Packages$covr
+$Packages$covr$Package
+[1] &quot;covr&quot;
+
+$Packages$covr$Version
+[1] &quot;3.5.0&quot;
+
+$Packages$covr$Source
+[1] &quot;Repository&quot;
+
+$Packages$covr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$covr$Hash
+[1] &quot;cbc6df1ef6ee576f844f973c1fc04ab4&quot;
+
+
+$Packages$cowplot
+$Packages$cowplot$Package
+[1] &quot;cowplot&quot;
+
+$Packages$cowplot$Version
+[1] &quot;1.0.0&quot;
+
+$Packages$cowplot$Source
+[1] &quot;Repository&quot;
+
+$Packages$cowplot$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$cowplot$Hash
+[1] &quot;82bae0172ae9d4c4f88a440ad01f73bb&quot;
+
+
+$Packages$cpp11
+$Packages$cpp11$Package
+[1] &quot;cpp11&quot;
+
+$Packages$cpp11$Version
+[1] &quot;0.2.4&quot;
+
+$Packages$cpp11$Source
+[1] &quot;Repository&quot;
+
+$Packages$cpp11$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$cpp11$Hash
+[1] &quot;ba66e5a750d39067d888aa7af797fed2&quot;
+
+
+$Packages$crayon
+$Packages$crayon$Package
+[1] &quot;crayon&quot;
+
+$Packages$crayon$Version
+[1] &quot;1.3.4&quot;
+
+$Packages$crayon$Source
+[1] &quot;Repository&quot;
+
+$Packages$crayon$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$crayon$Hash
+[1] &quot;0d57bc8e27b7ba9e45dba825ebc0de6b&quot;
+
+
+$Packages$credentials
+$Packages$credentials$Package
+[1] &quot;credentials&quot;
+
+$Packages$credentials$Version
+[1] &quot;1.3.0&quot;
+
+$Packages$credentials$Source
+[1] &quot;Repository&quot;
+
+$Packages$credentials$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$credentials$Hash
+[1] &quot;a96728288c75a814c900af9da84387be&quot;
+
+
+$Packages$crosstalk
+$Packages$crosstalk$Package
+[1] &quot;crosstalk&quot;
+
+$Packages$crosstalk$Version
+[1] &quot;1.1.0.1&quot;
+
+$Packages$crosstalk$Source
+[1] &quot;Repository&quot;
+
+$Packages$crosstalk$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$crosstalk$Hash
+[1] &quot;ae55f5d7c02f0ab43c58dd050694f2b4&quot;
+
+
+$Packages$curl
+$Packages$curl$Package
+[1] &quot;curl&quot;
+
+$Packages$curl$Version
+[1] &quot;4.3&quot;
+
+$Packages$curl$Source
+[1] &quot;Repository&quot;
+
+$Packages$curl$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$curl$Hash
+[1] &quot;2b7d10581cc730804e9ed178c8374bd6&quot;
+
+
+$Packages$czso
+$Packages$czso$Package
+[1] &quot;czso&quot;
+
+$Packages$czso$Version
+[1] &quot;0.2.3.9000&quot;
+
+$Packages$czso$Source
+[1] &quot;GitHub&quot;
+
+$Packages$czso$RemoteType
+[1] &quot;github&quot;
+
+$Packages$czso$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$czso$RemoteUsername
+[1] &quot;petrbouchal&quot;
+
+$Packages$czso$RemoteRepo
+[1] &quot;czso&quot;
+
+$Packages$czso$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$czso$RemoteSha
+[1] &quot;2bf6e361db93413b6e5b2c6838fd85b26ef3985b&quot;
+
+$Packages$czso$Hash
+[1] &quot;f739169db72cc8dbe782e76e0419b2c7&quot;
+
+
+$Packages$data.table
+$Packages$data.table$Package
+[1] &quot;data.table&quot;
+
+$Packages$data.table$Version
+[1] &quot;1.13.0&quot;
+
+$Packages$data.table$Source
+[1] &quot;Repository&quot;
+
+$Packages$data.table$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$data.table$Hash
+[1] &quot;06d5863292e2e8ffbb063ce34e77bb2a&quot;
+
+
+$Packages$dbplyr
+$Packages$dbplyr$Package
+[1] &quot;dbplyr&quot;
+
+$Packages$dbplyr$Version
+[1] &quot;2.0.0&quot;
+
+$Packages$dbplyr$Source
+[1] &quot;Repository&quot;
+
+$Packages$dbplyr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$dbplyr$Hash
+[1] &quot;714005206038b1dda74cb1de85029a20&quot;
+
+
+$Packages$dendextend
+$Packages$dendextend$Package
+[1] &quot;dendextend&quot;
+
+$Packages$dendextend$Version
+[1] &quot;1.13.4&quot;
+
+$Packages$dendextend$Source
+[1] &quot;Repository&quot;
+
+$Packages$dendextend$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$dendextend$Hash
+[1] &quot;842396bdc603ee4a40d8039b5540f2e6&quot;
+
+
+$Packages$desc
+$Packages$desc$Package
+[1] &quot;desc&quot;
+
+$Packages$desc$Version
+[1] &quot;1.2.0&quot;
+
+$Packages$desc$Source
+[1] &quot;Repository&quot;
+
+$Packages$desc$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$desc$Hash
+[1] &quot;6c8fe8fa26a23b79949375d372c7b395&quot;
+
+
+$Packages$details
+$Packages$details$Package
+[1] &quot;details&quot;
+
+$Packages$details$Version
+[1] &quot;0.2.1&quot;
+
+$Packages$details$Source
+[1] &quot;Repository&quot;
+
+$Packages$details$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$details$Hash
+[1] &quot;7a18f9d2e53a960aafbe25c043ec3f52&quot;
+
+
+$Packages$devtools
+$Packages$devtools$Package
+[1] &quot;devtools&quot;
+
+$Packages$devtools$Version
+[1] &quot;2.3.0&quot;
+
+$Packages$devtools$Source
+[1] &quot;Repository&quot;
+
+$Packages$devtools$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$devtools$Hash
+[1] &quot;d55dae3aa077e25128115a81e974f318&quot;
+
+
+$Packages$diffobj
+$Packages$diffobj$Package
+[1] &quot;diffobj&quot;
+
+$Packages$diffobj$Version
+[1] &quot;0.3.3&quot;
+
+$Packages$diffobj$Source
+[1] &quot;Repository&quot;
+
+$Packages$diffobj$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$diffobj$Hash
+[1] &quot;55fae7ec1418d2a47bd552571673d1af&quot;
+
+
+$Packages$digest
+$Packages$digest$Package
+[1] &quot;digest&quot;
+
+$Packages$digest$Version
+[1] &quot;0.6.27&quot;
+
+$Packages$digest$Source
+[1] &quot;Repository&quot;
+
+$Packages$digest$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$digest$Hash
+[1] &quot;a0cbe758a531d054b537d16dff4d58a1&quot;
+
+
+$Packages$dplyr
+$Packages$dplyr$Package
+[1] &quot;dplyr&quot;
+
+$Packages$dplyr$Version
+[1] &quot;1.0.2&quot;
+
+$Packages$dplyr$Source
+[1] &quot;Repository&quot;
+
+$Packages$dplyr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$dplyr$Hash
+[1] &quot;d0509913b27ea898189ee664b6030dc2&quot;
+
+
+$Packages$drat
+$Packages$drat$Package
+[1] &quot;drat&quot;
+
+$Packages$drat$Version
+[1] &quot;0.1.6&quot;
+
+$Packages$drat$Source
+[1] &quot;Repository&quot;
+
+$Packages$drat$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$drat$Hash
+[1] &quot;727f06914160f132ce56756e9fb5e030&quot;
+
+
+$Packages$e1071
+$Packages$e1071$Package
+[1] &quot;e1071&quot;
+
+$Packages$e1071$Version
+[1] &quot;1.7-3&quot;
+
+$Packages$e1071$Source
+[1] &quot;Repository&quot;
+
+$Packages$e1071$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$e1071$Hash
+[1] &quot;728e85416ffc90743054c1ac04486d69&quot;
+
+
+$Packages$ellipse
+$Packages$ellipse$Package
+[1] &quot;ellipse&quot;
+
+$Packages$ellipse$Version
+[1] &quot;0.4.2&quot;
+
+$Packages$ellipse$Source
+[1] &quot;Repository&quot;
+
+$Packages$ellipse$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ellipse$Hash
+[1] &quot;bfa61f1a00c0d30b86bf13d35748e24c&quot;
+
+
+$Packages$ellipsis
+$Packages$ellipsis$Package
+[1] &quot;ellipsis&quot;
+
+$Packages$ellipsis$Version
+[1] &quot;0.3.1&quot;
+
+$Packages$ellipsis$Source
+[1] &quot;Repository&quot;
+
+$Packages$ellipsis$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ellipsis$Hash
+[1] &quot;fd2844b3a43ae2d27e70ece2df1b4e2a&quot;
+
+
+$Packages$evaluate
+$Packages$evaluate$Package
+[1] &quot;evaluate&quot;
+
+$Packages$evaluate$Version
+[1] &quot;0.14&quot;
+
+$Packages$evaluate$Source
+[1] &quot;Repository&quot;
+
+$Packages$evaluate$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$evaluate$Hash
+[1] &quot;ec8ca05cffcc70569eaaad8469d2a3a7&quot;
+
+
+$Packages$extrafont
+$Packages$extrafont$Package
+[1] &quot;extrafont&quot;
+
+$Packages$extrafont$Version
+[1] &quot;0.17&quot;
+
+$Packages$extrafont$Source
+[1] &quot;Repository&quot;
+
+$Packages$extrafont$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$extrafont$Hash
+[1] &quot;7f2f50e8f998a4bea4b04650fc4f2ca8&quot;
+
+
+$Packages$extrafontdb
+$Packages$extrafontdb$Package
+[1] &quot;extrafontdb&quot;
+
+$Packages$extrafontdb$Version
+[1] &quot;1.0&quot;
+
+$Packages$extrafontdb$Source
+[1] &quot;Repository&quot;
+
+$Packages$extrafontdb$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$extrafontdb$Hash
+[1] &quot;a861555ddec7451c653b40e713166c6f&quot;
+
+
+$Packages$factoextra
+$Packages$factoextra$Package
+[1] &quot;factoextra&quot;
+
+$Packages$factoextra$Version
+[1] &quot;1.0.7&quot;
+
+$Packages$factoextra$Source
+[1] &quot;Repository&quot;
+
+$Packages$factoextra$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$factoextra$Hash
+[1] &quot;e95f1aed34b3f0a15a0c308175ee4c80&quot;
+
+
+$Packages$fansi
+$Packages$fansi$Package
+[1] &quot;fansi&quot;
+
+$Packages$fansi$Version
+[1] &quot;0.4.1&quot;
+
+$Packages$fansi$Source
+[1] &quot;Repository&quot;
+
+$Packages$fansi$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$fansi$Hash
+[1] &quot;7fce217eaaf8016e72065e85c73027b5&quot;
+
+
+$Packages$farver
+$Packages$farver$Package
+[1] &quot;farver&quot;
+
+$Packages$farver$Version
+[1] &quot;2.0.3&quot;
+
+$Packages$farver$Source
+[1] &quot;Repository&quot;
+
+$Packages$farver$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$farver$Hash
+[1] &quot;dad6793a5a1f73c8e91f1a1e3e834b05&quot;
+
+
+$Packages$flashClust
+$Packages$flashClust$Package
+[1] &quot;flashClust&quot;
+
+$Packages$flashClust$Version
+[1] &quot;1.01-2&quot;
+
+$Packages$flashClust$Source
+[1] &quot;Repository&quot;
+
+$Packages$flashClust$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$flashClust$Hash
+[1] &quot;09fb526c49460c4933bc077db6eba924&quot;
+
+
+$Packages$fontawesome
+$Packages$fontawesome$Package
+[1] &quot;fontawesome&quot;
+
+$Packages$fontawesome$Version
+[1] &quot;0.1.0&quot;
+
+$Packages$fontawesome$Source
+[1] &quot;GitHub&quot;
+
+$Packages$fontawesome$RemoteType
+[1] &quot;github&quot;
+
+$Packages$fontawesome$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$fontawesome$RemoteUsername
+[1] &quot;rstudio&quot;
+
+$Packages$fontawesome$RemoteRepo
+[1] &quot;fontawesome&quot;
+
+$Packages$fontawesome$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$fontawesome$RemoteSha
+[1] &quot;2b64e3148c9c5c70e415cdeb3e33ac3200edadbf&quot;
+
+$Packages$fontawesome$Hash
+[1] &quot;56015195afd4027e594d0d83ff0abdce&quot;
+
+
+$Packages$forcats
+$Packages$forcats$Package
+[1] &quot;forcats&quot;
+
+$Packages$forcats$Version
+[1] &quot;0.5.0&quot;
+
+$Packages$forcats$Source
+[1] &quot;Repository&quot;
+
+$Packages$forcats$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$forcats$Hash
+[1] &quot;1cb4279e697650f0bd78cd3601ee7576&quot;
+
+
+$Packages$foreign
+$Packages$foreign$Package
+[1] &quot;foreign&quot;
+
+$Packages$foreign$Version
+[1] &quot;0.8-80&quot;
+
+$Packages$foreign$Source
+[1] &quot;Repository&quot;
+
+$Packages$foreign$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$foreign$Hash
+[1] &quot;ae1b1e15cc6ccb2bc61c0ac33e86d35f&quot;
+
+
+$Packages$fs
+$Packages$fs$Package
+[1] &quot;fs&quot;
+
+$Packages$fs$Version
+[1] &quot;1.5.0&quot;
+
+$Packages$fs$Source
+[1] &quot;Repository&quot;
+
+$Packages$fs$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$fs$Hash
+[1] &quot;44594a07a42e5f91fac9f93fda6d0109&quot;
+
+
+$Packages$furrr
+$Packages$furrr$Package
+[1] &quot;furrr&quot;
+
+$Packages$furrr$Version
+[1] &quot;0.1.0&quot;
+
+$Packages$furrr$Source
+[1] &quot;Repository&quot;
+
+$Packages$furrr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$furrr$Hash
+[1] &quot;c1f60eafdbcbea57078aa6f501974d2a&quot;
+
+
+$Packages$future
+$Packages$future$Package
+[1] &quot;future&quot;
+
+$Packages$future$Version
+[1] &quot;1.18.0&quot;
+
+$Packages$future$Source
+[1] &quot;Repository&quot;
+
+$Packages$future$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$future$Hash
+[1] &quot;7f6e18b431939ccf2b4667d406a1f33e&quot;
+
+
+$Packages$gdtools
+$Packages$gdtools$Package
+[1] &quot;gdtools&quot;
+
+$Packages$gdtools$Version
+[1] &quot;0.2.2&quot;
+
+$Packages$gdtools$Source
+[1] &quot;Repository&quot;
+
+$Packages$gdtools$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gdtools$Hash
+[1] &quot;38f4026c0d09edb3a4474685cef68342&quot;
+
+
+$Packages$generics
+$Packages$generics$Package
+[1] &quot;generics&quot;
+
+$Packages$generics$Version
+[1] &quot;0.1.0&quot;
+
+$Packages$generics$Source
+[1] &quot;Repository&quot;
+
+$Packages$generics$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$generics$Hash
+[1] &quot;4d243a9c10b00589889fe32314ffd902&quot;
+
+
+$Packages$gert
+$Packages$gert$Package
+[1] &quot;gert&quot;
+
+$Packages$gert$Version
+[1] &quot;1.0.2&quot;
+
+$Packages$gert$Source
+[1] &quot;Repository&quot;
+
+$Packages$gert$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gert$Hash
+[1] &quot;0ebdadbb2b742cd230cb3ec7fdf5898a&quot;
+
+
+$Packages$getPass
+$Packages$getPass$Package
+[1] &quot;getPass&quot;
+
+$Packages$getPass$Version
+[1] &quot;0.2-2&quot;
+
+$Packages$getPass$Source
+[1] &quot;Repository&quot;
+
+$Packages$getPass$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$getPass$Hash
+[1] &quot;07a91f99e56951818ab911366db77700&quot;
+
+
+$Packages$ggforce
+$Packages$ggforce$Package
+[1] &quot;ggforce&quot;
+
+$Packages$ggforce$Version
+[1] &quot;0.3.2&quot;
+
+$Packages$ggforce$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggforce$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggforce$Hash
+[1] &quot;4adaf6b01b41f243ba0c62801de3331e&quot;
+
+
+$Packages$ggplot2
+$Packages$ggplot2$Package
+[1] &quot;ggplot2&quot;
+
+$Packages$ggplot2$Version
+[1] &quot;3.3.3&quot;
+
+$Packages$ggplot2$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggplot2$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggplot2$Hash
+[1] &quot;3eb6477d01eb5bbdc03f7d5f70f2733e&quot;
+
+
+$Packages$ggpubr
+$Packages$ggpubr$Package
+[1] &quot;ggpubr&quot;
+
+$Packages$ggpubr$Version
+[1] &quot;0.4.0&quot;
+
+$Packages$ggpubr$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggpubr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggpubr$Hash
+[1] &quot;77089557d374c69db7cb77e65f0d6ab0&quot;
+
+
+$Packages$ggrepel
+$Packages$ggrepel$Package
+[1] &quot;ggrepel&quot;
+
+$Packages$ggrepel$Version
+[1] &quot;0.8.2&quot;
+
+$Packages$ggrepel$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggrepel$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggrepel$Hash
+[1] &quot;c013a50b19695daf04853679e1bc105a&quot;
+
+
+$Packages$ggridges
+$Packages$ggridges$Package
+[1] &quot;ggridges&quot;
+
+$Packages$ggridges$Version
+[1] &quot;0.5.2&quot;
+
+$Packages$ggridges$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggridges$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggridges$Hash
+[1] &quot;b5c4e55a3856dff3c05595630a40edfc&quot;
+
+
+$Packages$ggsci
+$Packages$ggsci$Package
+[1] &quot;ggsci&quot;
+
+$Packages$ggsci$Version
+[1] &quot;2.9&quot;
+
+$Packages$ggsci$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggsci$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggsci$Hash
+[1] &quot;81ccb8213ed592598210afd10c3a5936&quot;
+
+
+$Packages$ggsignif
+$Packages$ggsignif$Package
+[1] &quot;ggsignif&quot;
+
+$Packages$ggsignif$Version
+[1] &quot;0.6.0&quot;
+
+$Packages$ggsignif$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggsignif$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggsignif$Hash
+[1] &quot;3e9b8a51dfdc95395632b25ce3ce8ebc&quot;
+
+
+$Packages$ggtext
+$Packages$ggtext$Package
+[1] &quot;ggtext&quot;
+
+$Packages$ggtext$Version
+[1] &quot;0.1.1&quot;
+
+$Packages$ggtext$Source
+[1] &quot;GitHub&quot;
+
+$Packages$ggtext$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggtext$RemoteType
+[1] &quot;github&quot;
+
+$Packages$ggtext$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$ggtext$RemoteUsername
+[1] &quot;clauswilke&quot;
+
+$Packages$ggtext$RemoteRepo
+[1] &quot;ggtext&quot;
+
+$Packages$ggtext$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$ggtext$RemoteSha
+[1] &quot;50fdaba101b2c591c08e9d67782a5b86621a4fa9&quot;
+
+$Packages$ggtext$Hash
+[1] &quot;0d0f123ebecc4677ead8e556117c7206&quot;
+
+
+$Packages$ggupset
+$Packages$ggupset$Package
+[1] &quot;ggupset&quot;
+
+$Packages$ggupset$Version
+[1] &quot;0.3.0&quot;
+
+$Packages$ggupset$Source
+[1] &quot;Repository&quot;
+
+$Packages$ggupset$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ggupset$Hash
+[1] &quot;8e9eb92bf465601c07d17c5e8b75dce1&quot;
+
+
+$Packages$gh
+$Packages$gh$Package
+[1] &quot;gh&quot;
+
+$Packages$gh$Version
+[1] &quot;1.2.0&quot;
+
+$Packages$gh$Source
+[1] &quot;Repository&quot;
+
+$Packages$gh$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gh$Hash
+[1] &quot;05129b4387282404780d2f8593636388&quot;
+
+
+$Packages$git2r
+$Packages$git2r$Package
+[1] &quot;git2r&quot;
+
+$Packages$git2r$Version
+[1] &quot;0.27.1&quot;
+
+$Packages$git2r$Source
+[1] &quot;Repository&quot;
+
+$Packages$git2r$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$git2r$Hash
+[1] &quot;531a82d1beed1f545beb25f4f5945bf7&quot;
+
+
+$Packages$gitcreds
+$Packages$gitcreds$Package
+[1] &quot;gitcreds&quot;
+
+$Packages$gitcreds$Version
+[1] &quot;0.1.1&quot;
+
+$Packages$gitcreds$Source
+[1] &quot;Repository&quot;
+
+$Packages$gitcreds$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gitcreds$Hash
+[1] &quot;f3aefccc1cc50de6338146b62f115de8&quot;
+
+
+$Packages$globals
+$Packages$globals$Package
+[1] &quot;globals&quot;
+
+$Packages$globals$Version
+[1] &quot;0.12.5&quot;
+
+$Packages$globals$Source
+[1] &quot;Repository&quot;
+
+$Packages$globals$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$globals$Hash
+[1] &quot;e9e529fb7a579ad4b4ff65e052e76ed8&quot;
+
+
+$Packages$glue
+$Packages$glue$Package
+[1] &quot;glue&quot;
+
+$Packages$glue$Version
+[1] &quot;1.4.2&quot;
+
+$Packages$glue$Source
+[1] &quot;Repository&quot;
+
+$Packages$glue$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$glue$Hash
+[1] &quot;6efd734b14c6471cfe443345f3e35e29&quot;
+
+
+$Packages$gridExtra
+$Packages$gridExtra$Package
+[1] &quot;gridExtra&quot;
+
+$Packages$gridExtra$Version
+[1] &quot;2.3&quot;
+
+$Packages$gridExtra$Source
+[1] &quot;Repository&quot;
+
+$Packages$gridExtra$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gridExtra$Hash
+[1] &quot;7d7f283939f563670a697165b2cf5560&quot;
+
+
+$Packages$gridtext
+$Packages$gridtext$Package
+[1] &quot;gridtext&quot;
+
+$Packages$gridtext$Version
+[1] &quot;0.1.1&quot;
+
+$Packages$gridtext$Source
+[1] &quot;Repository&quot;
+
+$Packages$gridtext$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gridtext$Hash
+[1] &quot;3ad82bf883067612096bda752dbd513e&quot;
+
+
+$Packages$gt
+$Packages$gt$Package
+[1] &quot;gt&quot;
+
+$Packages$gt$Version
+[1] &quot;0.2.2&quot;
+
+$Packages$gt$Source
+[1] &quot;Repository&quot;
+
+$Packages$gt$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gt$Hash
+[1] &quot;4eb28493ed31ff8f5f240d0fb5929ecb&quot;
+
+
+$Packages$gtable
+$Packages$gtable$Package
+[1] &quot;gtable&quot;
+
+$Packages$gtable$Version
+[1] &quot;0.3.0&quot;
+
+$Packages$gtable$Source
+[1] &quot;Repository&quot;
+
+$Packages$gtable$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$gtable$Hash
+[1] &quot;ac5c6baf7822ce8732b343f14c072c4d&quot;
+
+
+$Packages$haven
+$Packages$haven$Package
+[1] &quot;haven&quot;
+
+$Packages$haven$Version
+[1] &quot;2.2.0&quot;
+
+$Packages$haven$Source
+[1] &quot;Repository&quot;
+
+$Packages$haven$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$haven$Hash
+[1] &quot;e3f662e125e9fdffd1ee4e94baea3451&quot;
+
+
+$Packages$here
+$Packages$here$Package
+[1] &quot;here&quot;
+
+$Packages$here$Version
+[1] &quot;1.0.1&quot;
+
+$Packages$here$Source
+[1] &quot;Repository&quot;
+
+$Packages$here$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$here$Hash
+[1] &quot;24b224366f9c2e7534d2344d10d59211&quot;
+
+
+$Packages$hexbin
+$Packages$hexbin$Package
+[1] &quot;hexbin&quot;
+
+$Packages$hexbin$Version
+[1] &quot;1.28.1&quot;
+
+$Packages$hexbin$Source
+[1] &quot;Repository&quot;
+
+$Packages$hexbin$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$hexbin$Hash
+[1] &quot;3d59212f2814d65dff517e6899813c58&quot;
+
+
+$Packages$highr
+$Packages$highr$Package
+[1] &quot;highr&quot;
+
+$Packages$highr$Version
+[1] &quot;0.8&quot;
+
+$Packages$highr$Source
+[1] &quot;Repository&quot;
+
+$Packages$highr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$highr$Hash
+[1] &quot;4dc5bb88961e347a0f4d8aad597cbfac&quot;
+
+
+$Packages$hms
+$Packages$hms$Package
+[1] &quot;hms&quot;
+
+$Packages$hms$Version
+[1] &quot;0.5.3&quot;
+
+$Packages$hms$Source
+[1] &quot;Repository&quot;
+
+$Packages$hms$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$hms$Hash
+[1] &quot;726671f634529d470545f9fd1a9d1869&quot;
+
+
+$Packages$hrbrthemes
+$Packages$hrbrthemes$Package
+[1] &quot;hrbrthemes&quot;
+
+$Packages$hrbrthemes$Version
+[1] &quot;0.8.0&quot;
+
+$Packages$hrbrthemes$Source
+[1] &quot;Repository&quot;
+
+$Packages$hrbrthemes$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$hrbrthemes$Hash
+[1] &quot;0d1257948f016840ad90320ed19c8c7d&quot;
+
+
+$Packages$htmltools
+$Packages$htmltools$Package
+[1] &quot;htmltools&quot;
+
+$Packages$htmltools$Version
+[1] &quot;0.5.0.9003&quot;
+
+$Packages$htmltools$Source
+[1] &quot;GitHub&quot;
+
+$Packages$htmltools$RemoteType
+[1] &quot;github&quot;
+
+$Packages$htmltools$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$htmltools$RemoteRepo
+[1] &quot;htmltools&quot;
+
+$Packages$htmltools$RemoteUsername
+[1] &quot;rstudio&quot;
+
+$Packages$htmltools$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$htmltools$RemoteSha
+[1] &quot;d18bd8e404fb3e7d25dd448b1f8300f16a44add8&quot;
+
+$Packages$htmltools$Hash
+[1] &quot;2c4efca72b50b4dde3699acf9d055f22&quot;
+
+
+$Packages$htmlwidgets
+$Packages$htmlwidgets$Package
+[1] &quot;htmlwidgets&quot;
+
+$Packages$htmlwidgets$Version
+[1] &quot;1.5.1&quot;
+
+$Packages$htmlwidgets$Source
+[1] &quot;Repository&quot;
+
+$Packages$htmlwidgets$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$htmlwidgets$Hash
+[1] &quot;41bace23583fbc25089edae324de2dc3&quot;
+
+
+$Packages$httr
+$Packages$httr$Package
+[1] &quot;httr&quot;
+
+$Packages$httr$Version
+[1] &quot;1.4.2&quot;
+
+$Packages$httr$Source
+[1] &quot;Repository&quot;
+
+$Packages$httr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$httr$Hash
+[1] &quot;a525aba14184fec243f9eaec62fbed43&quot;
+
+
+$Packages$ini
+$Packages$ini$Package
+[1] &quot;ini&quot;
+
+$Packages$ini$Version
+[1] &quot;0.3.1&quot;
+
+$Packages$ini$Source
+[1] &quot;Repository&quot;
+
+$Packages$ini$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ini$Hash
+[1] &quot;6154ec2223172bce8162d4153cda21f7&quot;
+
+
+$Packages$isoband
+$Packages$isoband$Package
+[1] &quot;isoband&quot;
+
+$Packages$isoband$Version
+[1] &quot;0.2.3&quot;
+
+$Packages$isoband$Source
+[1] &quot;Repository&quot;
+
+$Packages$isoband$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$isoband$Hash
+[1] &quot;53647fb507373700028b2ce6cd30751a&quot;
+
+
+$Packages$janitor
+$Packages$janitor$Package
+[1] &quot;janitor&quot;
+
+$Packages$janitor$Version
+[1] &quot;2.0.1&quot;
+
+$Packages$janitor$Source
+[1] &quot;Repository&quot;
+
+$Packages$janitor$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$janitor$Hash
+[1] &quot;7eb42c3bb09e2019b97de69d2ea9dfff&quot;
+
+
+$Packages$jpeg
+$Packages$jpeg$Package
+[1] &quot;jpeg&quot;
+
+$Packages$jpeg$Version
+[1] &quot;0.1-8.1&quot;
+
+$Packages$jpeg$Source
+[1] &quot;Repository&quot;
+
+$Packages$jpeg$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$jpeg$Hash
+[1] &quot;bc316c003aba520fc73d70ad53b5fc36&quot;
+
+
+$Packages$jsonlite
+$Packages$jsonlite$Package
+[1] &quot;jsonlite&quot;
+
+$Packages$jsonlite$Version
+[1] &quot;1.7.2&quot;
+
+$Packages$jsonlite$Source
+[1] &quot;Repository&quot;
+
+$Packages$jsonlite$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$jsonlite$Hash
+[1] &quot;98138e0994d41508c7a6b84a0600cfcb&quot;
+
+
+$Packages$knitr
+$Packages$knitr$Package
+[1] &quot;knitr&quot;
+
+$Packages$knitr$Version
+[1] &quot;1.30&quot;
+
+$Packages$knitr$Source
+[1] &quot;Repository&quot;
+
+$Packages$knitr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$knitr$Hash
+[1] &quot;eed7ee0d02eee88d53881cdc92457c62&quot;
+
+
+$Packages$labeling
+$Packages$labeling$Package
+[1] &quot;labeling&quot;
+
+$Packages$labeling$Version
+[1] &quot;0.4.2&quot;
+
+$Packages$labeling$Source
+[1] &quot;Repository&quot;
+
+$Packages$labeling$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$labeling$Hash
+[1] &quot;3d5108641f47470611a32d0bdf357a72&quot;
+
+
+$Packages$later
+$Packages$later$Package
+[1] &quot;later&quot;
+
+$Packages$later$Version
+[1] &quot;1.0.0&quot;
+
+$Packages$later$Source
+[1] &quot;Repository&quot;
+
+$Packages$later$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$later$Hash
+[1] &quot;6d927978fc658d24175ce37db635f9e5&quot;
+
+
+$Packages$lattice
+$Packages$lattice$Package
+[1] &quot;lattice&quot;
+
+$Packages$lattice$Version
+[1] &quot;0.20-41&quot;
+
+$Packages$lattice$Source
+[1] &quot;Repository&quot;
+
+$Packages$lattice$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$lattice$Hash
+[1] &quot;fbd9285028b0263d76d18c95ae51a53d&quot;
+
+
+$Packages$lazyeval
+$Packages$lazyeval$Package
+[1] &quot;lazyeval&quot;
+
+$Packages$lazyeval$Version
+[1] &quot;0.2.2&quot;
+
+$Packages$lazyeval$Source
+[1] &quot;Repository&quot;
+
+$Packages$lazyeval$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$lazyeval$Hash
+[1] &quot;d908914ae53b04d4c0c0fd72ecc35370&quot;
+
+
+$Packages$leaflet
+$Packages$leaflet$Package
+[1] &quot;leaflet&quot;
+
+$Packages$leaflet$Version
+[1] &quot;2.0.3.9000&quot;
+
+$Packages$leaflet$Source
+[1] &quot;GitHub&quot;
+
+$Packages$leaflet$RemoteType
+[1] &quot;github&quot;
+
+$Packages$leaflet$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$leaflet$RemoteUsername
+[1] &quot;rstudio&quot;
+
+$Packages$leaflet$RemoteRepo
+[1] &quot;leaflet&quot;
+
+$Packages$leaflet$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$leaflet$RemoteSha
+[1] &quot;35e6e347adf5e64aa188b8a0d6dad4415a443519&quot;
+
+$Packages$leaflet$Hash
+[1] &quot;87c5740417d9c7ed10b3651d553f9186&quot;
+
+
+$Packages$leaflet.providers
+$Packages$leaflet.providers$Package
+[1] &quot;leaflet.providers&quot;
+
+$Packages$leaflet.providers$Version
+[1] &quot;1.9.0&quot;
+
+$Packages$leaflet.providers$Source
+[1] &quot;Repository&quot;
+
+$Packages$leaflet.providers$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$leaflet.providers$Hash
+[1] &quot;d3082a7beac4a1aeb96100ff06265d7e&quot;
+
+
+$Packages$leaps
+$Packages$leaps$Package
+[1] &quot;leaps&quot;
+
+$Packages$leaps$Version
+[1] &quot;3.1&quot;
+
+$Packages$leaps$Source
+[1] &quot;Repository&quot;
+
+$Packages$leaps$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$leaps$Hash
+[1] &quot;e7023edcf59fd695d92eb01a7f37f991&quot;
+
+
+$Packages$lifecycle
+$Packages$lifecycle$Package
+[1] &quot;lifecycle&quot;
+
+$Packages$lifecycle$Version
+[1] &quot;0.2.0&quot;
+
+$Packages$lifecycle$Source
+[1] &quot;Repository&quot;
+
+$Packages$lifecycle$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$lifecycle$Hash
+[1] &quot;361811f31f71f8a617a9a68bf63f1f42&quot;
+
+
+$Packages$listenv
+$Packages$listenv$Package
+[1] &quot;listenv&quot;
+
+$Packages$listenv$Version
+[1] &quot;0.8.0&quot;
+
+$Packages$listenv$Source
+[1] &quot;Repository&quot;
+
+$Packages$listenv$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$listenv$Hash
+[1] &quot;0bde42ee282efb18c7c4e63822f5b4f7&quot;
+
+
+$Packages$lme4
+$Packages$lme4$Package
+[1] &quot;lme4&quot;
+
+$Packages$lme4$Version
+[1] &quot;1.1-23&quot;
+
+$Packages$lme4$Source
+[1] &quot;Repository&quot;
+
+$Packages$lme4$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$lme4$Hash
+[1] &quot;ad24d1fd9ed431543f4633bb083e194a&quot;
+
+
+$Packages$log4r
+$Packages$log4r$Package
+[1] &quot;log4r&quot;
+
+$Packages$log4r$Version
+[1] &quot;0.3.2&quot;
+
+$Packages$log4r$Source
+[1] &quot;Repository&quot;
+
+$Packages$log4r$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$log4r$Hash
+[1] &quot;5ce4d2c11689134403962d6229395314&quot;
+
+
+$Packages$lubridate
+$Packages$lubridate$Package
+[1] &quot;lubridate&quot;
+
+$Packages$lubridate$Version
+[1] &quot;1.7.9.2&quot;
+
+$Packages$lubridate$Source
+[1] &quot;GitHub&quot;
+
+$Packages$lubridate$RemoteType
+[1] &quot;github&quot;
+
+$Packages$lubridate$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$lubridate$RemoteRepo
+[1] &quot;lubridate&quot;
+
+$Packages$lubridate$RemoteUsername
+[1] &quot;tidyverse&quot;
+
+$Packages$lubridate$RemoteRef
+[1] &quot;HEAD&quot;
+
+$Packages$lubridate$RemoteSha
+[1] &quot;aab2e30a07f870f5e0c36ad119b1b2df656e926a&quot;
+
+$Packages$lubridate$Hash
+[1] &quot;8d0e65f04ff73e8e7162da59ee07ed03&quot;
+
+
+$Packages$magrittr
+$Packages$magrittr$Package
+[1] &quot;magrittr&quot;
+
+$Packages$magrittr$Version
+[1] &quot;2.0.1&quot;
+
+$Packages$magrittr$Source
+[1] &quot;Repository&quot;
+
+$Packages$magrittr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$magrittr$Hash
+[1] &quot;41287f1ac7d28a92f0a286ed507928d3&quot;
+
+
+$Packages$maptools
+$Packages$maptools$Package
+[1] &quot;maptools&quot;
+
+$Packages$maptools$Version
+[1] &quot;1.0-1&quot;
+
+$Packages$maptools$Source
+[1] &quot;Repository&quot;
+
+$Packages$maptools$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$maptools$Hash
+[1] &quot;5117ca3798362fadc2d985899b3e891e&quot;
+
+
+$Packages$markdown
+$Packages$markdown$Package
+[1] &quot;markdown&quot;
+
+$Packages$markdown$Version
+[1] &quot;1.1&quot;
+
+$Packages$markdown$Source
+[1] &quot;Repository&quot;
+
+$Packages$markdown$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$markdown$Hash
+[1] &quot;61e4a10781dd00d7d81dd06ca9b94e95&quot;
+
+
+$Packages$matrixStats
+$Packages$matrixStats$Package
+[1] &quot;matrixStats&quot;
+
+$Packages$matrixStats$Version
+[1] &quot;0.56.0&quot;
+
+$Packages$matrixStats$Source
+[1] &quot;Repository&quot;
+
+$Packages$matrixStats$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$matrixStats$Hash
+[1] &quot;d16f18aeb023d7a80c090d9458fc75a6&quot;
+
+
+$Packages$memoise
+$Packages$memoise$Package
+[1] &quot;memoise&quot;
+
+$Packages$memoise$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$memoise$Source
+[1] &quot;Repository&quot;
+
+$Packages$memoise$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$memoise$Hash
+[1] &quot;58baa74e4603fcfb9a94401c58c8f9b1&quot;
+
+
+$Packages$metathis
+$Packages$metathis$Package
+[1] &quot;metathis&quot;
+
+$Packages$metathis$Version
+[1] &quot;1.0.2&quot;
+
+$Packages$metathis$Source
+[1] &quot;Repository&quot;
+
+$Packages$metathis$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$metathis$Hash
+[1] &quot;1cdadc4571387eb52ca71765b0f984c3&quot;
+
+
+$Packages$mgcv
+$Packages$mgcv$Package
+[1] &quot;mgcv&quot;
+
+$Packages$mgcv$Version
+[1] &quot;1.8-31&quot;
+
+$Packages$mgcv$Source
+[1] &quot;Repository&quot;
+
+$Packages$mgcv$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$mgcv$Hash
+[1] &quot;4bb7e0c4f3557583e1e8d3c9ffb8ba5c&quot;
+
+
+$Packages$mime
+$Packages$mime$Package
+[1] &quot;mime&quot;
+
+$Packages$mime$Version
+[1] &quot;0.9&quot;
+
+$Packages$mime$Source
+[1] &quot;Repository&quot;
+
+$Packages$mime$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$mime$Hash
+[1] &quot;e87a35ec73b157552814869f45a63aa3&quot;
+
+
+$Packages$minqa
+$Packages$minqa$Package
+[1] &quot;minqa&quot;
+
+$Packages$minqa$Version
+[1] &quot;1.2.4&quot;
+
+$Packages$minqa$Source
+[1] &quot;Repository&quot;
+
+$Packages$minqa$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$minqa$Hash
+[1] &quot;eaee7d2a6f3ed4491df868611cb064cc&quot;
+
+
+$Packages$modelr
+$Packages$modelr$Package
+[1] &quot;modelr&quot;
+
+$Packages$modelr$Version
+[1] &quot;0.1.7&quot;
+
+$Packages$modelr$Source
+[1] &quot;Repository&quot;
+
+$Packages$modelr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$modelr$Hash
+[1] &quot;5a10316936c16bb3b341f687c9ac0fff&quot;
+
+
+$Packages$munsell
+$Packages$munsell$Package
+[1] &quot;munsell&quot;
+
+$Packages$munsell$Version
+[1] &quot;0.5.0&quot;
+
+$Packages$munsell$Source
+[1] &quot;Repository&quot;
+
+$Packages$munsell$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$munsell$Hash
+[1] &quot;6dfe8bf774944bd5595785e3229d8771&quot;
+
+
+$Packages$naniar
+$Packages$naniar$Package
+[1] &quot;naniar&quot;
+
+$Packages$naniar$Version
+[1] &quot;0.5.1&quot;
+
+$Packages$naniar$Source
+[1] &quot;Repository&quot;
+
+$Packages$naniar$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$naniar$Hash
+[1] &quot;993cf9c07e82b769587b7ee08d3a4bb9&quot;
+
+
+$Packages$nlme
+$Packages$nlme$Package
+[1] &quot;nlme&quot;
+
+$Packages$nlme$Version
+[1] &quot;3.1-147&quot;
+
+$Packages$nlme$Source
+[1] &quot;Repository&quot;
+
+$Packages$nlme$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$nlme$Hash
+[1] &quot;dd4a1423f1472a2a8e05dd2c8945c3af&quot;
+
+
+$Packages$nloptr
+$Packages$nloptr$Package
+[1] &quot;nloptr&quot;
+
+$Packages$nloptr$Version
+[1] &quot;1.2.2.2&quot;
+
+$Packages$nloptr$Source
+[1] &quot;Repository&quot;
+
+$Packages$nloptr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$nloptr$Hash
+[1] &quot;2737faeee353704efec5afa1e943dd64&quot;
+
+
+$Packages$nnet
+$Packages$nnet$Package
+[1] &quot;nnet&quot;
+
+$Packages$nnet$Version
+[1] &quot;7.3-14&quot;
+
+$Packages$nnet$Source
+[1] &quot;Repository&quot;
+
+$Packages$nnet$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$nnet$Hash
+[1] &quot;0d87e50e11394a7151a28873637d799a&quot;
+
+
+$Packages$openssl
+$Packages$openssl$Package
+[1] &quot;openssl&quot;
+
+$Packages$openssl$Version
+[1] &quot;1.4.3&quot;
+
+$Packages$openssl$Source
+[1] &quot;Repository&quot;
+
+$Packages$openssl$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$openssl$Hash
+[1] &quot;a399e4773075fc2375b71f45fca186c4&quot;
+
+
+$Packages$openxlsx
+$Packages$openxlsx$Package
+[1] &quot;openxlsx&quot;
+
+$Packages$openxlsx$Version
+[1] &quot;4.1.5&quot;
+
+$Packages$openxlsx$Source
+[1] &quot;Repository&quot;
+
+$Packages$openxlsx$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$openxlsx$Hash
+[1] &quot;9b9b5322c83ee21db73c8ba3787897ca&quot;
+
+
+$Packages$parsedate
+$Packages$parsedate$Package
+[1] &quot;parsedate&quot;
+
+$Packages$parsedate$Version
+[1] &quot;1.2.0&quot;
+
+$Packages$parsedate$Source
+[1] &quot;Repository&quot;
+
+$Packages$parsedate$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$parsedate$Hash
+[1] &quot;9ab1426429ad716b42088a0fd8e909ee&quot;
+
+
+$Packages$pbkrtest
+$Packages$pbkrtest$Package
+[1] &quot;pbkrtest&quot;
+
+$Packages$pbkrtest$Version
+[1] &quot;0.4-8.6&quot;
+
+$Packages$pbkrtest$Source
+[1] &quot;Repository&quot;
+
+$Packages$pbkrtest$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$pbkrtest$Hash
+[1] &quot;d547eab65958fc4f5d68ad0adfacfcf4&quot;
+
+
+$Packages$pillar
+$Packages$pillar$Package
+[1] &quot;pillar&quot;
+
+$Packages$pillar$Version
+[1] &quot;1.4.7&quot;
+
+$Packages$pillar$Source
+[1] &quot;Repository&quot;
+
+$Packages$pillar$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$pillar$Hash
+[1] &quot;3b3dd89b2ee115a8b54e93a34cd546b4&quot;
+
+
+$Packages$pkgbuild
+$Packages$pkgbuild$Package
+[1] &quot;pkgbuild&quot;
+
+$Packages$pkgbuild$Version
+[1] &quot;1.2.0&quot;
+
+$Packages$pkgbuild$Source
+[1] &quot;Repository&quot;
+
+$Packages$pkgbuild$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$pkgbuild$Hash
+[1] &quot;725fcc30222d4d11ec68efb8ff11a9af&quot;
+
+
+$Packages$pkgconfig
+$Packages$pkgconfig$Package
+[1] &quot;pkgconfig&quot;
+
+$Packages$pkgconfig$Version
+[1] &quot;2.0.3&quot;
+
+$Packages$pkgconfig$Source
+[1] &quot;Repository&quot;
+
+$Packages$pkgconfig$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$pkgconfig$Hash
+[1] &quot;01f28d4278f15c76cddbea05899c5d6f&quot;
+
+
+$Packages$pkgload
+$Packages$pkgload$Package
+[1] &quot;pkgload&quot;
+
+$Packages$pkgload$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$pkgload$Source
+[1] &quot;Repository&quot;
+
+$Packages$pkgload$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$pkgload$Hash
+[1] &quot;b6b150cd4709e0c0c9b5d51ac4376282&quot;
+
+
+$Packages$plotly
+$Packages$plotly$Package
+[1] &quot;plotly&quot;
+
+$Packages$plotly$Version
+[1] &quot;4.9.2.1&quot;
+
+$Packages$plotly$Source
+[1] &quot;Repository&quot;
+
+$Packages$plotly$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$plotly$Hash
+[1] &quot;b08edf378e0e38959a6983e3d5902795&quot;
+
+
+$Packages$plyr
+$Packages$plyr$Package
+[1] &quot;plyr&quot;
+
+$Packages$plyr$Version
+[1] &quot;1.8.6&quot;
+
+$Packages$plyr$Source
+[1] &quot;Repository&quot;
+
+$Packages$plyr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$plyr$Hash
+[1] &quot;ec0e5ab4e5f851f6ef32cd1d1984957f&quot;
+
+
+$Packages$png
+$Packages$png$Package
+[1] &quot;png&quot;
+
+$Packages$png$Version
+[1] &quot;0.1-7&quot;
+
+$Packages$png$Source
+[1] &quot;Repository&quot;
+
+$Packages$png$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$png$Hash
+[1] &quot;03b7076c234cb3331288919983326c55&quot;
+
+
+$Packages$pointblank
+$Packages$pointblank$Package
+[1] &quot;pointblank&quot;
+
+$Packages$pointblank$Version
+[1] &quot;0.6.0&quot;
+
+$Packages$pointblank$Source
+[1] &quot;Repository&quot;
+
+$Packages$pointblank$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$pointblank$Hash
+[1] &quot;51055d2aa1b19ad633162a8066c34e09&quot;
+
+
+$Packages$polyclip
+$Packages$polyclip$Package
+[1] &quot;polyclip&quot;
+
+$Packages$polyclip$Version
+[1] &quot;1.10-0&quot;
+
+$Packages$polyclip$Source
+[1] &quot;Repository&quot;
+
+$Packages$polyclip$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$polyclip$Hash
+[1] &quot;cb167f328b3ada4ec5cf67a7df4c900a&quot;
+
+
+$Packages$polynom
+$Packages$polynom$Package
+[1] &quot;polynom&quot;
+
+$Packages$polynom$Version
+[1] &quot;1.4-0&quot;
+
+$Packages$polynom$Source
+[1] &quot;Repository&quot;
+
+$Packages$polynom$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$polynom$Hash
+[1] &quot;c396592ecfe9e75cee1013533efafe34&quot;
+
+
+$Packages$praise
+$Packages$praise$Package
+[1] &quot;praise&quot;
+
+$Packages$praise$Version
+[1] &quot;1.0.0&quot;
+
+$Packages$praise$Source
+[1] &quot;Repository&quot;
+
+$Packages$praise$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$praise$Hash
+[1] &quot;a555924add98c99d2f411e37e7d25e9f&quot;
+
+
+$Packages$prettyunits
+$Packages$prettyunits$Package
+[1] &quot;prettyunits&quot;
+
+$Packages$prettyunits$Version
+[1] &quot;1.1.1&quot;
+
+$Packages$prettyunits$Source
+[1] &quot;Repository&quot;
+
+$Packages$prettyunits$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$prettyunits$Hash
+[1] &quot;95ef9167b75dde9d2ccc3c7528393e7e&quot;
+
+
+$Packages$processx
+$Packages$processx$Package
+[1] &quot;processx&quot;
+
+$Packages$processx$Version
+[1] &quot;3.4.5&quot;
+
+$Packages$processx$Source
+[1] &quot;Repository&quot;
+
+$Packages$processx$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$processx$Hash
+[1] &quot;22aab6098cb14edd0a5973a8438b569b&quot;
+
+
+$Packages$progress
+$Packages$progress$Package
+[1] &quot;progress&quot;
+
+$Packages$progress$Version
+[1] &quot;1.2.2&quot;
+
+$Packages$progress$Source
+[1] &quot;Repository&quot;
+
+$Packages$progress$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$progress$Hash
+[1] &quot;14dc9f7a3c91ebb14ec5bb9208a07061&quot;
+
+
+$Packages$progressr
+$Packages$progressr$Package
+[1] &quot;progressr&quot;
+
+$Packages$progressr$Version
+[1] &quot;0.6.0&quot;
+
+$Packages$progressr$Source
+[1] &quot;Repository&quot;
+
+$Packages$progressr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$progressr$Hash
+[1] &quot;307c0643c2166795cbd93b436e558d18&quot;
+
+
+$Packages$promises
+$Packages$promises$Package
+[1] &quot;promises&quot;
+
+$Packages$promises$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$promises$Source
+[1] &quot;Repository&quot;
+
+$Packages$promises$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$promises$Hash
+[1] &quot;efbbe62da4709f7040a380c702bc7103&quot;
+
+
+$Packages$ps
+$Packages$ps$Package
+[1] &quot;ps&quot;
+
+$Packages$ps$Version
+[1] &quot;1.5.0&quot;
+
+$Packages$ps$Source
+[1] &quot;Repository&quot;
+
+$Packages$ps$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$ps$Hash
+[1] &quot;ebaed51a03411fd5cfc1e12d9079b353&quot;
+
+
+$Packages$ptrr
+$Packages$ptrr$Package
+[1] &quot;ptrr&quot;
+
+$Packages$ptrr$Version
+[1] &quot;0.2.0.9000&quot;
+
+$Packages$ptrr$Source
+[1] &quot;GitHub&quot;
+
+$Packages$ptrr$RemoteType
+[1] &quot;github&quot;
+
+$Packages$ptrr$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$ptrr$RemoteUsername
+[1] &quot;petrbouchal&quot;
+
+$Packages$ptrr$RemoteRepo
+[1] &quot;ptrr&quot;
+
+$Packages$ptrr$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$ptrr$RemoteSha
+[1] &quot;b593d0f6ede0d3690e9ad6f1997693d810662a1e&quot;
+
+$Packages$ptrr$Hash
+[1] &quot;8bb318494deec49676f302175fb0bcd7&quot;
+
+
+$Packages$purrr
+$Packages$purrr$Package
+[1] &quot;purrr&quot;
+
+$Packages$purrr$Version
+[1] &quot;0.3.4&quot;
+
+$Packages$purrr$Source
+[1] &quot;Repository&quot;
+
+$Packages$purrr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$purrr$Hash
+[1] &quot;97def703420c8ab10d8f0e6c72101e02&quot;
+
+
+$Packages$quantreg
+$Packages$quantreg$Package
+[1] &quot;quantreg&quot;
+
+$Packages$quantreg$Version
+[1] &quot;5.61&quot;
+
+$Packages$quantreg$Source
+[1] &quot;Repository&quot;
+
+$Packages$quantreg$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$quantreg$Hash
+[1] &quot;0d5ecb71ac9a614f260c668564118a93&quot;
+
+
+$Packages$rappdirs
+$Packages$rappdirs$Package
+[1] &quot;rappdirs&quot;
+
+$Packages$rappdirs$Version
+[1] &quot;0.3.1&quot;
+
+$Packages$rappdirs$Source
+[1] &quot;Repository&quot;
+
+$Packages$rappdirs$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rappdirs$Hash
+[1] &quot;8c8298583adbbe76f3c2220eef71bebc&quot;
+
+
+$Packages$raster
+$Packages$raster$Package
+[1] &quot;raster&quot;
+
+$Packages$raster$Version
+[1] &quot;3.1-5&quot;
+
+$Packages$raster$Source
+[1] &quot;Repository&quot;
+
+$Packages$raster$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$raster$Hash
+[1] &quot;5aef4b2e36fe729608b55abb04944827&quot;
+
+
+$Packages$rcmdcheck
+$Packages$rcmdcheck$Package
+[1] &quot;rcmdcheck&quot;
+
+$Packages$rcmdcheck$Version
+[1] &quot;1.3.3&quot;
+
+$Packages$rcmdcheck$Source
+[1] &quot;Repository&quot;
+
+$Packages$rcmdcheck$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rcmdcheck$Hash
+[1] &quot;ed95895886dab6d2a584da45503555da&quot;
+
+
+$Packages$reactR
+$Packages$reactR$Package
+[1] &quot;reactR&quot;
+
+$Packages$reactR$Version
+[1] &quot;0.4.3&quot;
+
+$Packages$reactR$Source
+[1] &quot;Repository&quot;
+
+$Packages$reactR$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$reactR$Hash
+[1] &quot;85d50afbf95bf92bda97e9417575e8ff&quot;
+
+
+$Packages$reactable
+$Packages$reactable$Package
+[1] &quot;reactable&quot;
+
+$Packages$reactable$Version
+[1] &quot;0.2.2&quot;
+
+$Packages$reactable$Source
+[1] &quot;Repository&quot;
+
+$Packages$reactable$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$reactable$Hash
+[1] &quot;31b911f5231ea795b79fdde51644035e&quot;
+
+
+$Packages$readr
+$Packages$readr$Package
+[1] &quot;readr&quot;
+
+$Packages$readr$Version
+[1] &quot;1.4.0&quot;
+
+$Packages$readr$Source
+[1] &quot;Repository&quot;
+
+$Packages$readr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$readr$Hash
+[1] &quot;2639976851f71f330264a9c9c3d43a61&quot;
+
+
+$Packages$readxl
+$Packages$readxl$Package
+[1] &quot;readxl&quot;
+
+$Packages$readxl$Version
+[1] &quot;1.3.1&quot;
+
+$Packages$readxl$Source
+[1] &quot;Repository&quot;
+
+$Packages$readxl$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$readxl$Hash
+[1] &quot;63537c483c2dbec8d9e3183b3735254a&quot;
+
+
+$Packages$rematch
+$Packages$rematch$Package
+[1] &quot;rematch&quot;
+
+$Packages$rematch$Version
+[1] &quot;1.0.1&quot;
+
+$Packages$rematch$Source
+[1] &quot;Repository&quot;
+
+$Packages$rematch$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rematch$Hash
+[1] &quot;c66b930d20bb6d858cd18e1cebcfae5c&quot;
+
+
+$Packages$rematch2
+$Packages$rematch2$Package
+[1] &quot;rematch2&quot;
+
+$Packages$rematch2$Version
+[1] &quot;2.1.2&quot;
+
+$Packages$rematch2$Source
+[1] &quot;Repository&quot;
+
+$Packages$rematch2$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rematch2$Hash
+[1] &quot;76c9e04c712a05848ae7a23d2f170a40&quot;
+
+
+$Packages$remotes
+$Packages$remotes$Package
+[1] &quot;remotes&quot;
+
+$Packages$remotes$Version
+[1] &quot;2.1.1&quot;
+
+$Packages$remotes$Source
+[1] &quot;Repository&quot;
+
+$Packages$remotes$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$remotes$Hash
+[1] &quot;57c3009534f805f0f6476ffee68483cc&quot;
+
+
+$Packages$renv
+$Packages$renv$Package
+[1] &quot;renv&quot;
+
+$Packages$renv$Version
+[1] &quot;0.12.5&quot;
+
+$Packages$renv$Source
+[1] &quot;Repository&quot;
+
+$Packages$renv$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$renv$Hash
+[1] &quot;5c0cdb37f063c58cdab3c7e9fbb8bd2c&quot;
+
+
+$Packages$repr
+$Packages$repr$Package
+[1] &quot;repr&quot;
+
+$Packages$repr$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$repr$Source
+[1] &quot;Repository&quot;
+
+$Packages$repr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$repr$Hash
+[1] &quot;466aee1b69232becb73769daa894c171&quot;
+
+
+$Packages$reprex
+$Packages$reprex$Package
+[1] &quot;reprex&quot;
+
+$Packages$reprex$Version
+[1] &quot;0.3.0&quot;
+
+$Packages$reprex$Source
+[1] &quot;Repository&quot;
+
+$Packages$reprex$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$reprex$Hash
+[1] &quot;b06bfb3504cc8a4579fd5567646f745b&quot;
+
+
+$Packages$reshape2
+$Packages$reshape2$Package
+[1] &quot;reshape2&quot;
+
+$Packages$reshape2$Version
+[1] &quot;1.4.4&quot;
+
+$Packages$reshape2$Source
+[1] &quot;Repository&quot;
+
+$Packages$reshape2$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$reshape2$Hash
+[1] &quot;bb5996d0bd962d214a11140d77589917&quot;
+
+
+$Packages$rex
+$Packages$rex$Package
+[1] &quot;rex&quot;
+
+$Packages$rex$Version
+[1] &quot;1.2.0&quot;
+
+$Packages$rex$Source
+[1] &quot;Repository&quot;
+
+$Packages$rex$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rex$Hash
+[1] &quot;093584b944440c5cd07a696b3c8e0e4c&quot;
+
+
+$Packages$rhub
+$Packages$rhub$Package
+[1] &quot;rhub&quot;
+
+$Packages$rhub$Version
+[1] &quot;1.1.1&quot;
+
+$Packages$rhub$Source
+[1] &quot;Repository&quot;
+
+$Packages$rhub$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rhub$Hash
+[1] &quot;977cce19c029acc6d88a1c861f224819&quot;
+
+
+$Packages$rio
+$Packages$rio$Package
+[1] &quot;rio&quot;
+
+$Packages$rio$Version
+[1] &quot;0.5.16&quot;
+
+$Packages$rio$Source
+[1] &quot;Repository&quot;
+
+$Packages$rio$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rio$Hash
+[1] &quot;4a9aecbe83639be364de13ffe0671bcf&quot;
+
+
+$Packages$rlang
+$Packages$rlang$Package
+[1] &quot;rlang&quot;
+
+$Packages$rlang$Version
+[1] &quot;0.4.10&quot;
+
+$Packages$rlang$Source
+[1] &quot;Repository&quot;
+
+$Packages$rlang$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rlang$Hash
+[1] &quot;599df23c40a4fce9c7b4764f28c37857&quot;
+
+
+$Packages$rmarkdown
+$Packages$rmarkdown$Package
+[1] &quot;rmarkdown&quot;
+
+$Packages$rmarkdown$Version
+[1] &quot;2.6&quot;
+
+$Packages$rmarkdown$Source
+[1] &quot;Repository&quot;
+
+$Packages$rmarkdown$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rmarkdown$Hash
+[1] &quot;bc4bac38960b446c183957bfd563e763&quot;
+
+
+$Packages$roxygen2
+$Packages$roxygen2$Package
+[1] &quot;roxygen2&quot;
+
+$Packages$roxygen2$Version
+[1] &quot;7.1.0&quot;
+
+$Packages$roxygen2$Source
+[1] &quot;Repository&quot;
+
+$Packages$roxygen2$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$roxygen2$Hash
+[1] &quot;f173062c04dc8e91d7376d914df6efee&quot;
+
+
+$Packages$rprojroot
+$Packages$rprojroot$Package
+[1] &quot;rprojroot&quot;
+
+$Packages$rprojroot$Version
+[1] &quot;2.0.2&quot;
+
+$Packages$rprojroot$Source
+[1] &quot;Repository&quot;
+
+$Packages$rprojroot$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rprojroot$Hash
+[1] &quot;249d8cd1e74a8f6a26194a91b47f21d1&quot;
+
+
+$Packages$rstatix
+$Packages$rstatix$Package
+[1] &quot;rstatix&quot;
+
+$Packages$rstatix$Version
+[1] &quot;0.6.0&quot;
+
+$Packages$rstatix$Source
+[1] &quot;Repository&quot;
+
+$Packages$rstatix$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rstatix$Hash
+[1] &quot;7eb4d25cb9f8183f0c9e19704a3cf681&quot;
+
+
+$Packages$rstudioapi
+$Packages$rstudioapi$Package
+[1] &quot;rstudioapi&quot;
+
+$Packages$rstudioapi$Version
+[1] &quot;0.13&quot;
+
+$Packages$rstudioapi$Source
+[1] &quot;Repository&quot;
+
+$Packages$rstudioapi$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rstudioapi$Hash
+[1] &quot;06c85365a03fdaf699966cc1d3cf53ea&quot;
+
+
+$Packages$rversions
+$Packages$rversions$Package
+[1] &quot;rversions&quot;
+
+$Packages$rversions$Version
+[1] &quot;2.0.1&quot;
+
+$Packages$rversions$Source
+[1] &quot;Repository&quot;
+
+$Packages$rversions$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rversions$Hash
+[1] &quot;2aa84e83767ba93ee6415b439fa981d2&quot;
+
+
+$Packages$rvest
+$Packages$rvest$Package
+[1] &quot;rvest&quot;
+
+$Packages$rvest$Version
+[1] &quot;0.3.5&quot;
+
+$Packages$rvest$Source
+[1] &quot;Repository&quot;
+
+$Packages$rvest$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$rvest$Hash
+[1] &quot;6a20c2cdf133ebc7ac45888c9ccc052b&quot;
+
+
+$Packages$sass
+$Packages$sass$Package
+[1] &quot;sass&quot;
+
+$Packages$sass$Version
+[1] &quot;0.2.0&quot;
+
+$Packages$sass$Source
+[1] &quot;Repository&quot;
+
+$Packages$sass$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$sass$Hash
+[1] &quot;441417bbd40d5bbd07561cc40fb182ed&quot;
+
+
+$Packages$scales
+$Packages$scales$Package
+[1] &quot;scales&quot;
+
+$Packages$scales$Version
+[1] &quot;1.1.1&quot;
+
+$Packages$scales$Source
+[1] &quot;Repository&quot;
+
+$Packages$scales$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$scales$Hash
+[1] &quot;6f76f71042411426ec8df6c54f34e6dd&quot;
+
+
+$Packages$scatterplot3d
+$Packages$scatterplot3d$Package
+[1] &quot;scatterplot3d&quot;
+
+$Packages$scatterplot3d$Version
+[1] &quot;0.3-41&quot;
+
+$Packages$scatterplot3d$Source
+[1] &quot;Repository&quot;
+
+$Packages$scatterplot3d$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$scatterplot3d$Hash
+[1] &quot;0d3e8c286b735517c2df4ed48848e732&quot;
+
+
+$Packages$selectr
+$Packages$selectr$Package
+[1] &quot;selectr&quot;
+
+$Packages$selectr$Version
+[1] &quot;0.4-2&quot;
+
+$Packages$selectr$Source
+[1] &quot;Repository&quot;
+
+$Packages$selectr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$selectr$Hash
+[1] &quot;3838071b66e0c566d55cc26bd6e27bf4&quot;
+
+
+$Packages$sessioninfo
+$Packages$sessioninfo$Package
+[1] &quot;sessioninfo&quot;
+
+$Packages$sessioninfo$Version
+[1] &quot;1.1.1&quot;
+
+$Packages$sessioninfo$Source
+[1] &quot;Repository&quot;
+
+$Packages$sessioninfo$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$sessioninfo$Hash
+[1] &quot;308013098befe37484df72c39cf90d6e&quot;
+
+
+$Packages$sf
+$Packages$sf$Package
+[1] &quot;sf&quot;
+
+$Packages$sf$Version
+[1] &quot;0.9-7&quot;
+
+$Packages$sf$Source
+[1] &quot;Repository&quot;
+
+$Packages$sf$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$sf$Hash
+[1] &quot;9d6831c4c002137d99be6b946ac9da07&quot;
+
+
+$Packages$showtext
+$Packages$showtext$Package
+[1] &quot;showtext&quot;
+
+$Packages$showtext$Version
+[1] &quot;0.8-1&quot;
+
+$Packages$showtext$Source
+[1] &quot;Repository&quot;
+
+$Packages$showtext$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$showtext$Hash
+[1] &quot;2f20d21891f0fd601992ed82e7622203&quot;
+
+
+$Packages$showtextdb
+$Packages$showtextdb$Package
+[1] &quot;showtextdb&quot;
+
+$Packages$showtextdb$Version
+[1] &quot;2.0&quot;
+
+$Packages$showtextdb$Source
+[1] &quot;Repository&quot;
+
+$Packages$showtextdb$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$showtextdb$Hash
+[1] &quot;8e0df803ddce30dddcec4c4c09af8676&quot;
+
+
+$Packages$skimr
+$Packages$skimr$Package
+[1] &quot;skimr&quot;
+
+$Packages$skimr$Version
+[1] &quot;2.1.1&quot;
+
+$Packages$skimr$Source
+[1] &quot;Repository&quot;
+
+$Packages$skimr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$skimr$Hash
+[1] &quot;fa365cc94b8d11fd241dcc6bb5e03500&quot;
+
+
+$Packages$snakecase
+$Packages$snakecase$Package
+[1] &quot;snakecase&quot;
+
+$Packages$snakecase$Version
+[1] &quot;0.11.0&quot;
+
+$Packages$snakecase$Source
+[1] &quot;Repository&quot;
+
+$Packages$snakecase$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$snakecase$Hash
+[1] &quot;4079070fc210c7901c0832a3aeab894f&quot;
+
+
+$Packages$sp
+$Packages$sp$Package
+[1] &quot;sp&quot;
+
+$Packages$sp$Version
+[1] &quot;1.4-1&quot;
+
+$Packages$sp$Source
+[1] &quot;Repository&quot;
+
+$Packages$sp$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$sp$Hash
+[1] &quot;a44a3cebab900c0f77e16804f361468e&quot;
+
+
+$Packages$statmod
+$Packages$statmod$Package
+[1] &quot;statmod&quot;
+
+$Packages$statmod$Version
+[1] &quot;1.4.34&quot;
+
+$Packages$statmod$Source
+[1] &quot;Repository&quot;
+
+$Packages$statmod$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$statmod$Hash
+[1] &quot;5b229273695937933bc21ef235e84962&quot;
+
+
+$Packages$statnipokladna
+$Packages$statnipokladna$Package
+[1] &quot;statnipokladna&quot;
+
+$Packages$statnipokladna$Version
+[1] &quot;0.6.0.9000&quot;
+
+$Packages$statnipokladna$Source
+[1] &quot;GitHub&quot;
+
+$Packages$statnipokladna$RemoteType
+[1] &quot;github&quot;
+
+$Packages$statnipokladna$RemoteHost
+[1] &quot;api.github.com&quot;
+
+$Packages$statnipokladna$RemoteUsername
+[1] &quot;petrbouchal&quot;
+
+$Packages$statnipokladna$RemoteRepo
+[1] &quot;statnipokladna&quot;
+
+$Packages$statnipokladna$RemoteRef
+[1] &quot;master&quot;
+
+$Packages$statnipokladna$RemoteSha
+[1] &quot;1c43e6db0c660fda05ad41af21c676deab5c9d8b&quot;
+
+$Packages$statnipokladna$Hash
+[1] &quot;1cd7659184111468ea21dd35964b8207&quot;
+
+
+$Packages$stringi
+$Packages$stringi$Package
+[1] &quot;stringi&quot;
+
+$Packages$stringi$Version
+[1] &quot;1.5.3&quot;
+
+$Packages$stringi$Source
+[1] &quot;Repository&quot;
+
+$Packages$stringi$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$stringi$Hash
+[1] &quot;a063ebea753c92910a4cca7b18bc1f05&quot;
+
+
+$Packages$stringr
+$Packages$stringr$Package
+[1] &quot;stringr&quot;
+
+$Packages$stringr$Version
+[1] &quot;1.4.0&quot;
+
+$Packages$stringr$Source
+[1] &quot;Repository&quot;
+
+$Packages$stringr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$stringr$Hash
+[1] &quot;0759e6b6c0957edb1311028a49a35e76&quot;
+
+
+$Packages$sys
+$Packages$sys$Package
+[1] &quot;sys&quot;
+
+$Packages$sys$Version
+[1] &quot;3.4&quot;
+
+$Packages$sys$Source
+[1] &quot;Repository&quot;
+
+$Packages$sys$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$sys$Hash
+[1] &quot;b227d13e29222b4574486cfcbde077fa&quot;
+
+
+$Packages$sysfonts
+$Packages$sysfonts$Package
+[1] &quot;sysfonts&quot;
+
+$Packages$sysfonts$Version
+[1] &quot;0.8.1&quot;
+
+$Packages$sysfonts$Source
+[1] &quot;Repository&quot;
+
+$Packages$sysfonts$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$sysfonts$Hash
+[1] &quot;49ed30f4a8938fb04551dced5b6d444e&quot;
+
+
+$Packages$systemfonts
+$Packages$systemfonts$Package
+[1] &quot;systemfonts&quot;
+
+$Packages$systemfonts$Version
+[1] &quot;0.3.2&quot;
+
+$Packages$systemfonts$Source
+[1] &quot;Repository&quot;
+
+$Packages$systemfonts$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$systemfonts$Hash
+[1] &quot;046e821d454edb3722192f588f4d7884&quot;
+
+
+$Packages$testthat
+$Packages$testthat$Package
+[1] &quot;testthat&quot;
+
+$Packages$testthat$Version
+[1] &quot;3.0.1&quot;
+
+$Packages$testthat$Source
+[1] &quot;Repository&quot;
+
+$Packages$testthat$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$testthat$Hash
+[1] &quot;17826764cb92d8b5aae6619896e5a161&quot;
+
+
+$Packages$tibble
+$Packages$tibble$Package
+[1] &quot;tibble&quot;
+
+$Packages$tibble$Version
+[1] &quot;3.0.4&quot;
+
+$Packages$tibble$Source
+[1] &quot;Repository&quot;
+
+$Packages$tibble$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tibble$Hash
+[1] &quot;71dffd8544691c520dd8e41ed2d7e070&quot;
+
+
+$Packages$tictoc
+$Packages$tictoc$Package
+[1] &quot;tictoc&quot;
+
+$Packages$tictoc$Version
+[1] &quot;1.0&quot;
+
+$Packages$tictoc$Source
+[1] &quot;Repository&quot;
+
+$Packages$tictoc$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tictoc$Hash
+[1] &quot;f8cc5adf4671b013434bbe127f35b28c&quot;
+
+
+$Packages$tidyr
+$Packages$tidyr$Package
+[1] &quot;tidyr&quot;
+
+$Packages$tidyr$Version
+[1] &quot;1.1.2&quot;
+
+$Packages$tidyr$Source
+[1] &quot;Repository&quot;
+
+$Packages$tidyr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tidyr$Hash
+[1] &quot;c40b2d5824d829190f4b825f4496dfae&quot;
+
+
+$Packages$tidyselect
+$Packages$tidyselect$Package
+[1] &quot;tidyselect&quot;
+
+$Packages$tidyselect$Version
+[1] &quot;1.1.0&quot;
+
+$Packages$tidyselect$Source
+[1] &quot;Repository&quot;
+
+$Packages$tidyselect$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tidyselect$Hash
+[1] &quot;6ea435c354e8448819627cf686f66e0a&quot;
+
+
+$Packages$tidyverse
+$Packages$tidyverse$Package
+[1] &quot;tidyverse&quot;
+
+$Packages$tidyverse$Version
+[1] &quot;1.3.0&quot;
+
+$Packages$tidyverse$Source
+[1] &quot;Repository&quot;
+
+$Packages$tidyverse$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tidyverse$Hash
+[1] &quot;bd51be662f359fa99021f3d51e911490&quot;
+
+
+$Packages$tinytex
+$Packages$tinytex$Package
+[1] &quot;tinytex&quot;
+
+$Packages$tinytex$Version
+[1] &quot;0.28&quot;
+
+$Packages$tinytex$Source
+[1] &quot;Repository&quot;
+
+$Packages$tinytex$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tinytex$Hash
+[1] &quot;ff73961a77fba606fbf944dc3468e5b9&quot;
+
+
+$Packages$tweenr
+$Packages$tweenr$Package
+[1] &quot;tweenr&quot;
+
+$Packages$tweenr$Version
+[1] &quot;1.0.1&quot;
+
+$Packages$tweenr$Source
+[1] &quot;Repository&quot;
+
+$Packages$tweenr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$tweenr$Hash
+[1] &quot;fc77eb5297507cccfa3349a606061030&quot;
+
+
+$Packages$units
+$Packages$units$Package
+[1] &quot;units&quot;
+
+$Packages$units$Version
+[1] &quot;0.6-6&quot;
+
+$Packages$units$Source
+[1] &quot;Repository&quot;
+
+$Packages$units$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$units$Hash
+[1] &quot;687aa5dfc4ec01ad4da86862a7e6a05b&quot;
+
+
+$Packages$usethis
+$Packages$usethis$Package
+[1] &quot;usethis&quot;
+
+$Packages$usethis$Version
+[1] &quot;2.0.0&quot;
+
+$Packages$usethis$Source
+[1] &quot;Repository&quot;
+
+$Packages$usethis$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$usethis$Hash
+[1] &quot;133099afbac51dc52948b89b387a9734&quot;
+
+
+$Packages$utf8
+$Packages$utf8$Package
+[1] &quot;utf8&quot;
+
+$Packages$utf8$Version
+[1] &quot;1.1.4&quot;
+
+$Packages$utf8$Source
+[1] &quot;Repository&quot;
+
+$Packages$utf8$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$utf8$Hash
+[1] &quot;4a5081acfb7b81a572e4384a7aaf2af1&quot;
+
+
+$Packages$uuid
+$Packages$uuid$Package
+[1] &quot;uuid&quot;
+
+$Packages$uuid$Version
+[1] &quot;0.1-4&quot;
+
+$Packages$uuid$Source
+[1] &quot;Repository&quot;
+
+$Packages$uuid$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$uuid$Hash
+[1] &quot;e4169eb989a5d03ccb6b628cad1b1b50&quot;
+
+
+$Packages$vctrs
+$Packages$vctrs$Package
+[1] &quot;vctrs&quot;
+
+$Packages$vctrs$Version
+[1] &quot;0.3.6&quot;
+
+$Packages$vctrs$Source
+[1] &quot;Repository&quot;
+
+$Packages$vctrs$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$vctrs$Hash
+[1] &quot;5cf1957f93076c19fdc81d01409d240b&quot;
+
+
+$Packages$viridis
+$Packages$viridis$Package
+[1] &quot;viridis&quot;
+
+$Packages$viridis$Version
+[1] &quot;0.5.1&quot;
+
+$Packages$viridis$Source
+[1] &quot;Repository&quot;
+
+$Packages$viridis$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$viridis$Hash
+[1] &quot;6f6b49e5b3b5ee5a6d0c28bf1b4b9eb3&quot;
+
+
+$Packages$viridisLite
+$Packages$viridisLite$Package
+[1] &quot;viridisLite&quot;
+
+$Packages$viridisLite$Version
+[1] &quot;0.3.0&quot;
+
+$Packages$viridisLite$Source
+[1] &quot;Repository&quot;
+
+$Packages$viridisLite$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$viridisLite$Hash
+[1] &quot;ce4f6271baa94776db692f1cb2055bee&quot;
+
+
+$Packages$visdat
+$Packages$visdat$Package
+[1] &quot;visdat&quot;
+
+$Packages$visdat$Version
+[1] &quot;0.5.3&quot;
+
+$Packages$visdat$Source
+[1] &quot;Repository&quot;
+
+$Packages$visdat$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$visdat$Hash
+[1] &quot;f62b960320b18fdffb2f0f76bb65dbaf&quot;
+
+
+$Packages$waldo
+$Packages$waldo$Package
+[1] &quot;waldo&quot;
+
+$Packages$waldo$Version
+[1] &quot;0.2.3&quot;
+
+$Packages$waldo$Source
+[1] &quot;Repository&quot;
+
+$Packages$waldo$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$waldo$Hash
+[1] &quot;181d1a31b1ba2009ef20926f2ee0570c&quot;
+
+
+$Packages$whisker
+$Packages$whisker$Package
+[1] &quot;whisker&quot;
+
+$Packages$whisker$Version
+[1] &quot;0.4&quot;
+
+$Packages$whisker$Source
+[1] &quot;Repository&quot;
+
+$Packages$whisker$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$whisker$Hash
+[1] &quot;ca970b96d894e90397ed20637a0c1bbe&quot;
+
+
+$Packages$whoami
+$Packages$whoami$Package
+[1] &quot;whoami&quot;
+
+$Packages$whoami$Version
+[1] &quot;1.3.0&quot;
+
+$Packages$whoami$Source
+[1] &quot;Repository&quot;
+
+$Packages$whoami$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$whoami$Hash
+[1] &quot;ef0f4d9b8f2cc2ebeccae1d725b8a023&quot;
+
+
+$Packages$withr
+$Packages$withr$Package
+[1] &quot;withr&quot;
+
+$Packages$withr$Version
+[1] &quot;2.3.0&quot;
+
+$Packages$withr$Source
+[1] &quot;Repository&quot;
+
+$Packages$withr$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$withr$Hash
+[1] &quot;7307d79f58d1885b38c4f4f1a8cb19dd&quot;
+
+
+$Packages$writexl
+$Packages$writexl$Package
+[1] &quot;writexl&quot;
+
+$Packages$writexl$Version
+[1] &quot;1.3.1&quot;
+
+$Packages$writexl$Source
+[1] &quot;Repository&quot;
+
+$Packages$writexl$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$writexl$Hash
+[1] &quot;230396d86a3710b0ec8f50bd3c81483e&quot;
+
+
+$Packages$xfun
+$Packages$xfun$Package
+[1] &quot;xfun&quot;
+
+$Packages$xfun$Version
+[1] &quot;0.20&quot;
+
+$Packages$xfun$Source
+[1] &quot;Repository&quot;
+
+$Packages$xfun$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$xfun$Hash
+[1] &quot;d7222684dc02327871e3b1da0aba7089&quot;
+
+
+$Packages$xml2
+$Packages$xml2$Package
+[1] &quot;xml2&quot;
+
+$Packages$xml2$Version
+[1] &quot;1.3.2&quot;
+
+$Packages$xml2$Source
+[1] &quot;Repository&quot;
+
+$Packages$xml2$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$xml2$Hash
+[1] &quot;d4d71a75dd3ea9eb5fa28cc21f9585e2&quot;
+
+
+$Packages$xopen
+$Packages$xopen$Package
+[1] &quot;xopen&quot;
+
+$Packages$xopen$Version
+[1] &quot;1.0.0&quot;
+
+$Packages$xopen$Source
+[1] &quot;Repository&quot;
+
+$Packages$xopen$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$xopen$Hash
+[1] &quot;6c85f015dee9cc7710ddd20f86881f58&quot;
+
+
+$Packages$yaml
+$Packages$yaml$Package
+[1] &quot;yaml&quot;
+
+$Packages$yaml$Version
+[1] &quot;2.2.1&quot;
+
+$Packages$yaml$Source
+[1] &quot;Repository&quot;
+
+$Packages$yaml$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$yaml$Hash
+[1] &quot;2826c5d9efb0a88f657c7a679c7106db&quot;
+
+
+$Packages$zip
+$Packages$zip$Package
+[1] &quot;zip&quot;
+
+$Packages$zip$Version
+[1] &quot;2.1.1&quot;
+
+$Packages$zip$Source
+[1] &quot;Repository&quot;
+
+$Packages$zip$Repository
+[1] &quot;CRAN&quot;
+
+$Packages$zip$Hash
+[1] &quot;3bc8405c637d988801ec5ea88372d0c2&quot;
+
+
+
+attr(,&quot;class&quot;)
+[1] &quot;renv_lockfile&quot;
+</code></pre>
+</details>
+<p><br></p>
+<div id="config.yml" class="section level3">
+<h3>config.yml</h3>
+<ul>
+<li>config used default</li>
+<li>file used</li>
+</ul>
+<details closed>
+<summary>
+<span title="Click to Open"> config.yml file </span>
+</summary>
+<pre class="r"><code>
+default:
+  input_dir: &quot;data-input/sestavy-20210119&quot;
+  input_chu_xlsx: &quot;data-input/CHKONP.xlsx&quot;
+  input_resolved_xlsx: &quot;data-manual/prj_nonhier-resolved.xlsx&quot;
+  arrow_output_dir: &quot;data-output/dtl-all-arrow&quot;
+  arrow_partitioning: [&quot;obec_puvod&quot;, &quot;op_id&quot;, &quot;chunk&quot;, &quot;rozpad_typ&quot;]
+  excel_output_dir: &quot;data-export/excel-all-chunked&quot;
+  export_excel: true
+</code></pre>
+</details>
+<p><br></p>
+<details closed>
+<summary>
+<span title="Click to Open"> config.yml settings </span>
+</summary>
+<pre class="r"><code>
+$input_dir
+[1] &quot;data-input/sestavy-20210119&quot;
+
+$input_chu_xlsx
+[1] &quot;data-input/CHKONP.xlsx&quot;
+
+$input_resolved_xlsx
+[1] &quot;data-manual/prj_nonhier-resolved.xlsx&quot;
+
+$arrow_output_dir
+[1] &quot;data-output/dtl-all-arrow&quot;
+
+$arrow_partitioning
+[1] &quot;obec_puvod&quot; &quot;op_id&quot;      &quot;chunk&quot;      &quot;rozpad_typ&quot;
+
+$excel_output_dir
+[1] &quot;data-export/excel-all-chunked&quot;
+
+$export_excel
+[1] TRUE
+
+attr(,&quot;config&quot;)
+[1] &quot;default&quot;
+attr(,&quot;file&quot;)
+[1] &quot;/Users/petr/cwork/mmr-esif-clean/config.yml&quot;
+</code></pre>
+</details>
+<p><br></p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Dokumentace výstupu</title>
+
+<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<meta name="robots" content="noindex,nofollow"/>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+<link rel="stylesheet" href="extra.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Místa realizace ESIF: čištění dat</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Návody a dokumentace
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="how-to-repeat.html">Jak postup zopakovat</a>
+    </li>
+    <li>
+      <a href="widget.html">Pomůcka k řešení nekonzistentních dat</a>
+    </li>
+    <li>
+      <a href="codebook.html">Dokumentace výstupu</a>
+    </li>
+    <li>
+      <a href="dev.html">Technická dokumentace</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Vizuální kontrola postupu
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_input-checks.html">Kontrola úplnosti a konzistence</a>
+    </li>
+    <li>
+      <a href="02_validate.html">Ověření geodat</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="03_explore.html">Struktura dat</a>
+    </li>
+    <li>
+      <a href="04_explore-complicated-projects.html">Analýza geograficky složitých projektů</a>
+    </li>
+    <li>
+      <a href="06_explore-obecless-projects.html">Analýza projektů bez identifikace obce ZÚJ</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="05_resolve-simple.html">Projekty s určením obce</a>
+    </li>
+    <li>
+      <a href="07_resolve-obecless-projects.html">Projekty bez určení obce/ZÚJ</a>
+    </li>
+    <li>
+      <a href="08_resolve-placeless.html">Projekty bez místa realizace</a>
+    </li>
+    <li>
+      <a href="09_resolve-complicated.html">Projekty s nehierarchickým určením místa</a>
+    </li>
+    <li>
+      <a href="10_compile-export.html">Kompilace a export</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="log.html">Záznam kroků a poznatků</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/petrbouchal/mmr-esif-clean">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Dokumentace výstupu</h1>
+
+</div>
+
+
+<div id="obsah-dat" class="section level2">
+<h2>Obsah dat</h2>
+<p>V datové tabulce je záznam o původní geolokaci projektu spolu s informací o nově odvozené geolokaci. Tam, kde je nová geolokace odvozena příliš extenzivně (např. rozpad projektu původně lokalizovaného na kraj do všech jeho obcí), je tedy možné vrátit se k původní geolokaci. (Prakticky by se to provedlo tak, že by se vybraly pro daný projekt (<code>prj_id</code>) řádky se všemi kombinacemi hodnot sloupce <code>geo_id_orig</code> a <code>level_orig</code>).</p>
+<p>Kvůli velikosti souborů výstupová tabulka neobsahuje všechna metadata o projektech a příjemcích. Ta lze podle potřeby připojit z jiných zdrojů.</p>
+<div id="jak-vznikaly-rozpady-na-obce" class="section level3">
+<h3>Jak vznikaly rozpady na obce</h3>
+<div id="projekty-kde-geolokace-byla-vnitřně-konzistentní" class="section level4">
+<h4>Projekty, kde geolokace byla vnitřně konzistentní</h4>
+<p>Toto byla velká většina projektů.</p>
+<p>Pro většinu projektů platilo několik jednoduchých pravidel, pokud projekt v datech neměl geolokaci na úrovni obce. Všechna pravidla byla ověřena alespoň na části dat, abychom měli jistotu, že aplikace pravidla nepřinese nesprávné výsledky u většího množství projektů.</p>
+<ul>
+<li>vycházíme z nejjemnější v datech uvedené lokalizace, tj. pokud byl projekt alokován zároveň na kraj a obec, vycházíme z obce, pokud zároveň na kraj a ORP, vycházíme z ORP atd.</li>
+<li>pokud je žadatel kraj nebo jeho příspěvkovka, je projekt rozpadnut do všech obcí kraje</li>
+<li>pokud je žadatel městská část Prahy nebo její příspěvkovka, projekt je alokován do této ZÚJ</li>
+<li>obec je alokována do sídla žadatele u těchto projektů:
+<ul>
+<li>výzvy pro školy</li>
+<li>výzvy na zateplení</li>
+<li>žadatel je obec</li>
+<li>výzvy pro VŠ</li>
+<li>sídlo žadatele je zmíněno v názvu projektu nebo je součástí názvu žadatele</li>
+<li>specifické výzvy pro firmy (firemní vzdělávání)</li>
+<li>výzvy pro dětské skupiny, předškolní vzdělávání apod.</li>
+<li>výzvy na budování kapacit NNO</li>
+<li>výzvy pro sociálně vyloučené lokality</li>
+</ul></li>
+<li>všechny verze Prahy (okres, ORP, kraj) jsou převedeny na obec Praha, též u všech projektů ve výzvách pouze pro Prahu</li>
+<li>projekty technické pomoci jsou převedeny do obce sídla příjemce</li>
+<li>rozpad na obce MAS, pokud je MAS zmíněna v názvu nebo anotaci projektu</li>
+<li>sídlo MAS u výzev na podporu kapaci MAS</li>
+<li>rozpad na obce v okrese/ORP/kraji, pokud:</li>
+<li>je okres/ORP zmíněn v názvu projektu</li>
+<li>je projekt původně lokalizován pouze na jeden okres, ORP nebo kraj</li>
+<li>projekty na krajské úrovni ve více než 11 kraji jsou rozpadnuty na celou ČR</li>
+<li>rozpad z obcí na ZÚJ (tj. městské části) se nedělal, pokud nešlo o upřednění viz výše (žadatel je MČ atd.)</li>
+</ul>
+</div>
+<div id="projekty-bez-geolokace-v-původních-datech" class="section level4">
+<h4>Projekty bez geolokace v původních datech</h4>
+<p>Část projektů měla geolokaci zadanou na úrovni chráněné oblasti, což ale nebylo v původním exportu. Z dodatečných dat se podařilo většinu z nich přiřadit k CHKO/NP a pomocí geodat poté rozpadnout na jednotlivé obce překrývající se s těmito územími. Současný postup zahrnuje do projektu všechny obce, do kterých dané chráněné území zasahuje.</p>
+</div>
+<div id="projekty-s-nekonzistentní-lokalizací" class="section level4">
+<h4>Projekty s nekonzistentní lokalizací</h4>
+<p>To jsou projekty, kde je např. jako místo realizace uveden zároveň Karlovarský kraj a město Třebíč.</p>
+<p>V datech z léta 2020 jich asi 119.</p>
+<p>U těch je potřeba úvaha a ruční zadání. Prakticky to vypadá tak, že skript vygeneruje excelový soubor, kde se do novéhou sloupečku zadá TRUE u řádků s tím geografickým údajem, kterých chceme použít. Pokud u nějakého projektu nezadáme TRUE u žádného řádku, použijou se všechny údaje.</p>
+<p>Výsledný excelový soubor je potřeba uložit do adresáře <code>data-manual</code> a znovu spustit skripty <code>09_resolve-complicated.Rmd</code> a <code>10_compile-export.Rmd</code>.</p>
+<p>Následně skript na základě tohoto zadání všechny projekty rozpadne na obce - tj. pokud jsme u nějakého projektu zadali, že se má použít geolokace na uvedený ORP, skript projekt rozpadne do všech obcí daného ORP.</p>
+</div>
+</div>
+<div id="rozložení-projektů" class="section level3">
+<h3>Rozložení projektů</h3>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["obec_puvod"],"name":[1],"type":["chr"],"align":["left"]},{"label":["rozpad_typ"],"name":[2],"type":["chr"],"align":["left"]},{"label":["rozpad_duvod"],"name":[3],"type":["chr"],"align":["left"]},{"label":["n"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"doplnění obce nebo ZÚJ podle chráněných území","2":"nic","3":"NA","4":"26"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"detekce_okres","3":"okres XY v názvu nebo anotaci","4":"155"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"detekce_orp","3":"ORP XY v názvu nebo anotaci","4":"427"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"detekce_uzemi","3":"Název obce/MČ v názvu nebo anotaci","4":"916"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"mc","3":"žadatel je MČ","4":"120"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"mc","3":"žadatel je PO MČ","4":"533"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obce_v_kraj","3":"1 kraj","4":"2578"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obce_v_kraj","3":"příjemce je kraj nebo jeho PO","4":"213"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obce_v_kraj","3":"více krajů","4":"866"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obce_v_mas","3":"MAS je příjemce","4":"206"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obce_v_mas","3":"MAS v názvu nebo anotaci projektu","4":"424"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obce_v_okres","3":"1 okres","4":"198"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obce_v_okres","3":"více okresů","4":"149"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obce_v_orp","3":"1 ORP","4":"169"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obce_v_orp","3":"více ORP","4":"103"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"obec sídla žadatele je v názvu projektu","4":"235"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"obec sídla žadatele je v názvu žadatele","4":"336"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"projekt TP podle kódu kategorie intervence","4":"393"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"VŠ podle názvu žadatele","4":"487"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"výzva na dětské skupiny","4":"1845"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"výzva na firemní vzdělávání","4":"3417"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"Výzva na kapacity NNO","4":"89"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"Výzva na péči o děti/předškolní atd.","4":"1122"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"výzva na zateplení","4":"232"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"výzva pro MAS (neidentifikovaná MAS)","4":"989"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"výzva pro školy","4":"13670"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"Výzva pro SVL","4":"402"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"Výzva pro VŠ","4":"15"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"Výzva sociální podnikání","4":"878"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"obec_sidla","3":"Žadatel je obec nebo její PO","4":"2788"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"plosny","3":"Projekt ve více než 11 krajích","4":"587"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"praha","3":"Praha je jediný kraj realizace","4":"2517"},{"1":"dovození obce nebo ZÚJ, kde tato úroveň chyběla","2":"praha","3":"výzva pro Prahu","4":"3"},{"1":"manuální řešení původně nekonzistentní geolokace","2":"více míst nehierarchicky","3":"manuálně vybrána obec","4":"107"},{"1":"manuální řešení původně nekonzistentní geolokace","2":"více míst nehierarchicky","3":"manuálně vybrána ZÚJ; úroveň převedena na obec kde se obec a ZÚJ kryjí","4":"43"},{"1":"manuální řešení původně nekonzistentní geolokace","2":"více míst nehierarchicky","3":"mechanický rozpad z manuálně vybraného ORP, okresu nebo kraje","4":"81"},{"1":"obec nebo ZUJ u projektů, kde byly ve vstupních datech","2":"jedno místo","3":"NA","4":"38452"},{"1":"obec nebo ZUJ u projektů, kde byly ve vstupních datech","2":"obec a ZUJ se kryjí","3":"NA","4":"125"},{"1":"obec nebo ZUJ u projektů, kde byly ve vstupních datech","2":"více míst hierarchicky","3":"NA","4":"8699"},{"1":"obec nebo ZUJ u projektů, kde byly ve vstupních datech","2":"více míst na stejné úrovni","3":"NA","4":"2188"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div id="výstupní-soubory-a-formáty" class="section level2">
+<h2>Výstupní soubory a formáty</h2>
+<div id="arrow-datasety" class="section level3">
+<h3>Arrow datasety</h3>
+<p>Zpracovaná data jsou exportována do datasetu Arrow ve formátu Parquet. Arrow je knihovna pro efektivní skladování a načítání dat využitelná v různých prostředích (R, Python, Java, JavaScript, Ruby, Rust, Go, Julia, Matlab aj.) Parquet je konkrétní formát skladování dat v souborech na disku.</p>
+<p>Výstupem je adresář souborů zanořených ve struktuře podadresářů - v našem případě adresář <code>data-output/dtl-all-arrow</code>. Z této struktury lze strojově odvodit datovou strukturu; členění dat do mnoha souborů umožňuje rychlé načítání části dat, např. pro jednotlivé OP nebo podle tzv. chunks (oddílů, na které jsou data rozdělena pro snadný export do většího množství Excel souborů.)</p>
+</div>
+<div id="náhledové-excel-soubory" class="section level3">
+<h3>Náhledové Excel soubory</h3>
+<ul>
+<li><a href="opz-one-chunk.xlsx">jeden kus OPZ (cca 500 000 řádků z celkem cca 7 mil.)</a></li>
+<li><a href="sample_export.xlsx">vzorek projektů zahrnující různé OP a typy řešených mezer v datech</a></li>
+</ul>
+<p>Jejich schéma (názvy sloupců, jejich obsah a datový typ) odpovídají schématu níže.</p>
+</div>
+</div>
+<div id="dokumentace-výstupního-exportu" class="section level2">
+<h2>Dokumentace výstupního exportu</h2>
+<style>@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+html {
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#pb_information .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 130%;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#pb_information .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pb_information .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#pb_information .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#pb_information .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pb_information .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pb_information .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#pb_information .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#pb_information .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#pb_information .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#pb_information .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#pb_information .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pb_information .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pb_information .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#pb_information .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#pb_information .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#pb_information .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#pb_information .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pb_information .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#pb_information .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pb_information .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#pb_information .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#pb_information .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pb_information .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pb_information .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#pb_information .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pb_information .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#pb_information .gt_left {
+  text-align: left;
+}
+
+#pb_information .gt_center {
+  text-align: center;
+}
+
+#pb_information .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#pb_information .gt_font_normal {
+  font-weight: normal;
+}
+
+#pb_information .gt_font_bold {
+  font-weight: bold;
+}
+
+#pb_information .gt_font_italic {
+  font-style: italic;
+}
+
+#pb_information .gt_super {
+  font-size: 65%;
+}
+
+#pb_information .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+
+#pb_information {
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: .15px;
+}
+
+#pb_information a {
+  color: #375F84;
+  text-decoration: none;
+}
+
+#pb_information a:hover {
+  color: #375F84;
+  text-decoration: underline;
+}
+
+#pb_information p {
+  overflow: visible;
+  margin-top: 2px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 5px;
+}
+
+#pb_information ul {
+  list-style-type: square;
+  padding-left: 25px;
+  margin-top: -4px;
+  margin-bottom: 6px;
+}
+
+#pb_information li {
+  text-indent: -1px;
+}
+
+#pb_information h4 {
+  font-weight: 500;
+  color: #444444;
+}
+
+#pb_information code {
+  font-family: 'IBM Plex Mono', monospace, courier;
+  font-size: 90%;
+  font-weight: 500;
+  color: #666666;
+  background-color: transparent;
+  padding: 0;
+}
+
+#pb_information .pb_date {
+  text-decoration-style: solid;
+  text-decoration-color: #9933CC;
+  text-decoration-line: underline;
+  text-underline-position: under;
+  font-variant-numeric: tabular-nums;
+  margin-right: 4px;
+}
+
+#pb_information .pb_label {
+  border: solid 1px;
+  border-color: inherit;
+  padding: 0px 3px 0px 3px;
+}
+
+#pb_information .pb_label_rounded {
+  border: solid 1px;
+  border-color: inherit;
+  border-radius: 8px;
+  padding: 0px 8px 0px 8px;
+}
+
+#pb_information .pb_sub_label {
+  font-size: smaller;
+  color: #777777;
+}
+
+#pb_information .pb_col_type {
+  font-size: 75%;
+}
+
+#pb_information .gt_sourcenote {
+  height: 35px;
+  font-size: 60%;
+  padding: 0;
+}
+
+#pb_information .gt_group_heading {
+  text-ident: -3px;
+}
+</style>
+<div id="pb_information" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table" style="table-layout: fixed;; width: 0px">
+  <colgroup>
+    <col style="width:875px;"/>
+  </colgroup>
+  <thead class="gt_header">
+    <tr>
+      <th colspan="1" class="gt_heading gt_title gt_font_normal" style="color: #444444; font-size: 28px; text-align: left; font-weight: 500;">Pointblank Information</th>
+    </tr>
+    <tr>
+      <th colspan="1" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style="font-size: 12px; text-align: left;"><span style="text-decoration-style:solid;text-decoration-color:#ADD8E6;text-decoration-line:underline;text-underline-position:under;color:#333333;font-variant-numeric:tabular-nums;padding-left:4px;margin-right:5px;padding-right:2px;">[2021-02-03|00:27:29]</span></p>
+<div style="height:25px;margin-top:10px;"><span style="background-color:#E2E2E2;color:#222222;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin:5px 0px 5px 5px;font-weight:bold;border:solid 1px #E2E2E2;padding:2px 15px 2px 15px;font-size:smaller;">Arrow dataset (parquet, 111 files)</span>
+<span style="background-color:none;color:#222222;padding:0.5em 0.5em;position:inherit;margin:5px 10px 5px -4px;font-weight:bold;border:solid 1px #E2E2E2;padding:2px 15px 2px 15px;font-size:smaller;">export</span><span style="background-color:#eecbff;color:#333333;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin:5px 0px 5px 5px;font-weight:bold;border:solid 1px #eecbff;padding:2px 15px 2px 15px;font-size:smaller;">Rows</span>
+<span style="background-color:none;color:#333333;padding:0.5em 0.5em;position:inherit;margin:5px 0px 5px -4px;font-weight:bold;border:solid 1px #eecbff;padding:2px 15px 2px 15px;font-size:smaller;">7,165,207</span>
+<span style="background-color:#BDE7B4;color:#333333;padding:0.5em 0.5em;position:inherit;text-transform:uppercase;margin:5px 0px 5px 1px;font-weight:bold;border:solid 1px #BDE7B4;padding:2px 15px 2px 15px;font-size:smaller;">Columns</span>
+<span style="background-color:none;color:#333333;padding:0.5em 0.5em;position:inherit;margin:5px 0px 5px -4px;font-weight:bold;border:solid 1px #BDE7B4;padding:2px 15px 2px 15px;font-size:smaller;">12</span></div>
+</th>
+    </tr>
+  </thead>
+  
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <td colspan="1" class="gt_group_heading" style="color: #444444; font-weight: 500; text-transform: uppercase; background-color: #FCFCFC; border-bottom-width: 1; border-bottom-style: solid; border-bottom-color: #EFEFEF;">Table</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><h4 style="margin-bottom:5px;">CO</h4>
+<p>Export všech upravených dat v jedné tabulce - pouze kódy území, bez metadat o projektech a příjemcích</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><h4 style="margin-bottom:5px;">FORMA</h4>
+<p>Arrow dataset, členěný do parquet souborů podle OP, typu rozpadu, původu ID obce a oddílu pro export (chunk).</p>
+</div></td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="1" class="gt_group_heading" style="color: #444444; font-weight: 500; text-transform: uppercase; background-color: #FCFCFC; border-bottom-width: 1; border-bottom-style: solid; border-bottom-color: #EFEFEF;">Columns</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><p><code style="margin-bottom:5px;color:#555555;font-weight:500;line-height:2em;border:solid 1px #499FFE;padding:2px 8px 3px 8px;background-color:#FAFAFA;">prj_id</code>  <code class="pb_col_type">character</code></p>
+<p><strong class="pb_sub_label">VYZNAM</strong> číslo projektu</p>
+<p><strong class="pb_sub_label">ZDROJ</strong> původní data, neupraveno</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><p><code style="margin-bottom:5px;color:#555555;font-weight:500;line-height:2em;border:solid 1px #499FFE;padding:2px 8px 3px 8px;background-color:#FAFAFA;">radek</code>  <code class="pb_col_type">integer</code></p>
+<p><strong class="pb_sub_label">VYZNAM</strong> pořadové číslo řádku v projektu</p>
+<p><strong class="pb_sub_label">ZDROJ</strong> generováno po rozpadu na obce</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><p><code style="margin-bottom:5px;color:#555555;font-weight:500;line-height:2em;border:solid 1px #499FFE;padding:2px 8px 3px 8px;background-color:#FAFAFA;">level</code>  <code class="pb_col_type">ordered, factor</code></p>
+<p><strong class="pb_sub_label">VYZNAM</strong> úroveň dovozené geolokace</p>
+<p><strong class="pb_sub_label">ZDROJ</strong> dovozeno rozpadem na obce a ZÚJ</p>
+<p><strong class="pb_sub_label">HODNOTY</strong> obec, zuj</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><p><code style="margin-bottom:5px;color:#555555;font-weight:500;line-height:2em;border:solid 1px #499FFE;padding:2px 8px 3px 8px;background-color:#FAFAFA;">geo_id</code>  <code class="pb_col_type">character</code></p>
+<p><strong class="pb_sub_label">VYZNAM</strong> kód obce nebo ZÚJ (pro MČ) bez prefixu NUTS</p>
+<p><strong class="pb_sub_label">ČÍSELNÍK</strong> ČSÚ číselník obcí (43), ZÚJ (51)</p>
+<p><strong class="pb_sub_label">ZDROJ</strong> vlastní dovození (viz výše)</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><p><code style="margin-bottom:5px;color:#555555;font-weight:500;line-height:2em;border:solid 1px #499FFE;padding:2px 8px 3px 8px;background-color:#FAFAFA;">level_orig</code>  <code class="pb_col_type">character</code></p>
+<p><strong class="pb_sub_label">VYZNAM</strong> původní úrove</p>
+<p><strong class="pb_sub_label">HODNOTY</strong> kraj, orp, okres, obec, zuj</p>
+<p><strong class="pb_sub_label">POZOR</strong> pouze úroveň, ze které se data rozpadala na obce</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><p><code style="margin-bottom:5px;color:#555555;font-weight:500;line-height:2em;border:solid 1px #499FFE;padding:2px 8px 3px 8px;background-color:#FAFAFA;">geo_id_orig</code>  <code class="pb_col_type">character</code></p>
+<p><strong class="pb_sub_label">VYZNAM</strong> všechny původní geolokace pro daný <code>level_orig</code> - kód území</p>
+<p><strong class="pb_sub_label">FORMA</strong> obce a ZÚJ včetně NUTS prefixu, ORP a okres podle ČSÚ, kraj podle NUTS</p>
+<p><strong class="pb_sub_label">POZOR</strong> může obsahovat více hodnot oddělených čárkou; pouze pro úroveň, ze kterých se data rozpadala na obce</p>
+<p><strong class="pb_sub_label">ČÍSELNÍK</strong> ČSÚ: obec (43), ZÚJ (51), NUTS kraje (100), ORP (65), okes (109)</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><p><code style="margin-bottom:5px;color:#555555;font-weight:500;line-height:2em;border:solid 1px #499FFE;padding:2px 8px 3px 8px;background-color:#FAFAFA;">rozpad_duvod</code>  <code class="pb_col_type">character</code></p>
+<p><strong class="pb_sub_label">VÝZNAM</strong> podrobná informace o způsobu dovození obce</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><p><code style="margin-bottom:5px;color:#555555;font-weight:500;line-height:2em;border:solid 1px #499FFE;padding:2px 8px 3px 8px;background-color:#FAFAFA;">geo_id_long</code>  <code class="pb_col_type">character</code></p>
+<p><strong class="pb_sub_label">VYZNAM</strong> kód obce nebo ZÚJ (pro MČ) s prefixem NUTS</p>
+<p><strong class="pb_sub_label">ČÍSELNÍK</strong> po úpravě: ČSÚ číselník obcí (43), ZÚJ (51), NUTS kraje (100)</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><p><code style="margin-bottom:5px;color:#555555;font-weight:500;line-height:2em;border:solid 1px #499FFE;padding:2px 8px 3px 8px;background-color:#FAFAFA;">obec_puvod</code>  <code class="pb_col_type">character</code></p>
+<p><strong class="pb_sub_label">VYZNAM</strong> zdroj informace o obci</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><p><code style="margin-bottom:5px;color:#555555;font-weight:500;line-height:2em;border:solid 1px #499FFE;padding:2px 8px 3px 8px;background-color:#FAFAFA;">op_id</code>  <code class="pb_col_type">character</code></p>
+<p><strong class="pb_sub_label">VYZNAM</strong> zkratka OP s mezerou a bez diakritiky: OP Z atd. (mezera, ne '_')</p>
+<p><strong class="pb_sub_label">HODNOTY</strong> OP D, OP Z, OP ZP, OP D, IROP, OP PPR, OP VVV</p>
+<p><strong class="pb_sub_label">ZDROJ</strong> převzato z původních dat</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><p><code style="margin-bottom:5px;color:#555555;font-weight:500;line-height:2em;border:solid 1px #499FFE;padding:2px 8px 3px 8px;background-color:#FAFAFA;">chunk</code>  <code class="pb_col_type">integer</code></p>
+<p><strong class="pb_sub_label">VYZNAM</strong> číslo oddílu; oddíly čítají cca 500 000 řádků pro export do jednotlivých excelových souborů</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="color: #666666; font-size: smaller; border-top-width: 1; border-top-style: solid; border-top-color: #EFEFEF;"><div class='gt_from_md'><p><code style="margin-bottom:5px;color:#555555;font-weight:500;line-height:2em;border:solid 1px #499FFE;padding:2px 8px 3px 8px;background-color:#FAFAFA;">rozpad_typ</code>  <code class="pb_col_type">character</code></p>
+<p><strong class="pb_sub_label">VÝZNAM</strong> základní informace o způsobu dovození obce</p>
+</div></td>
+    </tr>
+  </tbody>
+  <tfoot class="gt_sourcenotes">
+    <tr>
+      <td class="gt_sourcenote" colspan="1"><span style="background-color: #FFF;color: #444;padding: 0.5em 0.5em;position: inherit;text-transform: uppercase;margin-left: 10px;border: solid 1px #999999;font-variant-numeric: tabular-nums;border-radius: 0;padding: 2px 10px 2px 10px;font-size: smaller;">2021-02-03 00:27:29 CET</span><span style="background-color: #FFF;color: #444;padding: 0.5em 0.5em;position: inherit;margin: 5px 1px 5px 0;border: solid 1px #999999;border-left: none;font-variant-numeric: tabular-nums;border-radius: 0;padding: 2px 10px 2px 10px;font-size: smaller;">&lt; 1 s</span><span style="background-color: #FFF;color: #444;padding: 0.5em 0.5em;position: inherit;text-transform: uppercase;margin: 5px 1px 5px -1px;border: solid 1px #999999;border-left: none;border-radius: 0;padding: 2px 10px 2px 10px;font-size: smaller;">2021-02-03 00:27:30 CET</span></td>
+    </tr>
+  </tfoot>
+  
+</table></div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+
+</body>
+</html>

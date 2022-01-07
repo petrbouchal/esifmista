@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Jak zopakovat postup s novými daty</title>
+
+<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<meta name="robots" content="noindex,nofollow"/>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+<link rel="stylesheet" href="extra.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Místa realizace ESIF: čištění dat</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Návody a dokumentace
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="how-to-repeat.html">Jak postup zopakovat</a>
+    </li>
+    <li>
+      <a href="widget.html">Pomůcka k řešení nekonzistentních dat</a>
+    </li>
+    <li>
+      <a href="codebook.html">Dokumentace výstupu</a>
+    </li>
+    <li>
+      <a href="dev.html">Technická dokumentace</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Vizuální kontrola postupu
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_input-checks.html">Kontrola úplnosti a konzistence</a>
+    </li>
+    <li>
+      <a href="02_validate.html">Ověření geodat</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="03_explore.html">Struktura dat</a>
+    </li>
+    <li>
+      <a href="04_explore-complicated-projects.html">Analýza geograficky složitých projektů</a>
+    </li>
+    <li>
+      <a href="06_explore-obecless-projects.html">Analýza projektů bez identifikace obce ZÚJ</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="05_resolve-simple.html">Projekty s určením obce</a>
+    </li>
+    <li>
+      <a href="07_resolve-obecless-projects.html">Projekty bez určení obce/ZÚJ</a>
+    </li>
+    <li>
+      <a href="08_resolve-placeless.html">Projekty bez místa realizace</a>
+    </li>
+    <li>
+      <a href="09_resolve-complicated.html">Projekty s nehierarchickým určením místa</a>
+    </li>
+    <li>
+      <a href="10_compile-export.html">Kompilace a export</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="log.html">Záznam kroků a poznatků</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/petrbouchal/mmr-esif-clean">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Jak zopakovat postup s novými daty</h1>
+
+</div>
+
+
+<p>Tento dokument popisuje krok za krokem jak kód stáhnout, nachystat na spuštění a spustit.</p>
+<p>Výstup předchozího spuštění skriptu (tj. webové logy procesu a dokumentace) jsou dostupné na <a href="https://esif-data-cleaning.netlify.app/" class="uri">https://esif-data-cleaning.netlify.app/</a>.</p>
+<div id="instalace-r" class="section level1">
+<h1>Instalace R</h1>
+<p>Co je třeba:</p>
+<ul>
+<li>R 4.X, poslední verze na: <a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a></li>
+<li>RStudio <a href="https://rstudio.com/products/rstudio/" class="uri">https://rstudio.com/products/rstudio/</a></li>
+<li>Rtools 4.X - <a href="https://cran.r-project.org/bin/windows/Rtools/" class="uri">https://cran.r-project.org/bin/windows/Rtools/</a> - systémové nástroje potřebné pro instalaci některých balíků v R, my je potřebujeme kvůli nástrojům na analýzu geografických dat</li>
+</ul>
+</div>
+<div id="licence" class="section level1">
+<h1>Licence</h1>
+<p>viz soubor LICENSE.</p>
+</div>
+<div id="přístup-ke-kódu" class="section level1">
+<h1>Přístup ke kódu</h1>
+<p>Kód je v soukromém git repozitáři na Githubu; k přístupu je potřeba Github účet a zpřístupnění vlatníkem (momentálně Petr Bouchal, <a href="mailto:pbouchal@gmail.com" class="email">pbouchal@gmail.com</a>).</p>
+</div>
+<div id="stažení-kódu" class="section level1">
+<h1>Stažení kódu</h1>
+<blockquote>
+<p>Tyto kroky je potřeba udělat jen jednou.</p>
+</blockquote>
+<p>2 možnosti:</p>
+<ol style="list-style-type: decimal">
+<li>Pokud pracujete s gitem, pak</li>
+</ol>
+<pre><code>git clone https://github.com/petrbouchal/mmr-esif-clean/</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Jinak lze stáhnout jako ZIP z <a href="https://github.com/petrbouchal/mmr-esif-clean/archive/master.zip" class="uri">https://github.com/petrbouchal/mmr-esif-clean/archive/master.zip</a> a rozbalit na libovolné místo, popř. stáhnout přes webové rozhraní: <img src="doc-images/github-zip.png" alt="zip" /></li>
+</ol>
+<p>Veškerý kód určený k “ostrému” využití je v branchi <code>master</code>.</p>
+</div>
+<div id="otevření-projektu" class="section level1">
+<h1>Otevření projektu</h1>
+<p>Adresář lze otevřít jako projekt v RStudiu. To lze udělat otevřením souboru <code>mmr-esif-clean.Rproj</code>.</p>
+<p>Bude ale fungovat i v R v příkazové řádce.</p>
+<blockquote>
+<p>Poznámka: všechny adresářové cesty v dokumentaci i kódu jsou relativní k adresáři projektu.</p>
+</blockquote>
+</div>
+<div id="obnova-prostředí-balíky-r" class="section level1">
+<h1>Obnova prostředí (balíky R)</h1>
+<blockquote>
+<p>Tyto kroky je potřeba udělat jen jednou po stažení kódu z Githubu</p>
+</blockquote>
+<p>Po otevření projektu v RStudiu, popř. spuštění R v terminálu v adresáři by měla automaticky proběhnout instalace balíku <code>renv</code>, který udržuje fixované prostředí balíků potřebných pro analýzu ve správných verzích.</p>
+<p>Pokud by v tomto kroku došlo k chybě, lze balík nainstalovat příkazem <code>install.packages(renv)</code> a následně pro jistotu aktualizovat záznam prostředí pro nainstalovanou verzi balíku <code>renv</code> příkazem <code>renv::upgrade()</code>.</p>
+<p>Následně je třeba v adresáři vytvořit kopii prostředí (sady balíků) potřebného pro spuštění kódu:</p>
+<pre><code>renv::restore()</code></pre>
+<p>Pokud v této fázi nastane neřešitelná chyba, lze správu prostředí vypnout (<code>renv::deactivate()</code>) a balíky nainstalovat ručně. Stav balíků při posledním úspěšném buildu lze dovodit ze souboru <code>renv.lock</code>, popř. v <a href="https://esif-data-cleaning.netlify.app/dev.html">této části webového odrazu dokumentace</a>.</p>
+</div>
+<div id="spuštění-úprav-dat" class="section level1">
+<h1>Spuštění úprav dat</h1>
+<div id="vstupní-data" class="section level2">
+<h2>Vstupní data</h2>
+<ol style="list-style-type: decimal">
+<li>vytvořte v adresáři <code>data-input</code> podadresář, pojmenujte jakkoli a vložte do něj excelové (<code>.xlsx</code>) soubory - pro každý OP jeden. Název každého souboru by měl být stejný jako v původní sadě, s mezerami, tj. např. <code>"OP Z.xlsx"</code></li>
+<li>vložte celou cestu k těmto souborům (tj. např. <code>data-input/nova_data</code>) do parametru <code>input_dir</code> v souboru <code>config.yml</code>.</li>
+<li>Vložte novou verzi dat o projektech podle chráněného území, pokud je: přepište soubor <code>data-input/CHKONP.xlsx</code> novým, popř. vložte pod novým názvem a upravte parametr v <code>input_chu_xlsx</code></li>
+</ol>
+</div>
+<div id="spuštění-skriptů" class="section level2">
+<h2>Spuštění skriptů</h2>
+<p>Celý proces naráz lze spustit skriptem <code>build-and-render.R</code>. Tento skript:</p>
+<ul>
+<li>spustí R skripty na načtení a přípravu vstupních dat a metadat</li>
+<li>spustí všechen kód obsažený v <code>.Rmd</code> souborech a vygeneruje z toho vyplývající webovou prezentaci</li>
+</ul>
+<p>Pro snadnější spuštění z příkazové řádky existuje i skript <code>build-and-render.sh</code>, která udělá totéž bez nutnosti spouštět R nebo RStudio.</p>
+<div id="začlenění-manuálně-rozřešených-projektů" class="section level3">
+<h3>Začlenění manuálně rozřešených projektů</h3>
+<p>V současném stavu je v datech cca 119 projektů, u kterých jsou uvedeny vnitřně nekonzistentní geografické údaje, např. ukazují realizaci projektu zároveň v kraji a zároveň v obci, která ale není v daném kraji.</p>
+<p>U těchto projektů je třeba manuálně rozhodnout, který údaj se použije.</p>
+<p>TO DO</p>
+<p>Jak na to:</p>
+<ol style="list-style-type: decimal">
+<li>Spusťte vše podle návodu výše</li>
+<li>Otevřete soubor <code>data-output/prj_nehierarchicke.xlsx</code></li>
+<li>U každého projektu rozhodněte, které údaje (tj. řádky) se mají použít a u těch vložte do sloupce <code>vybrat</code> hodnotu <code>TRUE</code> nebo jen <code>T</code>. Ostatní můžete nechat prázdné (tj. netřeba vkládat <code>FALSE</code>).
+<ul>
+<li>Můžete se rozhodnout, že použijete víc údajů (např. lokalizaci na kraj a ORP, i když spolu nesouvisí); skript následně projekt rozpadne do všech obcí, které spadají do vybraných území.</li>
+<li><strong>Pokud u nějakého projektu nevyberete ani jeden řádek (tj. nikde neuvedete <code>TRUE</code> do sloupce <code>vybrat</code>, nebo ve všech řádcích vložíte <code>FALSE</code>), projekt se ve výstupních datech vůbec neobjeví</strong></li>
+</ul></li>
+<li>Pro rozhodování může pomoct mapový nástroj v souboru <code>docs/widget.html</code> nebo na <a href="https://esif-data-cleaning.netlify.app/widget.html" class="uri">https://esif-data-cleaning.netlify.app/widget.html</a>.</li>
+<li>Výsledný excelový soubor uložte do <code>data-manual/prj_nehierarchicke-resolved.xlsx</code></li>
+<li>(Pokud chcete rozřešené projekty brát z jiného souboru, upravte hodnotu <code>input_resolved_xlsx</code> v <code>config.yml</code>)</li>
+<li>Spusťte znovu Rmd skripty s názvy začínajícími 09 a 10 - tím se data těchto projektů ropzadnou na obce vybraných území a nové rozpady se začlení do finálního Arrow exportu.</li>
+<li>Pokud potřebujete excelové exporty, spusťte ještě <code>export-excel.R</code>.</li>
+</ol>
+<div id="při-opakovaném-spouštění" class="section level4">
+<h4>Při opakovaném spouštění</h4>
+<p>Pokud</p>
+</div>
+</div>
+<div id="co-se-kde-děje" class="section level3">
+<h3>Co se kde děje</h3>
+<p>Celé workflow není centrálně orchestrováno ani cacheováno žádným workflow nástrojem á la <code>make</code>; jde jednoduše o posloupnost skriptů, které si mezivýstupy předávají přes datové exporty v adresářích <code>data-input</code> (hrubá externí data) a <code>data-processed</code> (zpracovaná data). Každý skript poběží sám o sobě, ale předpokládá přítomnost mezivýstupů předchozích skriptů v těchto adresářích.</p>
+<p>R skripty zmíněné v <code>build-and-render.R</code> načítají vlastní ESIF data a externí data a metadata z ČSÚ, ČÚZK a Státní pokladny Ministerstva financí. Jako mezivýstup ukládají stažené datové soubory v <code>data-input</code> a <code>parquet</code>/<code>Rds</code> obraz vstupních ESIF dat a některých metadat v <code>data-processed</code>.</p>
+<p>Explorace, validace i transformace a export dat se dějí v Rmd skriptech, které zároveň provádí datové úkony a exporty a zároveň generují webový výstup. (To není ideální setup pro případné produkční nasazení, ale je funkční pro interaktivní práci s jednotlivými částmi workflow.)</p>
+<p>Mezivýstupy se běžně přepisují, tj. při novém spuštění vzniknou nové, ale v několika případech jsou znovuvyužity, pokud existují, aby se ušetříl čas. Zcela čisté spuštění tedy vyžaduje vymazání obsahu adresářů <code>data-input</code> (s výjimkou adresáře s excelovými vstupy) a adresáře <code>data-processed</code>.</p>
+<p>Celkové pořadí spouštění odpovídá skriptu <code>build-and-render.R</code>.</p>
+<p>Rmd skripty, které společně tvoří webovou prezentaci a zároveň provádějí datovou validaci a transformaci, se společně v abecedním pořadí spustí příkazem <code>rmarkdown::render_site()</code> (též zahrnut v <code>build-and-render.R</code>), ale lze je spouštět i samostatně přes <code>rmarkdown::render("xxx.RMd")</code> nebo tlačítkem <code>Knit</code> v Rstudiu.</p>
+</div>
+</div>
+<div id="výstupy" class="section level2">
+<h2>Výstupy</h2>
+<ol style="list-style-type: decimal">
+<li>webová prezentace v adresáři <code>docs</code>: lze ji otevřít lokálně v prohlížeči poklepáním na soubor <code>index.html</code>.</li>
+<li>data v Arrow datasetu (formát parquet) v adresáři <code>data-output</code></li>
+<li>data v Excelu v adresáři <code>data-export</code></li>
+</ol>
+</div>
+<div id="publikace-výsledné-webové-prezentace" class="section level2">
+<h2>Publikace výsledné webové prezentace</h2>
+<p>Webovou prezentaci v adresáři <code>docs</code> lze snadno zveřejnit kdekoli. V souboru <code>.netlify/state.json</code> je nastavení použitelné pro rychlý deploy na netlify; pokud bude potřeba stránku aktualizovat na Netlify, můžu subdoménu na někoho převést, nebo bude třeba tento soubor smazat a navázat projekt na novou subdoménu na Netlify.</p>
+<p>Konfigurace a struktura webové prezentace jsou upraveny v <code>_site.yml</code>; viz <a href="https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html#site-configuration">dokumentaci k rmarkdown websites</a>.</p>
+</div>
+<div id="opakované-spuštění" class="section level2">
+<h2>Opakované spuštění</h2>
+<p>Zcela nové spuštění načisto vyžaduje:</p>
+<ul>
+<li>správně nastavit cestu ke vstupním excelovým souborům, viz výše</li>
+<li>vyprázdnit adresáře:
+<ul>
+<li><code>data-input</code> vyjma adresáře se vstupními excely</li>
+<li><code>data-processed</code></li>
+<li><code>data-output</code></li>
+<li><code>data-manual</code> <strong>jen pokud nechceme využít předchozí manuální rozřešení nekonzistentních projektů</strong></li>
+</ul></li>
+</ul>
+<p>Tyto kroky nechávám jako manuální, aby nedocházelo k nechtěnému mazání výstupů nějakým skriptem.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+
+</body>
+</html>

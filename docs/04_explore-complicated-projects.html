@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Analýza projektů s nehierarchickou lokalizací</title>
+
+<script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<meta name="robots" content="noindex,nofollow"/>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+<link rel="stylesheet" href="extra.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Místa realizace ESIF: čištění dat</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Návody a dokumentace
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="how-to-repeat.html">Jak postup zopakovat</a>
+    </li>
+    <li>
+      <a href="widget.html">Pomůcka k řešení nekonzistentních dat</a>
+    </li>
+    <li>
+      <a href="codebook.html">Dokumentace výstupu</a>
+    </li>
+    <li>
+      <a href="dev.html">Technická dokumentace</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Vizuální kontrola postupu
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_input-checks.html">Kontrola úplnosti a konzistence</a>
+    </li>
+    <li>
+      <a href="02_validate.html">Ověření geodat</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="03_explore.html">Struktura dat</a>
+    </li>
+    <li>
+      <a href="04_explore-complicated-projects.html">Analýza geograficky složitých projektů</a>
+    </li>
+    <li>
+      <a href="06_explore-obecless-projects.html">Analýza projektů bez identifikace obce ZÚJ</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="05_resolve-simple.html">Projekty s určením obce</a>
+    </li>
+    <li>
+      <a href="07_resolve-obecless-projects.html">Projekty bez určení obce/ZÚJ</a>
+    </li>
+    <li>
+      <a href="08_resolve-placeless.html">Projekty bez místa realizace</a>
+    </li>
+    <li>
+      <a href="09_resolve-complicated.html">Projekty s nehierarchickým určením místa</a>
+    </li>
+    <li>
+      <a href="10_compile-export.html">Kompilace a export</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="log.html">Záznam kroků a poznatků</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/petrbouchal/mmr-esif-clean">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Analýza projektů s nehierarchickou lokalizací</h1>
+
+</div>
+
+
+<pre class="r"><code>dt &lt;- read_parquet(here::here(&quot;data-processed&quot;, 
+                              &quot;misto_fix-02-gnames.parquet&quot;))
+dtl &lt;- read_parquet(here::here(&quot;data-processed&quot;, 
+                               &quot;misto_fix-02-gnames_long-geo.parquet&quot;))</code></pre>
+<pre class="r"><code>source(&quot;read_metadata.R&quot;)</code></pre>
+<div id="výskyt-divných-projektů-v-různých-skupinách" class="section level2">
+<h2>Výskyt divných projektů v různých skupinách</h2>
+<pre class="r"><code>prjs_geostatus &lt;- read_parquet(here::here(&quot;data-processed&quot;,
+                                          &quot;projects-geo-check-groups.parquet&quot;))
+places_geostatus &lt;- read_parquet(here::here(&quot;data-processed&quot;,
+                                            &quot;places-geo-check.parquet&quot;))
+ops &lt;- read_parquet(here::here(&quot;data-processed&quot;, 
+                               &quot;op-codes.parquet&quot;))
+prj_meta &lt;- read_parquet(here::here(&quot;data-processed&quot;, 
+                                    &quot;prj-esif-meta.parquet&quot;))</code></pre>
+<pre class="r"><code>head(prjs_geostatus$prj_id) # memo jak vypadá číslo projektu</code></pre>
+<pre><code>## [1] &quot;CZ.06.1.42/0.0/0.0/16_030/0005269&quot; &quot;CZ.06.1.42/0.0/0.0/16_030/0005330&quot; &quot;CZ.06.1.42/0.0/0.0/16_030/0005331&quot; &quot;CZ.06.1.42/0.0/0.0/16_031/0005096&quot; &quot;CZ.06.1.42/0.0/0.0/16_031/0005101&quot; &quot;CZ.06.3.33/0.0/0.0/16_036/0006175&quot;</code></pre>
+<pre class="r"><code>prjs_groupable &lt;- prjs_geostatus %&gt;% 
+  separate(prj_id, sep = &quot;/&quot;, into = c(&quot;prog&quot;, &quot;obj&quot;, &quot;what&quot;, &quot;vyzva&quot;, &quot;proj&quot;), 
+           remove = F) %&gt;% 
+  separate(vyzva, sep = &quot;_&quot;, into = c(&quot;vyzva_rok&quot;, &quot;vyzva_cislo&quot;), remove = F)</code></pre>
+<pre><code>## Warning: Expected 5 pieces. Missing pieces filled with `NA` in 2 rows [37325, 37326].</code></pre>
+<div id="podle-op" class="section level3">
+<h3>Podle OP</h3>
+<pre class="r"><code>prjs_groupable %&gt;% 
+  filter(geostatus == &quot;více míst nehierarchicky&quot;) %&gt;% 
+  count(op_id, sort = T)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["op_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"OP VVV","2":"50"},{"1":"OP PIK","2":"46"},{"1":"OP ZP","2":"13"},{"1":"IROP","2":"7"},{"1":"OP D","2":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="podle-op-a-roku" class="section level3">
+<h3>Podle OP a roku</h3>
+<pre class="r"><code>prjs_groupable %&gt;% 
+  filter(geostatus == &quot;více míst nehierarchicky&quot;) %&gt;%
+  count(vyzva_rok, geostatus, op_id) %&gt;% 
+  ggplot(aes(vyzva_rok, n, fill = op_id)) +
+  geom_col() +
+  facet_wrap(~geostatus)</code></pre>
+<p><img src="04_explore-complicated-projects_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="podle-op-a-výzvy" class="section level3">
+<h3>Podle OP a výzvy</h3>
+<pre class="r"><code>prjs_groupable %&gt;% 
+  select(op_id, prj_id, geostatus, grp = vyzva) %&gt;% 
+  group_by(op_id, grp) %&gt;% 
+  mutate(prjs_in_grp = n()) %&gt;% 
+  filter(geostatus %in% c(&quot;bez místa&quot;, &quot;více míst nehierarchicky&quot;)) %&gt;% 
+  group_by(op_id, grp, geostatus) %&gt;% 
+  summarise(pocet = n(), podil_na_skupine = pocet/mean(prjs_in_grp), .groups = &quot;drop&quot;) %&gt;%
+  mutate(podil_na_celku = pocet/sum(pocet)) %&gt;%
+  arrange(desc(podil_na_celku)) %&gt;% 
+  mutate(cum_podil_na_celku = cumsum(podil_na_celku))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["op_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["grp"],"name":[2],"type":["chr"],"align":["left"]},{"label":["geostatus"],"name":[3],"type":["fct"],"align":["left"]},{"label":["pocet"],"name":[4],"type":["int"],"align":["right"]},{"label":["podil_na_skupine"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["podil_na_celku"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["cum_podil_na_celku"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"OP PIK","2":"15_019","3":"více míst nehierarchicky","4":"23","5":"0.0611702128","6":"0.157534247","7":"0.1575342"},{"1":"OP VVV","2":"16_013","3":"více míst nehierarchicky","4":"9","5":"0.1500000000","6":"0.061643836","7":"0.2191781"},{"1":"OP VVV","2":"15_005","3":"více míst nehierarchicky","4":"6","5":"0.0185758514","6":"0.041095890","7":"0.2602740"},{"1":"OP VVV","2":"15_003","3":"více míst nehierarchicky","4":"5","5":"0.0476190476","6":"0.034246575","7":"0.2945205"},{"1":"OP ZP","2":"17_078","3":"bez místa","4":"5","5":"0.1250000000","6":"0.034246575","7":"0.3287671"},{"1":"OP PIK","2":"15_018","3":"více míst nehierarchicky","4":"4","5":"0.0125391850","6":"0.027397260","7":"0.3561644"},{"1":"OP VVV","2":"15_007","3":"více míst nehierarchicky","4":"4","5":"0.0327868852","6":"0.027397260","7":"0.3835616"},{"1":"OP VVV","2":"16_032","3":"více míst nehierarchicky","4":"4","5":"0.0303030303","6":"0.027397260","7":"0.4109589"},{"1":"OP VVV","2":"17_047","3":"více míst nehierarchicky","4":"4","5":"0.0157480315","6":"0.027397260","7":"0.4383562"},{"1":"OP ZP","2":"19_120","3":"bez místa","4":"4","5":"0.2000000000","6":"0.027397260","7":"0.4657534"},{"1":"OP ZP","2":"19_131","3":"bez místa","4":"3","5":"0.0088495575","6":"0.020547945","7":"0.4863014"},{"1":"OP ZP","2":"20_140","3":"bez místa","4":"3","5":"0.0428571429","6":"0.020547945","7":"0.5068493"},{"1":"OP PIK","2":"15_014","3":"více míst nehierarchicky","4":"2","5":"0.0032051282","6":"0.013698630","7":"0.5205479"},{"1":"OP PIK","2":"16_084","3":"více míst nehierarchicky","4":"2","5":"0.0150375940","6":"0.013698630","7":"0.5342466"},{"1":"OP PIK","2":"17_176","3":"více míst nehierarchicky","4":"2","5":"0.0157480315","6":"0.013698630","7":"0.5479452"},{"1":"OP VVV","2":"16_010","3":"více míst nehierarchicky","4":"2","5":"0.0259740260","6":"0.013698630","7":"0.5616438"},{"1":"OP VVV","2":"16_019","3":"více míst nehierarchicky","4":"2","5":"0.0150375940","6":"0.013698630","7":"0.5753425"},{"1":"OP VVV","2":"16_027","3":"více míst nehierarchicky","4":"2","5":"0.0344827586","6":"0.013698630","7":"0.5890411"},{"1":"OP VVV","2":"16_037","3":"více míst nehierarchicky","4":"2","5":"0.0571428571","6":"0.013698630","7":"0.6027397"},{"1":"OP VVV","2":"18_046","3":"více míst nehierarchicky","4":"2","5":"0.0540540541","6":"0.013698630","7":"0.6164384"},{"1":"OP VVV","2":"18_053","3":"více míst nehierarchicky","4":"2","5":"0.0444444444","6":"0.013698630","7":"0.6301370"},{"1":"OP ZP","2":"15_009","3":"bez místa","4":"2","5":"0.1000000000","6":"0.013698630","7":"0.6438356"},{"1":"OP ZP","2":"16_041","3":"více míst nehierarchicky","4":"2","5":"0.0022222222","6":"0.013698630","7":"0.6575342"},{"1":"OP ZP","2":"17_088","3":"bez místa","4":"2","5":"0.0370370370","6":"0.013698630","7":"0.6712329"},{"1":"OP ZP","2":"19_121","3":"více míst nehierarchicky","4":"2","5":"0.0030959752","6":"0.013698630","7":"0.6849315"},{"1":"IROP","2":"15_002","3":"více míst nehierarchicky","4":"1","5":"0.0064935065","6":"0.006849315","7":"0.6917808"},{"1":"IROP","2":"15_003","3":"více míst nehierarchicky","4":"1","5":"0.0027472527","6":"0.006849315","7":"0.6986301"},{"1":"IROP","2":"15_012","3":"více míst nehierarchicky","4":"1","5":"0.0059880240","6":"0.006849315","7":"0.7054795"},{"1":"IROP","2":"16_033","3":"více míst nehierarchicky","4":"1","5":"0.0084033613","6":"0.006849315","7":"0.7123288"},{"1":"IROP","2":"16_072","3":"více míst nehierarchicky","4":"1","5":"0.0022321429","6":"0.006849315","7":"0.7191781"},{"1":"IROP","2":"16_077","3":"více míst nehierarchicky","4":"1","5":"0.0138888889","6":"0.006849315","7":"0.7260274"},{"1":"IROP","2":"18_103","3":"více míst nehierarchicky","4":"1","5":"0.0107526882","6":"0.006849315","7":"0.7328767"},{"1":"OP D","2":"16_028","3":"více míst nehierarchicky","4":"1","5":"0.1428571429","6":"0.006849315","7":"0.7397260"},{"1":"OP D","2":"18_067","3":"více míst nehierarchicky","4":"1","5":"0.2000000000","6":"0.006849315","7":"0.7465753"},{"1":"OP D","2":"19_069","3":"více míst nehierarchicky","4":"1","5":"0.3333333333","6":"0.006849315","7":"0.7534247"},{"1":"OP PIK","2":"15_002","3":"více míst nehierarchicky","4":"1","5":"0.0026041667","6":"0.006849315","7":"0.7602740"},{"1":"OP PIK","2":"15_003","3":"více míst nehierarchicky","4":"1","5":"0.0034364261","6":"0.006849315","7":"0.7671233"},{"1":"OP PIK","2":"15_005","3":"více míst nehierarchicky","4":"1","5":"0.0022883295","6":"0.006849315","7":"0.7739726"},{"1":"OP PIK","2":"15_010","3":"více míst nehierarchicky","4":"1","5":"0.0007017544","6":"0.006849315","7":"0.7808219"},{"1":"OP PIK","2":"15_038","3":"více míst nehierarchicky","4":"1","5":"0.0009980040","6":"0.006849315","7":"0.7876712"},{"1":"OP PIK","2":"16_049","3":"více míst nehierarchicky","4":"1","5":"0.0024154589","6":"0.006849315","7":"0.7945205"},{"1":"OP PIK","2":"16_059","3":"více míst nehierarchicky","4":"1","5":"0.0025510204","6":"0.006849315","7":"0.8013699"},{"1":"OP PIK","2":"16_061","3":"více míst nehierarchicky","4":"1","5":"0.0021929825","6":"0.006849315","7":"0.8082192"},{"1":"OP PIK","2":"16_076","3":"více míst nehierarchicky","4":"1","5":"0.0037174721","6":"0.006849315","7":"0.8150685"},{"1":"OP PIK","2":"16_083","3":"více míst nehierarchicky","4":"1","5":"0.0078125000","6":"0.006849315","7":"0.8219178"},{"1":"OP PIK","2":"17_106","3":"více míst nehierarchicky","4":"1","5":"0.0074074074","6":"0.006849315","7":"0.8287671"},{"1":"OP PIK","2":"17_175","3":"více míst nehierarchicky","4":"1","5":"0.0054347826","6":"0.006849315","7":"0.8356164"},{"1":"OP PIK","2":"18_215","3":"více míst nehierarchicky","4":"1","5":"0.0020000000","6":"0.006849315","7":"0.8424658"},{"1":"OP VVV","2":"16_018","3":"více míst nehierarchicky","4":"1","5":"0.0085470085","6":"0.006849315","7":"0.8493151"},{"1":"OP VVV","2":"16_026","3":"více míst nehierarchicky","4":"1","5":"0.0166666667","6":"0.006849315","7":"0.8561644"},{"1":"OP VVV","2":"16_028","3":"více míst nehierarchicky","4":"1","5":"0.0344827586","6":"0.006849315","7":"0.8630137"},{"1":"OP VVV","2":"18_058","3":"více míst nehierarchicky","4":"1","5":"0.1250000000","6":"0.006849315","7":"0.8698630"},{"1":"OP VVV","2":"18_067","3":"více míst nehierarchicky","4":"1","5":"0.0078740157","6":"0.006849315","7":"0.8767123"},{"1":"OP VVV","2":"19_075","3":"více míst nehierarchicky","4":"1","5":"0.0285714286","6":"0.006849315","7":"0.8835616"},{"1":"OP Z","2":"16_047","3":"bez místa","4":"1","5":"0.0005420054","6":"0.006849315","7":"0.8904110"},{"1":"OP ZP","2":"15_010","3":"bez místa","4":"1","5":"0.1000000000","6":"0.006849315","7":"0.8972603"},{"1":"OP ZP","2":"15_012","3":"více míst nehierarchicky","4":"1","5":"0.0112359551","6":"0.006849315","7":"0.9041096"},{"1":"OP ZP","2":"15_017","3":"více míst nehierarchicky","4":"1","5":"0.0555555556","6":"0.006849315","7":"0.9109589"},{"1":"OP ZP","2":"16_028","3":"více míst nehierarchicky","4":"1","5":"0.0909090909","6":"0.006849315","7":"0.9178082"},{"1":"OP ZP","2":"16_034","3":"více míst nehierarchicky","4":"1","5":"0.0250000000","6":"0.006849315","7":"0.9246575"},{"1":"OP ZP","2":"16_037","3":"více míst nehierarchicky","4":"1","5":"0.5000000000","6":"0.006849315","7":"0.9315068"},{"1":"OP ZP","2":"16_043","3":"více míst nehierarchicky","4":"1","5":"0.0135135135","6":"0.006849315","7":"0.9383562"},{"1":"OP ZP","2":"17_058","3":"bez místa","4":"1","5":"0.0666666667","6":"0.006849315","7":"0.9452055"},{"1":"OP ZP","2":"17_089","3":"více míst nehierarchicky","4":"1","5":"0.0045454545","6":"0.006849315","7":"0.9520548"},{"1":"OP ZP","2":"17_110","3":"bez místa","4":"1","5":"0.0357142857","6":"0.006849315","7":"0.9589041"},{"1":"OP ZP","2":"18_091","3":"bez místa","4":"1","5":"0.0588235294","6":"0.006849315","7":"0.9657534"},{"1":"OP ZP","2":"18_098","3":"více míst nehierarchicky","4":"1","5":"0.0833333333","6":"0.006849315","7":"0.9726027"},{"1":"OP ZP","2":"18_104","3":"více míst nehierarchicky","4":"1","5":"0.0026737968","6":"0.006849315","7":"0.9794521"},{"1":"OP ZP","2":"18_106","3":"bez místa","4":"1","5":"0.0526315789","6":"0.006849315","7":"0.9863014"},{"1":"OP ZP","2":"19_118","3":"bez místa","4":"1","5":"0.5000000000","6":"0.006849315","7":"0.9931507"},{"1":"OP ZP","2":"19_129","3":"bez místa","4":"1","5":"0.0416666667","6":"0.006849315","7":"1.0000000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="druhá-kategorizace-v-čísle-projektu" class="section level3">
+<h3>Druhá kategorizace v čísle projektu</h3>
+<p>Co to je?</p>
+<pre class="r"><code>prjs_groupable %&gt;% 
+  separate(prog, into = c(&quot;cnt&quot;, &quot;prg&quot;, &quot;posa&quot;, &quot;n2&quot;), remove = F) %&gt;% 
+  distinct(op_id, n2) %&gt;%
+  mutate(n = 1) %&gt;% 
+  spread(op_id, n) %&gt;% 
+  arrange(n2)</code></pre>
+<pre><code>## Warning: Expected 4 pieces. Missing pieces filled with `NA` in 2 rows [37325, 37326].</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["n2"],"name":[1],"type":["chr"],"align":["left"]},{"label":["IROP"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["OP D"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["OP PIK"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["OP PPR"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["OP TP"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["OP VVV"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["OP Z"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["OP ZP"],"name":[9],"type":["dbl"],"align":["right"]}],"data":[{"1":"01","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"1","8":"NA","9":"NA"},{"1":"02","2":"NA","3":"NA","4":"1","5":"1","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"03","2":"NA","3":"NA","4":"1","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"04","2":"NA","3":"NA","4":"1","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"05","2":"1","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"06","2":"NA","3":"NA","4":"1","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"07","2":"NA","3":"NA","4":"1","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"09","2":"NA","3":"NA","4":"1","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"10","2":"NA","3":"NA","4":"1","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"11","2":"1","3":"NA","4":"NA","5":"1","6":"NA","7":"NA","8":"NA","9":"1"},{"1":"111","2":"NA","3":"NA","4":"1","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"12","2":"NA","3":"NA","4":"1","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"125","2":"1","3":"1","4":"1","5":"1","6":"1","7":"1","8":"1","9":"1"},{"1":"13","2":"1","3":"NA","4":"NA","5":"1","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"14","2":"NA","3":"NA","4":"1","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"15","2":"NA","3":"NA","4":"1","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"18","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"1"},{"1":"23","2":"1","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"1"},{"1":"24","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"1"},{"1":"27","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"1"},{"1":"28","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"1"},{"1":"29","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"1"},{"1":"30","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"1"},{"1":"32","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"1"},{"1":"33","2":"1","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"37","2":"1","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"39","2":"NA","3":"1","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"40","2":"NA","3":"1","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"41","2":"NA","3":"1","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"42","2":"1","3":"1","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"43","2":"NA","3":"NA","4":"1","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"48","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"1","9":"NA"},{"1":"49","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"1","9":"NA"},{"1":"51","2":"NA","3":"NA","4":"NA","5":"1","6":"NA","7":"NA","8":"1","9":"NA"},{"1":"52","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"1","9":"NA"},{"1":"54","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"1","9":"NA"},{"1":"56","2":"1","3":"NA","4":"NA","5":"1","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"58","2":"1","3":"NA","4":"NA","5":"1","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"59","2":"1","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"60","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"1","9":"NA"},{"1":"61","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"1","8":"NA","9":"NA"},{"1":"62","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"1","8":"NA","9":"NA"},{"1":"63","2":"NA","3":"NA","4":"NA","5":"1","6":"NA","7":"NA","8":"1","9":"NA"},{"1":"65","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"1","9":"NA"},{"1":"67","2":"1","3":"NA","4":"NA","5":"1","6":"NA","7":"1","8":"NA","9":"NA"},{"1":"68","2":"NA","3":"NA","4":"NA","5":"1","6":"NA","7":"1","8":"NA","9":"NA"},{"1":"69","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"1","8":"NA","9":"NA"},{"1":"72","2":"1","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"},{"1":"74","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"1","9":"NA"},{"1":"X","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"1","8":"1","9":"NA"},{"1":"NA","2":"NA","3":"NA","4":"1","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div id="kombinace-úrovní-v-divných-projektech" class="section level2">
+<h2>Kombinace úrovní v divných projektech</h2>
+<pre class="r"><code>prj_ids_nonhierarchical &lt;- prjs_geostatus$prj_id[prjs_geostatus$geostatus == &quot;více míst nehierarchicky&quot;]</code></pre>
+<pre class="r"><code>library(ggupset)
+
+gst_for_upset &lt;- dtl %&gt;% 
+  filter(typ == &quot;id&quot; &amp; !is.na(value),
+         prj_id %in% prj_ids_nonhierarchical) %&gt;% 
+  select(op_id, prj_id, level) %&gt;%
+  distinct() %&gt;% 
+  mutate(level = as.character(level)) %&gt;% 
+  group_by(prj_id) %&gt;% 
+  summarise(geos = list(level)) %&gt;%
+  left_join(dt %&gt;% filter(prj_radek == 1) %&gt;% select(prj_id, op_id)) %&gt;% 
+  # mutate(nr = map_int(geos, nrow)) %&gt;%
+  # arrange(desc(nr)) %&gt;% 
+  filter(TRUE)</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre><code>## Joining, by = &quot;prj_id&quot;</code></pre>
+<pre class="r"><code>ggplot2::update_geom_defaults(&quot;line&quot;, list(colour = &quot;black&quot;))
+ggplot(gst_for_upset) +
+  geom_bar(mapping = aes(x = geos, fill = op_id), position = &quot;stack&quot;) +
+  scale_x_upset(order_by = &quot;degree&quot;, sets = geolevels) +
+  # scale_y_continuous(limits = c(0, 6e4)) +
+  # scale_y_log10(limits = c(1, 1e5), n.breaks = 10,
+  #               labels = scales::label_number(1)) +
+  # scale_y_continuous(trans = scales::log_trans(), breaks = scales::pretty_breaks()) +
+  ptrr::theme_ptrr() +
+  scale_fill_brewer(type = &quot;qual&quot;)</code></pre>
+<p><img src="04_explore-complicated-projects_files/figure-html/upset-plot-1.png" width="672" /></p>
+<pre class="r"><code>ggplot2::update_geom_defaults(&quot;line&quot;, list(colour = &quot;darkblue&quot;))</code></pre>
+<pre class="r"><code>ggplot2::update_geom_defaults(&quot;line&quot;, list(colour = &quot;black&quot;))
+
+ggplot(gst_for_upset) +
+  geom_bar(mapping = aes(x = geos)) +
+  scale_x_upset(order_by = &quot;degree&quot;, sets = geolevels) +
+  # scale_y_log10(n.breaks = 6, labels = scales::label_number(1)) +
+  # scale_y_continuous(trans = scales::log_trans(), breaks = scales::pretty_breaks()) +
+  ptrr::theme_ptrr(multiplot = T) +
+  facet_wrap(~op_id, scales = &quot;fixed&quot;)</code></pre>
+<p><img src="04_explore-complicated-projects_files/figure-html/upset-plot-ops-1.png" width="672" /></p>
+<pre class="r"><code>ggplot2::update_geom_defaults(&quot;line&quot;, list(colour = &quot;darkblue&quot;))</code></pre>
+<pre class="r"><code>dtl_with_geostatus &lt;- dtl %&gt;% 
+  left_join(prjs_geostatus %&gt;% 
+              select(prj_id, geostatus)) %&gt;% 
+  select(op_id, prj_id, level, typ, geostatus, value) %&gt;% 
+  filter(typ %in% c(&quot;nazev&quot;, &quot;id&quot;), geostatus == &quot;více míst nehierarchicky&quot;) %&gt;% 
+  drop_na(value)</code></pre>
+<pre><code>## Joining, by = &quot;prj_id&quot;</code></pre>
+<pre class="r"><code>dtl_with_geostatus_places &lt;- dtl %&gt;% 
+  filter(typ == &quot;id&quot;) %&gt;% 
+  drop_na(value) %&gt;% 
+  left_join(places_geostatus %&gt;% 
+              select(prj_id, value, level, value_has_valid_parent)) %&gt;% 
+  left_join(prjs_geostatus %&gt;% 
+              select(prj_id, geostatus)) %&gt;% 
+  select(op_id, prj_id, level, typ, value_has_valid_parent, value, 
+         prj_geostatus = geostatus)</code></pre>
+<pre><code>## Joining, by = c(&quot;prj_id&quot;, &quot;level&quot;, &quot;value&quot;)
+## Joining, by = &quot;prj_id&quot;</code></pre>
+<pre class="r"><code>data_geocheck_file &lt;- here::here(&quot;data-processed&quot;, &quot;dt-geohierarchy-check.parquet&quot;)
+
+data_geocheck &lt;- read_parquet(data_geocheck_file)
+
+# data_geocheck %&gt;% 
+#   filter(prj_id %in% prj_ids_nonhierarchical) %&gt;% 
+#   arrange(prj_id)</code></pre>
+<pre class="r"><code>data_geocheck %&gt;% 
+  group_by(prj_id, level, value) %&gt;% 
+  filter(all(!levels_ok)) %&gt;% 
+  # filter(str_detect(prj_id, &quot;CZ.04&quot;)) %&gt;% 
+  ungroup() %&gt;% 
+  count(prj_id, sort = T)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["prj_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"CZ.02.3.68/0.0/0.0/16_010/0000507","2":"225"},{"1":"CZ.05.1.24/0.0/0.0/16_037/0002602","2":"110"},{"1":"CZ.05.2.32/0.0/0.0/15_017/0002616","2":"42"},{"1":"CZ.06.3.72/0.0/0.0/15_012/0004558","2":"34"},{"1":"CZ.02.3.61/0.0/0.0/15_007/0000253","2":"14"},{"1":"CZ.02.3.68/0.0/0.0/16_032/0008063","2":"14"},{"1":"CZ.04.2.40/0.0/0.0/19_069/0000467","2":"11"},{"1":"CZ.02.3.61/0.0/0.0/19_075/0016923","2":"10"},{"1":"CZ.02.3.68/0.0/0.0/16_032/0008083","2":"6"},{"1":"CZ.02.3.68/0.0/0.0/17_047/0010653","2":"6"},{"1":"CZ.04.1.40/0.0/0.0/16_028/0000193","2":"6"},{"1":"CZ.05.2.32/0.0/0.0/18_098/0009090","2":"6"},{"1":"CZ.02.3.61/0.0/0.0/15_007/0000201","2":"5"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004680","2":"4"},{"1":"CZ.02.1.01/0.0/0.0/16_013/0001792","2":"4"},{"1":"CZ.02.3.62/0.0/0.0/16_037/0004677","2":"4"},{"1":"CZ.02.3.68/0.0/0.0/16_032/0008067","2":"4"},{"1":"CZ.02.3.68/0.0/0.0/16_032/0008274","2":"4"},{"1":"CZ.02.3.68/0.0/0.0/17_047/0009672","2":"4"},{"1":"CZ.06.2.56/0.0/0.0/16_033/0003124","2":"4"},{"1":"CZ.06.4.59/0.0/0.0/15_003/0000756","2":"4"},{"1":"CZ.06.4.59/0.0/0.0/16_072/0013958","2":"4"},{"1":"CZ.01.1.02/0.0/0.0/15_018/0004683","2":"3"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004661","2":"3"},{"1":"CZ.02.1.01/0.0/0.0/15_003/0000418","2":"3"},{"1":"CZ.02.1.01/0.0/0.0/16_013/0001315","2":"3"},{"1":"CZ.02.3.68/0.0/0.0/18_067/0012347","2":"3"},{"1":"CZ.05.3.29/0.0/0.0/18_104/0009739","2":"3"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004451","2":"2"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004569","2":"2"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004666","2":"2"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004686","2":"2"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004763","2":"2"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004835","2":"2"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004958","2":"2"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004978","2":"2"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0005033","2":"2"},{"1":"CZ.01.1.02/0.0/0.0/16_049/0009753","2":"2"},{"1":"CZ.01.1.02/0.0/0.0/16_084/0010229","2":"2"},{"1":"CZ.01.1.02/0.0/0.0/17_176/0015602","2":"2"},{"1":"CZ.01.2.07/0.0/0.0/15_003/0002105","2":"2"},{"1":"CZ.02.1.01/0.0/0.0/15_003/0000423","2":"2"},{"1":"CZ.02.1.01/0.0/0.0/15_003/0000481","2":"2"},{"1":"CZ.02.3.61/0.0/0.0/15_007/0000282","2":"2"},{"1":"CZ.02.3.68/0.0/0.0/15_005/0000118","2":"2"},{"1":"CZ.02.3.68/0.0/0.0/15_005/0000360","2":"2"},{"1":"CZ.02.3.68/0.0/0.0/17_047/0008636","2":"2"},{"1":"CZ.04.2.40/0.0/0.0/18_067/0000379","2":"2"},{"1":"CZ.05.4.27/0.0/0.0/16_028/0002405","2":"2"},{"1":"CZ.06.1.37/0.0/0.0/16_077/0006262","2":"2"},{"1":"CZ.01.1.02/0.0/0.0/15_002/0002063","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_014/0000447","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_014/0005790","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_018/0001498","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_018/0001499","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_018/0004608","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004368","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004620","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004628","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004654","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004671","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004730","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004844","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004846","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004888","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004959","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0004982","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/15_019/0005013","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/16_083/0010381","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/16_084/0009839","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/17_106/0012285","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/17_175/0015736","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/17_176/0015535","2":"1"},{"1":"CZ.01.1.02/0.0/0.0/18_215/0018754","2":"1"},{"1":"CZ.01.2.06/0.0/0.0/15_038/0006160","2":"1"},{"1":"CZ.01.2.06/0.0/0.0/16_059/0008402","2":"1"},{"1":"CZ.01.3.10/0.0/0.0/15_010/0004026","2":"1"},{"1":"CZ.01.3.10/0.0/0.0/16_061/0010650","2":"1"},{"1":"CZ.01.4.04/0.0/0.0/15_005/0003306","2":"1"},{"1":"CZ.01.4.04/0.0/0.0/16_076/0009478","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/15_003/0000451","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/15_003/0000493","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/16_013/0001242","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/16_013/0001260","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/16_013/0001261","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/16_013/0001402","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/16_013/0001403","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/16_013/0001404","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/16_013/0001569","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/16_019/0000728","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/16_019/0000849","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/16_026/0008432","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/18_046/0016010","2":"1"},{"1":"CZ.02.1.01/0.0/0.0/18_046/0016013","2":"1"},{"1":"CZ.02.2.69/0.0/0.0/16_018/0002597","2":"1"},{"1":"CZ.02.2.69/0.0/0.0/16_027/0008016","2":"1"},{"1":"CZ.02.2.69/0.0/0.0/16_027/0008215","2":"1"},{"1":"CZ.02.2.69/0.0/0.0/16_028/0006250","2":"1"},{"1":"CZ.02.2.69/0.0/0.0/18_053/0016932","2":"1"},{"1":"CZ.02.2.69/0.0/0.0/18_053/0016987","2":"1"},{"1":"CZ.02.2.69/0.0/0.0/18_058/0010212","2":"1"},{"1":"CZ.02.3.61/0.0/0.0/15_007/0000239","2":"1"},{"1":"CZ.02.3.62/0.0/0.0/16_037/0004871","2":"1"},{"1":"CZ.02.3.68/0.0/0.0/15_005/0000019","2":"1"},{"1":"CZ.02.3.68/0.0/0.0/15_005/0000069","2":"1"},{"1":"CZ.02.3.68/0.0/0.0/15_005/0000373","2":"1"},{"1":"CZ.02.3.68/0.0/0.0/15_005/0004016","2":"1"},{"1":"CZ.02.3.68/0.0/0.0/16_010/0000531","2":"1"},{"1":"CZ.02.3.68/0.0/0.0/17_047/0009161","2":"1"},{"1":"CZ.05.1.24/0.0/0.0/16_034/0002340","2":"1"},{"1":"CZ.05.1.30/0.0/0.0/16_043/0004779","2":"1"},{"1":"CZ.05.2.32/0.0/0.0/17_089/0007400","2":"1"},{"1":"CZ.05.3.29/0.0/0.0/16_041/0003109","2":"1"},{"1":"CZ.05.3.29/0.0/0.0/16_041/0003419","2":"1"},{"1":"CZ.05.4.27/0.0/0.0/15_012/0000072","2":"1"},{"1":"CZ.05.5.18/0.0/0.0/19_121/0010179","2":"1"},{"1":"CZ.05.5.18/0.0/0.0/19_121/0012077","2":"1"},{"1":"CZ.06.1.42/0.0/0.0/15_002/0001634","2":"1"},{"1":"CZ.06.2.56/0.0/0.0/18_103/0009336","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+
+</body>
+</html>

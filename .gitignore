@@ -1,7 +1,6 @@
 .Rhistory
 .RData
 .Rproj.user
-docs
 todo.md
 data-output/*
 !data-output/.here
