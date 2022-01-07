@@ -134,7 +134,7 @@ write_parquet(orgs_detail, here::here("data-processed", "orgs_sp.parquet"))
 
 # z https://www.czso.cz/csu/czso/data_pro_mistni_akcni_skupiny_mas
 masczsofile <- here::here("data-input/mas-czso.xlsx")
-download.file("https://www.czso.cz/documents/10180/23194580/data_pro_mas_2014_2019_b_aktualizace_k_30_6_2020.xlsx/3e6bf657-507b-4592-a6b9-959392e934ba?version=1.1",
+download.file("https://www.czso.cz/documents/10180/23194580/data_pro_mas_2014_2020_aktualizace_k_05_11_2021.xlsx/3108481c-572f-4bde-be1d-6449d8f4748a?version=1.3",
               masczsofile)
 
 readxl::excel_sheets(masczsofile)

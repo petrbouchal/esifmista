@@ -288,7 +288,8 @@ texty <- dtl %>%
   distinct(prj_nazev, prj_anotace, p_ico, p_nazev, prj_id) %>%
   # sample_n(1000) %>%
   left_join(prj_meta) %>%
-  left_join(vyzvy)
+  left_join(vyzvy) |> 
+  replace_na(list(prj_anotace = "", prj_nazev = ""))
 
 zuj_nazvy0 <- zuj_geo %>%
   st_set_geometry(NULL) %>%
@@ -313,7 +314,7 @@ zuj_nazvy <- zuj_nazvy0 %>%
   ungroup()
 
 detect_any_name <- function(txt, nazvy) {
-  check_rslt <- map_lgl(nazvy$value, ~grepl(.x, txt))
+  check_rslt <- map_lgl(nazvy$value, ~stringi::stri_detect_regex(txt, .x))
   
   # print(all(!check_rslt))
   
@@ -355,6 +356,7 @@ detect_any_name <- function(txt, nazvy) {
 
 ```{r geodetekce-run}
 geonames_in_prjtext_file <- here::here("data-processed", "geonames_in_prjtexts.parquet")
+# file.remove(geonames_in_prjtext_file)
 
 if(file.exists(geonames_in_prjtext_file)) {
   prj_geoname_matched <- read_parquet(geonames_in_prjtext_file)
@@ -365,22 +367,33 @@ if(file.exists(geonames_in_prjtext_file)) {
                             incomplete = " ",
                             current = "▸"))
   
-  plan(multiprocess)
+  dtx <- texty
+  
+  plan(multisession)
+  # plan(sequential)
+    
+  # dtx <- texty |> sample_n(40)
+  
   tictoc::tic()
   with_progress({
-    dtx <- texty
-    # dtx <- texty[1:200,]
-    p <- progressor(along = dtx$prj_id)
-    prj_geoname_matched <- dtx %>%
+    p1 <- progressor(along = dtx$prj_id)
+    prj_geoname_matched00 <- dtx %>%
       mutate(geonames_in_prjtitle = future_map(prj_nazev,
                                                function(x) {
-                                                 p(sprintf("x=%s", x))
-                                                 detect_any_name(x, zuj_nazvy)
-                                               }),
-             geonames_in_prjtitle = map(geonames_in_prjtitle, as.character),
-             geonames_in_prjanot = future_map(prj_anotace,
+                                                 p1(sprintf("x=%s", x))
+                                                 detect_any_name(x, zuj_nazvy)}),
+             geonames_in_prjtitle = map(geonames_in_prjtitle, as.character))
+  })
+    
+  tictoc::toc()
+  
+  tictoc::tic()
+  with_progress({
+    p2 <- progressor(along = prj_geoname_matched00$prj_id)
+    prj_geoname_matched0 <- prj_geoname_matched00 |> 
+      mutate(geonames_in_prjanot = future_map(prj_anotace,
                                               function(x) {
-                                                p(sprintf("x=%s", x))
+                                                p2(sprintf("x=%s", x))
                                                 detect_any_name(x, zuj_nazvy)
                                               }),
              geonames_in_prjanot = map(geonames_in_prjanot, as.character),
@@ -388,11 +401,13 @@ if(file.exists(geonames_in_prjtext_file)) {
   })
   tictoc::toc()
   
-  prj_geoname_matched <- prj_geoname_matched %>%
+  prj_geoname_matched <- prj_geoname_matched0 %>%
     select(prj_id, geonames_in_prjanot, geonames_in_prjtitle)
   
   write_parquet(prj_geoname_matched,
                 geonames_in_prjtext_file)
+  
+  rm(prj_geoname_matched0, prj_geoname_matched00)
 }
 ```
 
@@ -432,15 +447,14 @@ if(file.exists(prj_geoname_validated_file)) {
     # ungroup() %>% 
     # sample_n(100) %>% 
     # unnest() %>% 
-    p2 <- progressor(along = prj_geoname_for_check$prj_id)
+    p3 <- progressor(along = prj_geoname_for_check$prj_id)
     prj_geoname_checked <- prj_geoname_for_check %>% 
       mutate(obec_in_misto = future_pmap_lgl(list(uzemi,
                                                   value,
                                                   uzemi_level,
                                                   level),
                                              function(first, second, third, fourth) {
-                                               # p2(sprintf("x=%s", second))
-                                               p2()
+                                               p3(sprintf("x=%s", second))
                                                is_parent(first, second, third, fourth, ids_short)
                                              }))
   })

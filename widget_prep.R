@@ -1,3 +1,4 @@
+source("read_metadata.R")
 
 gorp <- CzechData::load_RUIAN_state("orp") %>%
   left_join(csu_orp %>% select(kod = KOD_RUIAN, kod_csu = CHODNOTA)) %>%

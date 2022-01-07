@@ -1,18 +1,10 @@
 {
   "R": {
-    "Version": "4.0.2",
+    "Version": "4.1.0",
     "Repositories": [
       {
         "Name": "CRAN",
         "URL": "https://cran.rstudio.com"
-      },
-      {
-        "Name": "petrbouchal",
-        "URL": "https://petrbouchal.github.io/drat"
-      },
-      {
-        "Name": "scholaempirica",
-        "URL": "https://scholaempirica.github.io/drat"
       }
     ]
   },
@@ -157,10 +149,10 @@
     },
     "arrow": {
       "Package": "arrow",
-      "Version": "2.0.0",
+      "Version": "6.0.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "04a9e87326777f5205bacdf3ec4ffa02"
+      "Hash": "da21509f51b9ad1386ca293e1042abf5"
     },
     "askpass": {
       "Package": "askpass",
@@ -442,15 +434,10 @@
     },
     "czso": {
       "Package": "czso",
-      "Version": "0.2.3.9000",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteUsername": "petrbouchal",
-      "RemoteRepo": "czso",
-      "RemoteRef": "master",
-      "RemoteSha": "2bf6e361db93413b6e5b2c6838fd85b26ef3985b",
-      "Hash": "f739169db72cc8dbe782e76e0419b2c7"
+      "Version": "0.3.7",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "467b14133b960a32f6129a6d96bae8ff"
     },
     "data.table": {
       "Package": "data.table",
@@ -720,7 +707,6 @@
       "Package": "ggtext",
       "Version": "0.1.1",
       "Source": "GitHub",
-      "Repository": "CRAN",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteUsername": "clauswilke",
@@ -979,10 +965,10 @@
     },
     "lme4": {
       "Package": "lme4",
-      "Version": "1.1-23",
+      "Version": "1.1-27.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "ad24d1fd9ed431543f4633bb083e194a"
+      "Hash": "c995b0405ce0894d6fe52b3e08ea9085"
     },
     "log4r": {
       "Package": "log4r",
@@ -1533,24 +1519,12 @@
       "Repository": "CRAN",
       "Hash": "a44a3cebab900c0f77e16804f361468e"
     },
-    "statmod": {
-      "Package": "statmod",
-      "Version": "1.4.34",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "5b229273695937933bc21ef235e84962"
-    },
     "statnipokladna": {
       "Package": "statnipokladna",
-      "Version": "0.6.0.9000",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteUsername": "petrbouchal",
-      "RemoteRepo": "statnipokladna",
-      "RemoteRef": "master",
-      "RemoteSha": "1c43e6db0c660fda05ad41af21c676deab5c9d8b",
-      "Hash": "1cd7659184111468ea21dd35964b8207"
+      "Version": "0.7.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e91c8afa6583a45b260add3a4bda0c09"
     },
     "stringi": {
       "Package": "stringi",
@@ -1603,10 +1577,10 @@
     },
     "tictoc": {
       "Package": "tictoc",
-      "Version": "1.0",
+      "Version": "1.0.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "f8cc5adf4671b013434bbe127f35b28c"
+      "Hash": "5acb66b0266ad1f0ebf7ffe1aa36ff4c"
     },
     "tidyr": {
       "Package": "tidyr",

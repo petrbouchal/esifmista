@@ -25,28 +25,38 @@ names(files)
 #                      "data-input/misto/OP PIK.xlsx")
 files
 
-dt0 <- map_dfr(files, read_xlsx, skip = 1, .id = "op_id")
+dt0 <- map_dfr(files, read_xlsx, skip = 0)
 
 geolevels_pattern <- str_c("^", geolevels, collapse = "|")
 geolevels_name_pattern <- str_c(paste0(geolevels, "$"), collapse = "|")
 
 dt <- dt0 %>%
   janitor::clean_names() %>%
-  rename(prj_nazev = nazev_projektu_cz,
+  rename(prj_nazev = nazev_projektu,
          prj_id = registracni_cislo_projektu,
          prj_anotace = anotace_projektu,
-         p_nazev = nazev_subjektu,
+         p_nazev = nazev_zadatele,
          p_sidlo_nazev = sidlo_nazev,
          p_ico = ic,
          p_sidlo_id = sidlo_kod,
   ) %>%
-  rename_all(str_replace, "(?!_)cislo$", "_id") %>%
-  rename_all(str_replace, "rozobec", "orp") %>%
-  rename_at(vars(matches(geolevels_pattern)), ~paste0("g_", .)) %>%
-  rename_at(vars(matches(geolevels_name_pattern)), ~paste0(., "_nazev")) %>%
+  rename(g_zuj_id = cislo_zuj,
+         g_zuj_nazev = zuj,
+         g_obec_nazev = obec,
+         g_obec_id = cislo_obce,
+         g_orp_id = cislo_rozsirene_obce,
+         g_orp_nazev = rozsirena_obec,
+         g_orp_id = cislo_rozsirene_obce,
+         g_kraj_id = cislo_kraje,
+         g_kraj_nazev = kraj,
+         g_okres_nazev = okres,
+         g_okres_id = cislo_okresu) |>
   group_by(prj_id) %>%
   mutate(prj_radek = row_number()) %>%
-  ungroup()
+  ungroup() |>
+  add_op_labels() |>
+  select(-op_id, -op_nazev, -op_nazev_zkr) |>
+  rename(op_id = op_zkr)
 
 write_parquet(dt0, here::here("data-processed","misto_raw-n.parquet"))
 write_parquet(dt, here::here("data-processed","misto_renamed-n.parquet"))

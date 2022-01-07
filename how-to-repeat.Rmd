@@ -91,12 +91,12 @@ TO DO
 Jak na to:
 
 1. Spusťte vše podle návodu výše
-1. Otevřete soubor `data-output/prj_nehierarchicke.xlsx`
+1. Otevřete soubor `data-output/prj_nehierarchicke-vse.xlsx`
 1. U každého projektu rozhodněte, které údaje (tj. řádky) se mají použít a u těch vložte do sloupce `vybrat` hodnotu `TRUE` nebo jen `T`. Ostatní můžete nechat prázdné (tj. netřeba vkládat `FALSE`).
 	- Můžete se rozhodnout, že použijete víc údajů (např. lokalizaci na kraj a ORP, i když spolu nesouvisí); skript následně projekt rozpadne do všech obcí, které spadají do vybraných území.
 	- **Pokud u nějakého projektu nevyberete ani jeden řádek (tj. nikde neuvedete `TRUE` do sloupce `vybrat`, nebo ve všech řádcích vložíte `FALSE`), projekt se ve výstupních datech vůbec neobjeví**
 1. Pro rozhodování může pomoct mapový nástroj v souboru `docs/widget.html` nebo na <https://esif-data-cleaning.netlify.app/widget.html>.
-1. Výsledný excelový soubor uložte do `data-manual/prj_nehierarchicke-resolved.xlsx`
+1. Výsledný excelový soubor uložte do `data-manual/prj_nehierarchicke-vybrano.xlsx`
 1. (Pokud chcete rozřešené projekty brát z jiného souboru, upravte hodnotu `input_resolved_xlsx` v `config.yml`)
 1. Spusťte znovu Rmd skripty s názvy začínajícími 09 a 10 - tím se data těchto projektů ropzadnou na obce vybraných území a nové rozpady se začlení do finálního Arrow exportu.
 1. Pokud potřebujete excelové exporty, spusťte ještě `export-excel.R`.
